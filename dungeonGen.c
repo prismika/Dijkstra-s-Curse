@@ -22,16 +22,9 @@ struct Map{
 
 void printMap(struct Map map);
 char getVisual(enum BlockType type);
+void testMapPrint(void);
 
 int main(int argc, char *argv[]){
-	struct Map map;
-	int i,j;
-	for(i=0;i<MAPHEIGHT;++i){
-		for(j=0; j<MAPWIDTH; ++j){
-			map.block[i][j].type = floor;
-		}
-	}
-	printMap(map);
 	return 0;
 }
 
@@ -62,4 +55,15 @@ char getVisual(enum BlockType type){
 			return '!';
 	}
 	return '!';
+}
+
+void testMapPrint(void){
+	struct Map map;
+	int i,j;
+	for(i=0;i<MAPHEIGHT;++i){
+		for(j=0; j<MAPWIDTH; ++j){
+			map.block[i][j].type = floor;
+		}
+	}
+	printMap(map);
 }
