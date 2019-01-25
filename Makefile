@@ -1,8 +1,7 @@
 all: dungeonGen
 
 dungeonGen: dungeonGen.c
-	gcc -Wall -ggdb3 dungeonGen.c -o dungeonGen
+	gcc -Wall -ggdb3 dungeonGen.c -o dungeonGen -lm
 
 clean:
-	rm dungeonGen
-	rm dungeonGen.exe
+	rm dungeonGen dungeonGen.exe
