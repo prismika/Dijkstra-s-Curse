@@ -58,7 +58,7 @@ void placeNewRoom(struct Map *map, struct Room room);
 void printMap(struct Map map);
 char getVisual(enum BlockType type);
 void testMapPrint(void);
-
+bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr);
 
 
 int main(int argc, char *argv[]){
@@ -114,10 +114,13 @@ int attemptNewRoom(struct Map *map){
 	for(i=newRoom.position.x; i < newRoom.position.x + newRoom.width; ++i){
 		for(j=newRoom.position.y; j < newRoom.position.y + newRoom.height; ++j){
 			struct Block curBlock = map->block[i][j];
+			struct Coordinate curBlockCoord = {i,j};
+			struct Coordinate lowerRight = {newRoom.position.x + newRoom.width-1,newRoom.position.y + newRoom.height-1};
+
 			if(curBlock.type == bedrock){
 				return -1; //Bedrock encountered
-			}else if(curBlock.isRoomBorder){
-//TODO Room borders can overlap. Add isBorderOfRegion function
+			}else if(curBlock.isRoomBorder
+					&&	!isOnBorder(curBlockCoord,newRoom.position,lowerRight)){
 				return -2; //Room border encountered
 			}else if(curBlock.type == floor){
 				return -3; //Another room's floor was encountered
@@ -176,6 +179,13 @@ char getVisual(enum BlockType type){
 			return '!';
 	}
 	return '!';
+}
+
+bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr){
+	return	point.x==ul.x
+		||	point.x==lr.x
+		||  point.y==ul.y
+		|| 	point.y==lr.y;
 }
 
 void testMapPrint(void){
