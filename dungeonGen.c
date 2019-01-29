@@ -52,8 +52,9 @@ struct Corridor{
 };
 
 
-
+void initializeMap(struct Map *map);
 int attemptNewRoom(struct Map *map);
+int isLegalRoom(struct Room *room, struct Map *map);
 void placeNewRoom(struct Map *map, struct Room room);
 void printMap(struct Map map);
 char getVisual(enum BlockType type);
@@ -63,27 +64,11 @@ bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate
 
 int main(int argc, char *argv[]){
 	struct Map theMap;
-	int i,j;
-	printf("Initializing map...\n");
-	for(i = 0; i < MAPWIDTH; ++i){
-		for(j = 0; j < MAPHEIGHT; ++j){
-			struct Block newBlock;
-			if((i==0||i==MAPWIDTH-1)||(j==0||j==MAPHEIGHT-1)){
-				newBlock.type = bedrock;
-			}else{
-				newBlock.type = rock;
-			}
-			newBlock.isRoomBorder = false;
-			theMap.block[i][j] = newBlock;
-			printf("X|%d  Y|%d  T|%c \n",i,j,getVisual(newBlock.type));
-
-		}
-	}
-
-	printf("Map initialized\n");
+	initializeMap(&theMap);
 	srand(time(0));
 		int status = -1;
 		int roomCount = 0;
+	int i;
 	for(i = 0; i < 5; ++i){
 		status = attemptNewRoom(&theMap);
 		printf("%d\n", status);
@@ -97,7 +82,26 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
+void initializeMap(struct Map *map){
+	printf("Initializing map...\n");
 
+	int i,j;
+	for(i = 0; i < MAPWIDTH; ++i){
+		for(j = 0; j < MAPHEIGHT; ++j){
+			struct Block newBlock;
+			if((i==0||i==MAPWIDTH-1)||(j==0||j==MAPHEIGHT-1)){
+				newBlock.type = bedrock;
+			}else{
+				newBlock.type = rock;
+			}
+			newBlock.isRoomBorder = false;
+			map->block[i][j] = newBlock;
+			printf("X|%d  Y|%d  T|%c \n",i,j,getVisual(newBlock.type));
+		}
+	}
+
+	printf("Map initialized\n");
+}
 
 int attemptNewRoom(struct Map *map){
 	struct Room newRoom;
@@ -108,9 +112,19 @@ int attemptNewRoom(struct Map *map){
 
 	printf("Attempting room: %d,%d,%d,%d\n",newRoom.position.x,newRoom.position.y,newRoom.width,newRoom.height);
 
-	//Check if room touches immutible blocks. This also covers the case where the room
-	//extends out of bounds.
+	int legality = isLegalRoom(&newRoom,map);
+	if(legality==0) placeNewRoom(map,newRoom);
+	return legality;
+}
+
+/*Returns 	0:Legal
+			-1:Encountered Bedrock
+			-2:Encountered border of another room
+			-3:Encountered floor of another room
+*/
+int isLegalRoom(struct Room *room, struct Map *map){
 	int i, j;
+	struct Room newRoom = *room;
 	for(i=newRoom.position.x; i < newRoom.position.x + newRoom.width; ++i){
 		for(j=newRoom.position.y; j < newRoom.position.y + newRoom.height; ++j){
 			struct Block curBlock = map->block[i][j];
@@ -127,8 +141,6 @@ int attemptNewRoom(struct Map *map){
 			}
 		}
 	}
-
-	placeNewRoom(map,newRoom);
 	return 0;
 }
 
@@ -181,6 +193,7 @@ char getVisual(enum BlockType type){
 	return '!';
 }
 
+//TODO Overload this and refactor above
 bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr){
 	return	point.x==ul.x
 		||	point.x==lr.x
