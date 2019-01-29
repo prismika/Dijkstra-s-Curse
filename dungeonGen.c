@@ -9,12 +9,12 @@
 #define MIN_ROOM_WIDTH 6 //6
 #define MIN_ROOM_HEIGHT 5 //5
 #define MAX_ROOM_WIDTH 18 //Exclusive
-#define MAX_ROOM_HEIGHT 14	//Exclusive
+#define MAX_ROOM_HEIGHT 12	//Exclusive
 
-#define MIN_ROOM_COUNT 1
-#define MAX_ROOM_COUNT 1
+#define MIN_ROOM_COUNT 6
+#define MAX_ROOM_COUNT 9 //Exclusive
+#define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
-//TODO Introduce room border
 enum BlockType{
 	rock,
 	bedrock,
@@ -53,6 +53,7 @@ struct Corridor{
 
 
 void initializeMap(struct Map *map);
+void populateWithRooms(struct Map *map);
 int attemptNewRoom(struct Map *map);
 int isLegalRoom(struct Room *room, struct Map *map);
 void placeNewRoom(struct Map *map, struct Room room);
@@ -63,21 +64,12 @@ bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate
 
 
 int main(int argc, char *argv[]){
+	srand(time(0));
+
 	struct Map theMap;
 	initializeMap(&theMap);
-	srand(time(0));
-		int status = -1;
-		int roomCount = 0;
-	int i;
-	for(i = 0; i < 5; ++i){
-		status = attemptNewRoom(&theMap);
-		printf("%d\n", status);
-		if(status == 0){
-			++roomCount;
-		}
-		printMap(theMap);
-		printf("%d rooms\n", roomCount);
-	}
+	populateWithRooms(&theMap);
+	printMap(theMap);
 	
 	return 0;
 }
@@ -96,11 +88,32 @@ void initializeMap(struct Map *map){
 			}
 			newBlock.isRoomBorder = false;
 			map->block[i][j] = newBlock;
-			printf("X|%d  Y|%d  T|%c \n",i,j,getVisual(newBlock.type));
 		}
 	}
 
 	printf("Map initialized\n");
+}
+
+void populateWithRooms(struct Map *map){
+	int roomQuota = (rand()%(MAX_ROOM_COUNT - MIN_ROOM_COUNT)) + MIN_ROOM_COUNT;
+	int roomCount = 0;
+	int failures = 0;
+	while(roomCount < roomQuota){
+		int attemptResult = attemptNewRoom(map);
+		if(attemptResult == 0){
+			failures = 0;
+			roomCount++;
+		}else{
+			failures++;
+		}
+		if(failures > FAILED_ROOM_ATTEMPTS_LIMIT){
+			printf("Too many failed placements. Here is the map.\n");
+			printMap(*map);
+			failures = 0;
+			roomCount = 0;
+			initializeMap(map);
+		}
+	}
 }
 
 int attemptNewRoom(struct Map *map){
@@ -163,7 +176,6 @@ void placeNewRoom(struct Map *map, struct Room room){
 		}
 	}
 }
-
 
 void printMap(struct Map map){
 	int i,j;
