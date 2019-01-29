@@ -192,11 +192,27 @@ void placeNewRoom(struct Map *map, struct Room room){
 
 
 void populateWithCorridors(struct Map *map, struct Room room[]){
-
+	struct Corridor cor;
+	cor.midpoint.x=5;
+	cor.midpoint.y=1;
+	cor.start.x=1;
+	cor.start.y=1;
+	placeNewCorridor(cor,map);
 }
 
 void placeNewCorridor(struct Corridor cor, struct Map *map){
-
+	printf("Placing corridor\n");
+	int incrementer = (cor.midpoint.x - cor.start.x)/abs(cor.midpoint.x - cor.start.x);
+	printf("Incrementer:%d\n", incrementer);
+	int curPosition = cor.start.x;
+	while(curPosition != cor.midpoint.x+1){
+		struct Block curBlock = map -> block[curPosition][cor.midpoint.y];
+		if(curBlock.type == rock){
+			printf("Placing corridor at (%d,%d)\n",curPosition,cor.midpoint.y);
+			 map -> block[curPosition][cor.midpoint.y].type = corridor;
+		}
+		curPosition = curPosition + incrementer;
+	}
 }
 
 
@@ -223,6 +239,9 @@ char getVisual(enum BlockType type){
 			break;
 		case floor:
 			return '.';
+			break;
+		case corridor:
+			return '#';
 			break;
 		default:
 			return '!';
