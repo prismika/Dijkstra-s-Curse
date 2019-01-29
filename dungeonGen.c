@@ -45,6 +45,8 @@ struct Room{
 	int width;
 };
 
+/*It is assumed that the corridor goes horizontally to start
+and vertically to end*/
 struct Corridor{
 	struct Coordinate start;
 	struct Coordinate midpoint;
@@ -192,30 +194,43 @@ void placeNewRoom(struct Map *map, struct Room room){
 
 
 void populateWithCorridors(struct Map *map, struct Room room[]){
-	struct Corridor cor;
-	cor.midpoint.x=5;
-	cor.midpoint.y=1;
-	cor.start.x=1;
-	cor.start.y=1;
-	placeNewCorridor(cor,map);
+	// struct Corridor cor;
+	// cor.midpoint.x=1;
+	// cor.midpoint.y=1;
+	// cor.start.x=5;
+	// cor.start.y=1;
+	// cor.end.x=5;
+	// cor.end.y=7;
+	// placeNewCorridor(cor,map);
+	int i;
+	while(!isSentinel(room[i+1]))
 }
 
 void placeNewCorridor(struct Corridor cor, struct Map *map){
 	printf("Placing corridor\n");
 	int incrementer = (cor.midpoint.x - cor.start.x)/abs(cor.midpoint.x - cor.start.x);
-	printf("Incrementer:%d\n", incrementer);
 	int curPosition = cor.start.x;
-	while(curPosition != cor.midpoint.x+1){
+	while(curPosition != cor.midpoint.x){
 		struct Block curBlock = map -> block[curPosition][cor.midpoint.y];
 		if(curBlock.type == rock){
-			printf("Placing corridor at (%d,%d)\n",curPosition,cor.midpoint.y);
-			 map -> block[curPosition][cor.midpoint.y].type = corridor;
+			map -> block[curPosition][cor.midpoint.y].type = corridor;
 		}
 		curPosition = curPosition + incrementer;
 	}
+	map -> block[curPosition][cor.midpoint.y].type = corridor;
+
+
+	incrementer = (cor.midpoint.y - cor.end.y)/abs(cor.midpoint.y - cor.end.y);
+	curPosition = cor.end.y;
+	while(curPosition != cor.midpoint.y){
+		struct Block curBlock = map -> block[cor.midpoint.x][curPosition];
+		if(curBlock.type == rock){
+			map -> block[cor.midpoint.x][curPosition].type = corridor;
+		}
+		curPosition = curPosition + incrementer;
+	}
+	map -> block[cor.midpoint.x][curPosition].type = corridor;
 }
-
-
 
 
 void printMap(struct Map map){
