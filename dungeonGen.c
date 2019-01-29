@@ -61,7 +61,9 @@ int isLegalRoom(struct Room *room, struct Map *map);
 void placeNewRoom(struct Map *map, struct Room room);
 
 void populateWithCorridors(struct Map *map, struct Room room[]);
+struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2);
 void placeNewCorridor(struct Corridor cor, struct Map *map);
+bool isSentinel(struct Room room);
 
 void printMap(struct Map map);
 char getVisual(enum BlockType type);
@@ -202,9 +204,41 @@ void populateWithCorridors(struct Map *map, struct Room room[]){
 	// cor.end.x=5;
 	// cor.end.y=7;
 	// placeNewCorridor(cor,map);
-	int i;
-	while(!isSentinel(room[i+1]))
+	int i=0;
+	while(!isSentinel(room[i+1])){
+		printf("Placing corridor from room %d\n",i);
+		struct Corridor newCorridor= *generateNewCorridor(
+			room[i].position,room[i+1].position);
+		placeNewCorridor(newCorridor,map);
+		i++;
+		return;
+	}
 }
+
+struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2){
+	static struct Corridor cor;
+	cor.start.x = c1.x;
+	cor.start.y = c1.y;
+	cor.midpoint.x = c1.y;
+	cor.midpoint.y = c2.x;
+	cor.end.x = c2.x;
+	cor.end.y = c2.y;
+
+	// cor.start.x=5;
+	// cor.start.y=1;
+	// cor.midpoint.x=1;
+	// cor.midpoint.y=7;
+	// cor.end.x=5;
+	// cor.end.y=7;
+
+	printf("From (%d,%d) through (%d,%d) to (%d,%d)\n",
+		cor.start.x,cor.start.y,
+		cor.midpoint.x,cor.midpoint.y,
+		cor.end.x,cor.end.y);
+
+	return &cor;
+}
+
 
 void placeNewCorridor(struct Corridor cor, struct Map *map){
 	printf("Placing corridor\n");
@@ -231,6 +265,11 @@ void placeNewCorridor(struct Corridor cor, struct Map *map){
 	}
 	map -> block[cor.midpoint.x][curPosition].type = corridor;
 }
+
+bool isSentinel(struct Room room){
+	return room.height == -1;
+}
+
 
 
 void printMap(struct Map map){
