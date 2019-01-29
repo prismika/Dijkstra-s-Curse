@@ -53,10 +53,14 @@ struct Corridor{
 
 
 void initializeMap(struct Map *map);
-void populateWithRooms(struct Map *map);
-int attemptNewRoom(struct Map *map);
+struct Room * populateWithRooms(struct Map *map);
+struct Room * generateNewRoom(struct Map *map);
 int isLegalRoom(struct Room *room, struct Map *map);
 void placeNewRoom(struct Map *map, struct Room room);
+
+void populateWithCorridors(struct Map *map, struct Room room[]);
+void placeNewCorridor(struct Corridor cor, struct Map *map);
+
 void printMap(struct Map map);
 char getVisual(enum BlockType type);
 void testMapPrint(void);
@@ -64,13 +68,16 @@ bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate
 
 
 int main(int argc, char *argv[]){
-	srand(time(0));
+	long seed = time(0);
+	printf("Seed:%ld\n", seed);
+	srand(seed);
 
 	struct Map theMap;
 	initializeMap(&theMap);
-	populateWithRooms(&theMap);
+	struct Room *roomList = populateWithRooms(&theMap);
+	populateWithCorridors(&theMap,roomList);
 	printMap(theMap);
-	
+
 	return 0;
 }
 
@@ -94,15 +101,18 @@ void initializeMap(struct Map *map){
 	printf("Map initialized\n");
 }
 
-void populateWithRooms(struct Map *map){
+struct Room * populateWithRooms(struct Map *map){
 	int roomQuota = (rand()%(MAX_ROOM_COUNT - MIN_ROOM_COUNT)) + MIN_ROOM_COUNT;
 	int roomCount = 0;
 	int failures = 0;
+	static struct Room roomList[MAX_ROOM_COUNT+1];//+1?
+
 	while(roomCount < roomQuota){
-		int attemptResult = attemptNewRoom(map);
-		if(attemptResult == 0){
+		struct Room *newRoom = generateNewRoom(map);
+		if(isLegalRoom(newRoom,map)==0){
 			failures = 0;
-			roomCount++;
+			roomList[roomCount++] = *newRoom;
+			placeNewRoom(map,*newRoom);
 		}else{
 			failures++;
 		}
@@ -114,20 +124,20 @@ void populateWithRooms(struct Map *map){
 			initializeMap(map);
 		}
 	}
+	struct Room sentinelRoom;
+	sentinelRoom.height = -1;
+	roomList[roomQuota] = sentinelRoom;
+	return roomList;
 }
 
-int attemptNewRoom(struct Map *map){
-	struct Room newRoom;
+struct Room * generateNewRoom(struct Map *map){
+	static struct Room newRoom;
 	newRoom.position.x = (rand() % MAPWIDTH);
 	newRoom.position.y = (rand() % MAPHEIGHT);
 	newRoom.height = (rand() % (MAX_ROOM_HEIGHT - MIN_ROOM_HEIGHT) + MIN_ROOM_HEIGHT);
 	newRoom.width = (rand() % (MAX_ROOM_WIDTH - MIN_ROOM_WIDTH) + MIN_ROOM_WIDTH);
 
-	printf("Attempting room: %d,%d,%d,%d\n",newRoom.position.x,newRoom.position.y,newRoom.width,newRoom.height);
-
-	int legality = isLegalRoom(&newRoom,map);
-	if(legality==0) placeNewRoom(map,newRoom);
-	return legality;
+	return &newRoom;	
 }
 
 /*Returns 	0:Legal
@@ -136,8 +146,10 @@ int attemptNewRoom(struct Map *map){
 			-3:Encountered floor of another room
 */
 int isLegalRoom(struct Room *room, struct Map *map){
-	int i, j;
 	struct Room newRoom = *room;
+	printf("Attempting room: %d,%d,%d,%d\n",newRoom.position.x,newRoom.position.y,newRoom.width,newRoom.height);
+	
+	int i, j;
 	for(i=newRoom.position.x; i < newRoom.position.x + newRoom.width; ++i){
 		for(j=newRoom.position.y; j < newRoom.position.y + newRoom.height; ++j){
 			struct Block curBlock = map->block[i][j];
@@ -157,7 +169,6 @@ int isLegalRoom(struct Room *room, struct Map *map){
 	return 0;
 }
 
-
 void placeNewRoom(struct Map *map, struct Room room){
 	int i,j;
 	printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
@@ -176,6 +187,20 @@ void placeNewRoom(struct Map *map, struct Room room){
 		}
 	}
 }
+
+
+
+
+void populateWithCorridors(struct Map *map, struct Room room[]){
+
+}
+
+void placeNewCorridor(struct Corridor cor, struct Map *map){
+
+}
+
+
+
 
 void printMap(struct Map map){
 	int i,j;
