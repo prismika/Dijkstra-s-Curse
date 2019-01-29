@@ -8,8 +8,8 @@
 //Keep in mind these include the room border
 #define MIN_ROOM_WIDTH 6 //6
 #define MIN_ROOM_HEIGHT 5 //5
-#define MAX_ROOM_WIDTH 7 //Exclusive
-#define MAX_ROOM_HEIGHT 6	//Exclusive
+#define MAX_ROOM_WIDTH 18 //Exclusive
+#define MAX_ROOM_HEIGHT 14	//Exclusive
 
 #define MIN_ROOM_COUNT 1
 #define MAX_ROOM_COUNT 1
@@ -81,11 +81,19 @@ int main(int argc, char *argv[]){
 	}
 
 	printf("Map initialized\n");
-	int status = -1;
 	srand(time(0));
-	status = attemptNewRoom(&theMap);
-	printf("%d\n", status);
-	printMap(theMap);
+		int status = -1;
+		int roomCount = 0;
+	for(i = 0; i < 5; ++i){
+		status = attemptNewRoom(&theMap);
+		printf("%d\n", status);
+		if(status == 0){
+			++roomCount;
+		}
+		printMap(theMap);
+		printf("%d rooms\n", roomCount);
+	}
+	
 	return 0;
 }
 
@@ -105,15 +113,17 @@ int attemptNewRoom(struct Map *map){
 	int i, j;
 	for(i=newRoom.position.x; i < newRoom.position.x + newRoom.width; ++i){
 		for(j=newRoom.position.y; j < newRoom.position.y + newRoom.height; ++j){
-			printf("Examining block %d,%d\nType %c\n",i,j,getVisual(map->block[i][j].type) );
-			if(map->block[i][j].type == bedrock){
+			struct Block curBlock = map->block[i][j];
+			if(curBlock.type == bedrock){
 				return -1; //Bedrock encountered
+			}else if(curBlock.isRoomBorder){
+//TODO Room borders can overlap. Add isBorderOfRegion function
+				return -2; //Room border encountered
+			}else if(curBlock.type == floor){
+				return -3; //Another room's floor was encountered
 			}
 		}
 	}
-
-	//Check if new room overlaps or borders another room.
-	//TODO
 
 	placeNewRoom(map,newRoom);
 	return 0;
@@ -123,10 +133,17 @@ int attemptNewRoom(struct Map *map){
 void placeNewRoom(struct Map *map, struct Room room){
 	int i,j;
 	printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
-	for(i=room.position.x + 1; i < room.position.x + room.width - 1; ++i){
-		for(j=room.position.y + 1; j < room.position.y + room.height - 1; ++j){
+	for(i=room.position.x; i < room.position.x + room.width; ++i){
+		for(j=room.position.y; j < room.position.y + room.height; ++j){
 			struct Block newBlock;
-			newBlock.type = floor;
+			if(	i==room.position.x || i==room.position.x+room.width-1
+			||	j==room.position.y || j==room.position.y+room.height-1){
+				newBlock.type = rock;
+				newBlock.isRoomBorder = true;
+			}else{
+				newBlock.type = floor;
+				newBlock.isRoomBorder = false;
+			}
 			map->block[i][j] = newBlock;
 		}
 	}
