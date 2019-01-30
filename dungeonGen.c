@@ -5,14 +5,14 @@
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21
-//Keep in mind these include the room border
+//Keep in mind these measurements include the room border
 #define MIN_ROOM_WIDTH 6 //6
 #define MIN_ROOM_HEIGHT 5 //5
 #define MAX_ROOM_WIDTH 18 //Exclusive
 #define MAX_ROOM_HEIGHT 12	//Exclusive
 
 #define MIN_ROOM_COUNT 6 //6
-#define MAX_ROOM_COUNT 7 //Exclusive
+#define MAX_ROOM_COUNT 10 //Exclusive
 #define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
 enum BlockType{
@@ -31,12 +31,12 @@ struct Block{
 
 //TODO Flip x and y everywhere
 struct Map{
-	struct Block block[MAPWIDTH][MAPHEIGHT];
+	struct Block block[MAPHEIGHT][MAPWIDTH];
 };
 
 struct Coordinate{
-	int x;
 	int y;
+	int x;
 };
 
 struct Room{
@@ -45,7 +45,7 @@ struct Room{
 	int width;
 };
 
-/*It is assumed that the corridor goes horizontally to start
+/*It is assumed that the corridor goes horizontally from start
 and vertically to end*/
 struct Corridor{
 	struct Coordinate start;
@@ -87,6 +87,7 @@ int main(int argc, char *argv[]){
 	initializeMap(&theMap);
 	struct Room *roomList = populateWithRooms(&theMap);
 	populateWithCorridors(&theMap,roomList);
+	// //TODO erodeCorridors(&theMap);
 	printMap(theMap);
 
 	return 0;
@@ -96,10 +97,10 @@ void initializeMap(struct Map *map){
 	printf("Initializing map...\n");
 
 	int i,j;
-	for(i = 0; i < MAPWIDTH; ++i){
-		for(j = 0; j < MAPHEIGHT; ++j){
+	for(i = 0; i < MAPHEIGHT; ++i){
+		for(j = 0; j < MAPWIDTH; ++j){
 			struct Block newBlock;
-			if((i==0||i==MAPWIDTH-1)||(j==0||j==MAPHEIGHT-1)){
+			if((i==0||i==MAPHEIGHT-1)||(j==0||j==MAPWIDTH-1)){
 				newBlock.type = bedrock;
 			}else{
 				newBlock.type = rock;
@@ -161,11 +162,16 @@ int isLegalRoom(struct Room *room, struct Map *map){
 	printf("Attempting room: %d,%d,%d,%d\n",newRoom.position.x,newRoom.position.y,newRoom.width,newRoom.height);
 	
 	int i, j;
-	for(i=newRoom.position.x; i < newRoom.position.x + newRoom.width; ++i){
-		for(j=newRoom.position.y; j < newRoom.position.y + newRoom.height; ++j){
+	for(i=newRoom.position.y; i < newRoom.position.y + newRoom.height; ++i){
+		for(j=newRoom.position.x; j < newRoom.position.x + newRoom.width; ++j){
 			struct Block curBlock = map->block[i][j];
-			struct Coordinate curBlockCoord = {i,j};
-			struct Coordinate lowerRight = {newRoom.position.x + newRoom.width-1,newRoom.position.y + newRoom.height-1};
+			struct Coordinate curBlockCoord;
+			curBlockCoord.y=i;
+			curBlockCoord.x=j;
+			struct Coordinate lowerRight;
+			lowerRight.y = newRoom.position.y + newRoom.height-1;
+			lowerRight.x = newRoom.position.x + newRoom.width-1;
+
 
 			if(curBlock.type == bedrock){
 				return -1; //Bedrock encountered
@@ -183,11 +189,11 @@ int isLegalRoom(struct Room *room, struct Map *map){
 void placeNewRoom(struct Map *map, struct Room room){
 	int i,j;
 	printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
-	for(i=room.position.x; i < room.position.x + room.width; ++i){
-		for(j=room.position.y; j < room.position.y + room.height; ++j){
+	for(i=room.position.y; i < room.position.y + room.height; ++i){
+		for(j=room.position.x; j < room.position.x + room.width; ++j){
 			struct Block newBlock;
-			if(	i==room.position.x || i==room.position.x+room.width-1
-			||	j==room.position.y || j==room.position.y+room.height-1){
+			if(	i==room.position.y || i==room.position.y+room.height-1
+			||	j==room.position.x || j==room.position.x+room.width-1){
 				newBlock.type = rock;
 				newBlock.isRoomBorder = true;
 			}else{
@@ -257,24 +263,24 @@ void placeNewCorridor(struct Corridor cor, struct Map *map){
 }
 //TODO Refactor this by using a "Place region" function
 void placePartialCorridor(struct Coordinate origin, int dist, bool horizontal, struct Map *map){
-	int incrementerHorizontal;
 	int incrementerVertical;
+	int incrementerHorizontal;
 	if(dist == 0){
 		return;
 	}
 	if(horizontal){
-		incrementerHorizontal = dist/abs(dist);
 		incrementerVertical = 0;
+		incrementerHorizontal = dist/abs(dist);
 	}else{
-		incrementerHorizontal = 0;
 		incrementerVertical = dist/abs(dist);
+		incrementerHorizontal = 0;
 	}
 	int i;
 	for(i=0;i<=abs(dist);++i){
-		int xCoord = origin.x + i*incrementerHorizontal;
 		int yCoord = origin.y + i*incrementerVertical;
-		if(map -> block[xCoord][yCoord].type == rock){
-			map -> block[xCoord][yCoord].type = corridor;
+		int xCoord = origin.x + i*incrementerHorizontal;
+		if(map -> block[yCoord][xCoord].type == rock){
+			map -> block[yCoord][xCoord].type = corridor;
 		}
 	}
 }
@@ -287,8 +293,8 @@ bool isSentinel(struct Room room){
 
 void printMap(struct Map map){
 	int i,j;
-	for(j=0;j<MAPHEIGHT;++j){
-		for(i=0; i<MAPWIDTH; ++i){
+	for(i=0;i<MAPHEIGHT;++i){
+		for(j=0; j<MAPWIDTH; ++j){
 			struct Block curBlock = map.block[i][j];
 			char blockVisual[1];
 			blockVisual[0] = getVisual(curBlock.type);
