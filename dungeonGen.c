@@ -66,6 +66,7 @@ void placeNewCorridor(struct Corridor cor, struct Map *map);
 bool isSentinel(struct Room room);
 
 void printMap(struct Map map);
+void printRoomList(struct Room *roomList);
 char getVisual(enum BlockType type);
 void testMapPrint(void);
 bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr);
@@ -131,7 +132,7 @@ struct Room * populateWithRooms(struct Map *map){
 	struct Room sentinelRoom;
 	sentinelRoom.height = -1;
 	roomList[roomQuota] = sentinelRoom;
-	return roomList;
+	return roomList;//TODO For testing purposes
 }
 
 struct Room * generateNewRoom(struct Map *map){
@@ -204,6 +205,7 @@ void populateWithCorridors(struct Map *map, struct Room room[]){
 	// cor.end.x=5;
 	// cor.end.y=7;
 	// placeNewCorridor(cor,map);
+	printRoomList(room);
 	int i=0;
 	while(!isSentinel(room[i+1])){
 		printf("Placing corridor from room %d\n",i);
@@ -211,7 +213,7 @@ void populateWithCorridors(struct Map *map, struct Room room[]){
 			room[i].position,room[i+1].position);
 		placeNewCorridor(newCorridor,map);
 		i++;
-		return; //For testing purposes
+		// return; //For testing purposes
 	}
 }
 
@@ -274,6 +276,18 @@ void printMap(struct Map map){
 			printf(blockVisual);
 		}
 		printf("\n");
+	}
+}
+
+void printRoomList(struct Room *roomList){
+	printf("Rooms:\n");
+
+	int i;
+	for(i=0;i<MAX_ROOM_COUNT;++i){
+		struct Room curRoom = roomList[i];
+		printf("\tRoom %d: X|%d Y|%d W|%d H|%d\n",
+			i,curRoom.position.x,curRoom.position.y,
+			curRoom.width,curRoom.height);
 	}
 }
 
