@@ -63,6 +63,7 @@ void placeNewRoom(struct Map *map, struct Room room);
 void populateWithCorridors(struct Map *map, struct Room room[]);
 struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2);
 void placeNewCorridor(struct Corridor cor, struct Map *map);
+void placePartialCorridor(struct Coordinate origin, int dist, bool horizontal, struct Map *map);
 bool isSentinel(struct Room room);
 
 void printMap(struct Map map);
@@ -216,7 +217,7 @@ void populateWithCorridors(struct Map *map, struct Room room[]){
 		printf("Calculating corridor from room %d\n",i);
 		struct Corridor newCorridor= *generateNewCorridor(
 			room[i].position,room[i+1].position);
-		if(i<1)
+		// if(i<1) //For testing purposes
 		placeNewCorridor(newCorridor,map);
 		i++;
 		// printf("Room 6 sentinel? %d\n",isSentinel(room[6]));
@@ -226,6 +227,8 @@ void populateWithCorridors(struct Map *map, struct Room room[]){
 
 struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2){
 	static struct Corridor cor;
+	//TODO This is what technical debt looks like.
+	//Put the offset where it belongs
 	cor.start.x = c1.x+1;
 	cor.start.y = c1.y+1;
 	cor.midpoint.x = c2.x+1;
@@ -244,25 +247,35 @@ struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2
 
 void placeNewCorridor(struct Corridor cor, struct Map *map){
 	printf("Placing corridor\n");
-	int incrementer = (cor.midpoint.x - cor.start.x)/abs(cor.midpoint.x - cor.start.x);
-	int curPosition = cor.start.x;
-	while(curPosition != cor.midpoint.x+incrementer){
-		struct Block curBlock = map -> block[curPosition][cor.midpoint.y];
-		if(curBlock.type == rock){
-			map -> block[curPosition][cor.midpoint.y].type = corridor;
-		}
-		curPosition = curPosition + incrementer;
+
+	int xDistance = cor.start.x - cor.midpoint.x;
+	int yDistance = cor.end.y - cor.midpoint.y;
+
+	placePartialCorridor(cor.midpoint,xDistance,true,map);
+	placePartialCorridor(cor.midpoint,yDistance,false,map);
+
+}
+//TODO Refactor this by using a "Place region" function
+void placePartialCorridor(struct Coordinate origin, int dist, bool horizontal, struct Map *map){
+	int incrementerHorizontal;
+	int incrementerVertical;
+	if(dist == 0){
+		return;
 	}
-
-
-	incrementer = (cor.midpoint.y - cor.end.y)/abs(cor.midpoint.y - cor.end.y);
-	curPosition = cor.end.y;
-	while(curPosition != cor.midpoint.y+incrementer){
-		struct Block curBlock = map -> block[cor.midpoint.x][curPosition];
-		if(curBlock.type == rock){
-			map -> block[cor.midpoint.x][curPosition].type = corridor;
+	if(horizontal){
+		incrementerHorizontal = dist/abs(dist);
+		incrementerVertical = 0;
+	}else{
+		incrementerHorizontal = 0;
+		incrementerVertical = dist/abs(dist);
+	}
+	int i;
+	for(i=0;i<=abs(dist);++i){
+		int xCoord = origin.x + i*incrementerHorizontal;
+		int yCoord = origin.y + i*incrementerVertical;
+		if(map -> block[xCoord][yCoord].type == rock){
+			map -> block[xCoord][yCoord].type = corridor;
 		}
-		curPosition = curPosition + incrementer;
 	}
 }
 
