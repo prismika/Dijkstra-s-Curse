@@ -11,8 +11,8 @@
 #define MAX_ROOM_WIDTH 18 //Exclusive
 #define MAX_ROOM_HEIGHT 12	//Exclusive
 
-#define MIN_ROOM_COUNT 6
-#define MAX_ROOM_COUNT 9 //Exclusive
+#define MIN_ROOM_COUNT 6 //6
+#define MAX_ROOM_COUNT 7 //Exclusive
 #define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
 enum BlockType{
@@ -73,7 +73,12 @@ bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate
 
 
 int main(int argc, char *argv[]){
-	long seed = time(0);
+	long seed;
+	if(argc == 2){
+		seed = atoi(argv[1]);
+	}else{
+		seed = time(0);
+	}
 	printf("Seed:%ld\n", seed);
 	srand(seed);
 
@@ -208,12 +213,14 @@ void populateWithCorridors(struct Map *map, struct Room room[]){
 	printRoomList(room);
 	int i=0;
 	while(!isSentinel(room[i+1])){
-		printf("Placing corridor from room %d\n",i);
+		printf("Calculating corridor from room %d\n",i);
 		struct Corridor newCorridor= *generateNewCorridor(
 			room[i].position,room[i+1].position);
+		if(i<1)
 		placeNewCorridor(newCorridor,map);
 		i++;
-		// return; //For testing purposes
+		// printf("Room 6 sentinel? %d\n",isSentinel(room[6]));
+		// return; 						//For testing purposes
 	}
 }
 
