@@ -1,1 +1,17 @@
-1/24/19: Begin project
+1/24/19: 	Begin project
+			Configure .gitignore, Makefile and create dungeon.c
+			Add map display functionality
+1/25/19:	Create function to test map print
+1/28/19:	Generate map with one room. Introduce bedrock for outer border.
+			Generate multiple rooms without collisions.
+			Allow rooms to border each other.
+			Much refactoring
+			Add rudimentary corridor placement and corridor display functionality
+			Successfully place arbitrary corridors
+1/29/19:	Generate and place corridors
+			Debug corridor placement. Automatically connect two rooms successfully.
+			System populates dungeon with all corridors, crashes occasionally.
+			Introduce custom seed functionality to help debug corridor population crash
+1/30/19		Debug corridor population crash. Dungeons are properly connected.
+			Flip x and y in all 2-d arrays because Dr. Sheaffer and the C language itself demanded it of me.
+			

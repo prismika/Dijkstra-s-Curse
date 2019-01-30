@@ -65,6 +65,10 @@ struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2
 void placeNewCorridor(struct Corridor cor, struct Map *map);
 void placePartialCorridor(struct Coordinate origin, int dist, bool horizontal, struct Map *map);
 bool isSentinel(struct Room room);
+void erodeCorridors(struct Map *map);
+
+void populateWithStairs(struct Map *map);
+void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[], int canReplaceSize, struct Map *map);
 
 void printMap(struct Map map);
 void printRoomList(struct Room *roomList);
@@ -88,6 +92,7 @@ int main(int argc, char *argv[]){
 	struct Room *roomList = populateWithRooms(&theMap);
 	populateWithCorridors(&theMap,roomList);
 	// //TODO erodeCorridors(&theMap);
+	populateWithStairs(&theMap);
 	printMap(theMap);
 
 	return 0;
@@ -112,6 +117,8 @@ void initializeMap(struct Map *map){
 
 	printf("Map initialized\n");
 }
+
+//----------------------------ROOMS------------------------------
 
 struct Room * populateWithRooms(struct Map *map){
 	int roomQuota = (rand()%(MAX_ROOM_COUNT - MIN_ROOM_COUNT)) + MIN_ROOM_COUNT;
@@ -205,8 +212,7 @@ void placeNewRoom(struct Map *map, struct Room room){
 	}
 }
 
-
-
+//-----------------------------CORRIDORS------------------------
 
 void populateWithCorridors(struct Map *map, struct Room room[]){
 	// struct Corridor cor;
@@ -250,7 +256,6 @@ struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2
 	return &cor;
 }
 
-
 void placeNewCorridor(struct Corridor cor, struct Map *map){
 	printf("Placing corridor\n");
 
@@ -289,7 +294,48 @@ bool isSentinel(struct Room room){
 	return room.height == -1;
 }
 
+enum BlockType locales[][3][3]={
+	{{	rock,	rock,	rock},
+	{	rock,	corridor,corridor},
+	{	rock,	corridor,	rock}},
 
+	{{	rock,	rock,	rock},
+	{	rock,	rock,	rock},
+	{	rock,	rock,	rock}}
+};
+void erodeCorridors(struct Map *map){
+
+}
+
+
+
+//--------------------------STAIRS------------------------------
+
+void populateWithStairs(struct Map *map){
+	enum BlockType canReplace[] = {floor,corridor};
+	assignTypeToRandomBlock(upstairs,canReplace,2,map);
+	assignTypeToRandomBlock(downstairs,canReplace,2,map);
+}
+
+void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[], int canReplaceSize, struct Map *map){
+	while(true){
+		int yCoord = rand()%MAPHEIGHT;
+		int xCoord = rand()%MAPWIDTH;
+		enum BlockType type = map -> block[yCoord][xCoord].type;
+
+		//check if it is permissible to replace the selected block
+		int i;
+		for(i=0;i<canReplaceSize; ++i){
+			if(canReplace[i] == type){
+				map -> block[yCoord][xCoord].type = toPlace;
+				return;
+			}
+		}
+		//The chosen block was of a type not in the canReplace list.
+	}
+}
+
+//-----------------------------PRINTING-------------------------
 
 void printMap(struct Map map){
 	int i,j;
@@ -319,19 +365,14 @@ void printRoomList(struct Room *roomList){
 
 char getVisual(enum BlockType type){
 	switch(type){
-		case rock:
-			return ' ';
-			break;
-		case floor:
-			return '.';
-			break;
-		case corridor:
-			return '#';
-			break;
-		default:
-			return '!';
+		case rock:		return ' ';
+		case floor:		return '.';
+		case corridor:	return '#';
+		case upstairs:	return '>';
+		case downstairs:return '<';
+		case bedrock: 	return ' ';
+		default:		return '!';
 	}
-	return '!';
 }
 
 //TODO Overload this and refactor above
