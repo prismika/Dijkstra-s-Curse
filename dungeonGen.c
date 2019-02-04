@@ -15,6 +15,8 @@
 #define MAX_ROOM_COUNT 10 //Exclusive
 #define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
+#define SECOND_CLOSEST_ROOM_CONNECTION_ODDS 3
+
 enum BlockType{
 	rock,
 	bedrock,
@@ -61,6 +63,7 @@ int isLegalRoom(struct Room *room, struct Map *map);
 void placeNewRoom(struct Map *map, struct Room room);
 
 void populateWithCorridors(struct Map *map, struct Room room[]);
+int dist(struct Room *r1, struct Room *r2);
 struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2);
 void placeNewCorridor(struct Corridor cor, struct Map *map);
 void placePartialCorridor(struct Coordinate origin, int dist, bool horizontal, struct Map *map);
@@ -76,7 +79,7 @@ char getVisual(enum BlockType type);
 void testMapPrint(void);
 bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr);
 
-
+//TODO Debug mode
 int main(int argc, char *argv[]){
 	long seed;
 	if(argc == 2){
@@ -91,7 +94,7 @@ int main(int argc, char *argv[]){
 	initializeMap(&theMap);
 	struct Room *roomList = populateWithRooms(&theMap);
 	populateWithCorridors(&theMap,roomList);
-	// //TODO erodeCorridors(&theMap);
+	// TODO erodeCorridors(&theMap);
 	populateWithStairs(&theMap);
 	printMap(theMap);
 
@@ -99,7 +102,7 @@ int main(int argc, char *argv[]){
 }
 
 void initializeMap(struct Map *map){
-	printf("Initializing map...\n");
+	// printf("Initializing map...\n");
 
 	int i,j;
 	for(i = 0; i < MAPHEIGHT; ++i){
@@ -115,7 +118,7 @@ void initializeMap(struct Map *map){
 		}
 	}
 
-	printf("Map initialized\n");
+	// printf("Map initialized\n");
 }
 
 //----------------------------ROOMS------------------------------
@@ -124,7 +127,7 @@ struct Room * populateWithRooms(struct Map *map){
 	int roomQuota = (rand()%(MAX_ROOM_COUNT - MIN_ROOM_COUNT)) + MIN_ROOM_COUNT;
 	int roomCount = 0;
 	int failures = 0;
-	static struct Room roomList[MAX_ROOM_COUNT+1];//+1?
+	static struct Room roomList[MAX_ROOM_COUNT+1];
 
 	while(roomCount < roomQuota){
 		struct Room *newRoom = generateNewRoom(map);
@@ -136,8 +139,8 @@ struct Room * populateWithRooms(struct Map *map){
 			failures++;
 		}
 		if(failures > FAILED_ROOM_ATTEMPTS_LIMIT){
-			printf("Too many failed placements. Here is the map.\n");
-			printMap(*map);
+			// printf("Too many failed placements. Here is the map.\n");
+			// printMap(*map);
 			failures = 0;
 			roomCount = 0;
 			initializeMap(map);
@@ -166,7 +169,7 @@ struct Room * generateNewRoom(struct Map *map){
 */
 int isLegalRoom(struct Room *room, struct Map *map){
 	struct Room newRoom = *room;
-	printf("Attempting room: %d,%d,%d,%d\n",newRoom.position.x,newRoom.position.y,newRoom.width,newRoom.height);
+	// printf("Attempting room: %d,%d,%d,%d\n",newRoom.position.x,newRoom.position.y,newRoom.width,newRoom.height);
 	
 	int i, j;
 	for(i=newRoom.position.y; i < newRoom.position.y + newRoom.height; ++i){
@@ -195,7 +198,7 @@ int isLegalRoom(struct Room *room, struct Map *map){
 
 void placeNewRoom(struct Map *map, struct Room room){
 	int i,j;
-	printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
+	// printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
 	for(i=room.position.y; i < room.position.y + room.height; ++i){
 		for(j=room.position.x; j < room.position.x + room.width; ++j){
 			struct Block newBlock;
@@ -215,26 +218,40 @@ void placeNewRoom(struct Map *map, struct Room room){
 //-----------------------------CORRIDORS------------------------
 
 void populateWithCorridors(struct Map *map, struct Room room[]){
-	// struct Corridor cor;
-	// cor.midpoint.x=1;
-	// cor.midpoint.y=1;
-	// cor.start.x=5;
-	// cor.start.y=1;
-	// cor.end.x=5;
-	// cor.end.y=7;
-	// placeNewCorridor(cor,map);
-	printRoomList(room);
-	int i=0;
-	while(!isSentinel(room[i+1])){
-		printf("Calculating corridor from room %d\n",i);
+	// printRoomList(room);
+	int i=1;
+	while(!isSentinel(room[i])){
+		struct Room curRoom = room[i];
+		int j;
+		struct Room closestRoom = room[0];
+		struct Room secondClosestRoom = room[0];
+		//Calculate the closest and second closest rooms
+		for(j=1; j<i; j++){
+			struct Room otherRoom = room[j];
+			if(dist(&curRoom,&otherRoom)
+				<dist(&curRoom,&closestRoom)){
+				secondClosestRoom = closestRoom;
+				closestRoom = otherRoom;
+			}else if(dist(&curRoom,&otherRoom)
+					<dist(&curRoom,&secondClosestRoom)){
+				secondClosestRoom = otherRoom;
+			}
+		}
+		printf("Calculating corridors from room %d\n",i);
 		struct Corridor newCorridor= *generateNewCorridor(
-			room[i].position,room[i+1].position);
-		// if(i<1) //For testing purposes
+			curRoom.position, closestRoom.position);
 		placeNewCorridor(newCorridor,map);
+		if(rand()%SECOND_CLOSEST_ROOM_CONNECTION_ODDS == 0){
+			newCorridor= *generateNewCorridor(
+			curRoom.position, secondClosestRoom.position);
+			placeNewCorridor(newCorridor,map);
+		}
 		i++;
-		// printf("Room 6 sentinel? %d\n",isSentinel(room[6]));
-		// return; 						//For testing purposes
 	}
+}
+int dist(struct Room *r1, struct Room *r2){
+	return 	abs(r1->position.x - r2->position.x)
+		+	abs(r2->position.y - r2->position.y);
 }
 
 struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2){
@@ -248,16 +265,16 @@ struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2
 	cor.end.x = c2.x+1;
 	cor.end.y = c2.y+1;
 
-	printf("From (%d,%d) through (%d,%d) to (%d,%d)\n",
-		cor.start.x,cor.start.y,
-		cor.midpoint.x,cor.midpoint.y,
-		cor.end.x,cor.end.y);
+	// printf("From (%d,%d) through (%d,%d) to (%d,%d)\n",
+	// 	cor.start.x,cor.start.y,
+	// 	cor.midpoint.x,cor.midpoint.y,
+	// 	cor.end.x,cor.end.y);
 
 	return &cor;
 }
 
 void placeNewCorridor(struct Corridor cor, struct Map *map){
-	printf("Placing corridor\n");
+	// printf("Placing corridor\n");
 
 	int xDistance = cor.start.x - cor.midpoint.x;
 	int yDistance = cor.end.y - cor.midpoint.y;
@@ -294,15 +311,42 @@ bool isSentinel(struct Room room){
 	return room.height == -1;
 }
 
+int localeCount = 4;
 enum BlockType locales[][3][3]={
 	{{	rock,	rock,	rock},
 	{	rock,	corridor,corridor},
 	{	rock,	corridor,	rock}},
 
 	{{	rock,	rock,	rock},
-	{	rock,	rock,	rock},
+	{corridor,	corridor,rock},
+	{	rock,	corridor,rock}},
+
+	{{	rock,	corridor,rock},
+	{corridor,	corridor,rock},
+	{	rock,	rock,	rock}},
+
+	{{	rock,	corridor,rock},
+	{	rock,	corridor,corridor},
 	{	rock,	rock,	rock}}
 };
+enum BlockType localeReplacements[][3][3]={
+	{{	rock,	rock,	rock},
+	{	rock,	rock,	corridor},
+	{	rock,	corridor,corridor}},
+
+	{{	rock,	rock,	rock},
+	{corridor,	rock,	rock},
+	{corridor,	corridor,rock}},
+
+	{{rock,	corridor,rock},
+	{corridor,corridor,rock},
+	{	rock,	rock,	rock}},
+
+	{{	rock,	corridor,rock},
+	{	rock,	corridor,corridor},
+	{	rock,	rock,	rock}}
+};
+
 void erodeCorridors(struct Map *map){
 
 }
@@ -368,8 +412,8 @@ char getVisual(enum BlockType type){
 		case rock:		return ' ';
 		case floor:		return '.';
 		case corridor:	return '#';
-		case upstairs:	return '>';
-		case downstairs:return '<';
+		case upstairs:	return '<';
+		case downstairs:return '>';
 		case bedrock: 	return ' ';
 		default:		return '!';
 	}
