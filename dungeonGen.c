@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
+#include <stdint.h>
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21
@@ -29,6 +30,7 @@ enum BlockType{
 struct Block{
 	enum BlockType type;
 	bool isRoomBorder;
+	uint8_t hardness;
 };
 
 //TODO Flip x and y everywhere
@@ -76,8 +78,11 @@ void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[]
 void printMap(struct Map map);
 void printRoomList(struct Room *roomList);
 char getVisual(enum BlockType type);
+
 void testMapPrint(void);
 bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr);
+//-----------------------Constructors----------------------------
+struct Block newBlock(enum BlockType blockType, uint8_t hardness, bool isRoomBorder);
 
 //TODO Debug mode
 int main(int argc, char *argv[]){
@@ -419,7 +424,6 @@ char getVisual(enum BlockType type){
 	}
 }
 
-//TODO Overload this and refactor above
 bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr){
 	return	point.x==ul.x
 		||	point.x==lr.x
@@ -436,4 +440,16 @@ void testMapPrint(void){
 		}
 	}
 	printMap(map);
+}
+
+
+//------------------------------Constructors---------------------------------------
+
+
+struct Block newBlock(enum BlockType blockType, uint8_t hardness, bool isRoomBorder){
+	struct Block retBlock;
+	retBlock.type = blockType;
+	retBlock.hardness = hardness;
+	retBlock.isRoomBorder = false;
+	return retBlock;
 }
