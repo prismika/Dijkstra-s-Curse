@@ -33,11 +33,6 @@ struct Block{
 	uint8_t hardness;
 };
 
-//TODO Flip x and y everywhere
-struct Map{
-	struct Block block[MAPHEIGHT][MAPWIDTH];
-};
-
 struct Coordinate{
 	int y;
 	int x;
@@ -49,6 +44,10 @@ struct Room{
 	int width;
 };
 
+struct Map{
+	struct Block block[MAPHEIGHT][MAPWIDTH];
+	struct Room room[MAX_ROOM_COUNT+1];//Extra spot for sentinel value
+};
 /*It is assumed that the corridor goes horizontally from start
 and vertically to end*/
 struct Corridor{
@@ -59,18 +58,17 @@ struct Corridor{
 
 
 void initializeMap(struct Map *map);
-struct Room * populateWithRooms(struct Map *map);
-struct Room * generateNewRoom(struct Map *map);
+void populateWithRooms(struct Map *map);
+struct Room generateNewRoom(struct Map *map);
 int isLegalRoom(struct Room *room, struct Map *map);
-void placeNewRoom(struct Map *map, struct Room room);
+void placeNewRoom(struct Map *map, struct Room *room);
 
-void populateWithCorridors(struct Map *map, struct Room room[]);
+void populateWithCorridors(struct Map *map);
 int dist(struct Room *r1, struct Room *r2);
 struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2);
 void placeNewCorridor(struct Corridor cor, struct Map *map);
 void placePartialCorridor(struct Coordinate origin, int dist, bool horizontal, struct Map *map);
 bool isSentinel(struct Room room);
-void erodeCorridors(struct Map *map);
 
 void populateWithStairs(struct Map *map);
 void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[], int canReplaceSize, struct Map *map);
@@ -78,6 +76,7 @@ void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[]
 void printMap(struct Map map);
 void printRoomList(struct Room *roomList);
 char getVisual(enum BlockType type);
+void glog(char *string);
 
 void testMapPrint(void);
 bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr);
@@ -97,9 +96,8 @@ int main(int argc, char *argv[]){
 
 	struct Map theMap;
 	initializeMap(&theMap);
-	struct Room *roomList = populateWithRooms(&theMap);
-	populateWithCorridors(&theMap,roomList);
-	// TODO erodeCorridors(&theMap);
+	populateWithRooms(&theMap);
+	populateWithCorridors(&theMap);
 	populateWithStairs(&theMap);
 	printMap(theMap);
 
@@ -123,23 +121,31 @@ void initializeMap(struct Map *map){
 		}
 	}
 
+	for(i=0;i<MAX_ROOM_COUNT+1;i++){
+		struct Room sentinelRoom;
+		sentinelRoom.height=-1;
+		sentinelRoom.width=-1;
+		sentinelRoom.position.x = 0;
+		sentinelRoom.position.y = 0;
+		map->room[i] = sentinelRoom;
+	}
+
 	// printf("Map initialized\n");
 }
 
 //----------------------------ROOMS------------------------------
 
-struct Room * populateWithRooms(struct Map *map){
+void populateWithRooms(struct Map *map){
 	int roomQuota = (rand()%(MAX_ROOM_COUNT - MIN_ROOM_COUNT)) + MIN_ROOM_COUNT;
 	int roomCount = 0;
 	int failures = 0;
-	static struct Room roomList[MAX_ROOM_COUNT+1];
 
 	while(roomCount < roomQuota){
-		struct Room *newRoom = generateNewRoom(map);
-		if(isLegalRoom(newRoom,map)==0){
+		struct Room newRoom = generateNewRoom(map);
+		if(isLegalRoom(&newRoom,map)==0){
 			failures = 0;
-			roomList[roomCount++] = *newRoom;
-			placeNewRoom(map,*newRoom);
+			map -> room[roomCount++] = newRoom;
+			placeNewRoom(map, &newRoom);
 		}else{
 			failures++;
 		}
@@ -151,20 +157,16 @@ struct Room * populateWithRooms(struct Map *map){
 			initializeMap(map);
 		}
 	}
-	struct Room sentinelRoom;
-	sentinelRoom.height = -1;
-	roomList[roomQuota] = sentinelRoom;
-	return roomList;//TODO For testing purposes
 }
 
-struct Room * generateNewRoom(struct Map *map){
+struct Room generateNewRoom(struct Map *map){
 	static struct Room newRoom;
 	newRoom.position.x = (rand() % MAPWIDTH);
 	newRoom.position.y = (rand() % MAPHEIGHT);
 	newRoom.height = (rand() % (MAX_ROOM_HEIGHT - MIN_ROOM_HEIGHT) + MIN_ROOM_HEIGHT);
 	newRoom.width = (rand() % (MAX_ROOM_WIDTH - MIN_ROOM_WIDTH) + MIN_ROOM_WIDTH);
 
-	return &newRoom;	
+	return newRoom;	
 }
 
 /*Returns 	0:Legal
@@ -201,14 +203,18 @@ int isLegalRoom(struct Room *room, struct Map *map){
 	return 0;
 }
 
-void placeNewRoom(struct Map *map, struct Room room){
+void placeNewRoom(struct Map *map, struct Room *room){
+	int xPos = room->position.x;
+	int yPos = room->position.y;
+	int width = room->width;
+	int height = room->height;
 	int i,j;
 	// printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
-	for(i=room.position.y; i < room.position.y + room.height; ++i){
-		for(j=room.position.x; j < room.position.x + room.width; ++j){
+	for(i = yPos; i < yPos + height; ++i){
+		for(j = xPos; j < xPos + width; ++j){
 			struct Block newBlock;
-			if(	i==room.position.y || i==room.position.y+room.height-1
-			||	j==room.position.x || j==room.position.x+room.width-1){
+			if(	i==yPos || i==yPos+height-1
+			||	j==xPos || j==xPos+width-1){
 				newBlock.type = rock;
 				newBlock.isRoomBorder = true;
 			}else{
@@ -222,17 +228,17 @@ void placeNewRoom(struct Map *map, struct Room room){
 
 //-----------------------------CORRIDORS------------------------
 
-void populateWithCorridors(struct Map *map, struct Room room[]){
-	// printRoomList(room);
+void populateWithCorridors(struct Map *map){
+	printRoomList(map->room);
 	int i=1;
-	while(!isSentinel(room[i])){
-		struct Room curRoom = room[i];
+	while(!isSentinel(map->room[i])){
+		struct Room curRoom = map->room[i];
 		int j;
-		struct Room closestRoom = room[0];
-		struct Room secondClosestRoom = room[0];
+		struct Room closestRoom = map->room[0];
+		struct Room secondClosestRoom = map->room[0];
 		//Calculate the closest and second closest rooms
 		for(j=1; j<i; j++){
-			struct Room otherRoom = room[j];
+			struct Room otherRoom = map->room[j];
 			if(dist(&curRoom,&otherRoom)
 				<dist(&curRoom,&closestRoom)){
 				secondClosestRoom = closestRoom;
@@ -315,47 +321,6 @@ void placePartialCorridor(struct Coordinate origin, int dist, bool horizontal, s
 bool isSentinel(struct Room room){
 	return room.height == -1;
 }
-
-int localeCount = 4;
-enum BlockType locales[][3][3]={
-	{{	rock,	rock,	rock},
-	{	rock,	corridor,corridor},
-	{	rock,	corridor,	rock}},
-
-	{{	rock,	rock,	rock},
-	{corridor,	corridor,rock},
-	{	rock,	corridor,rock}},
-
-	{{	rock,	corridor,rock},
-	{corridor,	corridor,rock},
-	{	rock,	rock,	rock}},
-
-	{{	rock,	corridor,rock},
-	{	rock,	corridor,corridor},
-	{	rock,	rock,	rock}}
-};
-enum BlockType localeReplacements[][3][3]={
-	{{	rock,	rock,	rock},
-	{	rock,	rock,	corridor},
-	{	rock,	corridor,corridor}},
-
-	{{	rock,	rock,	rock},
-	{corridor,	rock,	rock},
-	{corridor,	corridor,rock}},
-
-	{{rock,	corridor,rock},
-	{corridor,corridor,rock},
-	{	rock,	rock,	rock}},
-
-	{{	rock,	corridor,rock},
-	{	rock,	corridor,corridor},
-	{	rock,	rock,	rock}}
-};
-
-void erodeCorridors(struct Map *map){
-
-}
-
 
 
 //--------------------------STAIRS------------------------------
@@ -440,6 +405,13 @@ void testMapPrint(void){
 		}
 	}
 	printMap(map);
+}
+
+/*
+string must point to a char array ending in a newline character
+*/
+void glog(char *string){
+	fprintf(stderr,string);
 }
 
 
