@@ -396,7 +396,7 @@ char getVisual(enum BlockType type){
 		case corridor:	return '#';
 		case upstairs:	return '<';
 		case downstairs:return '>';
-		case bedrock: 	return ' ';
+		case bedrock: 	return '|';
 		default:		return '!';
 	}
 }
@@ -552,6 +552,43 @@ struct Map * readFile(){
 		fread(&downStairSpecsIn[i],1,1,fp);
 		printf("%d|%d\n",i,downStairSpecsIn[i] );
 	}
+
+
+	//----Construct map----
+
+	// uint16_t roomCountIn;
+	// uint8_t * roomSpecsIn;//Remember to malloc AND free this sucker
+	// uint16_t upStairCountIn;
+	// uint8_t * upStairSpecsIn;//And this one
+	// uint16_t downStairCountIn;
+	// uint8_t * downStairSpecsIn;//And this one!
+
+	struct Map newMap;
+	//PC Position
+	newMap.pcPos.x=pcPosXIn;
+	newMap.pcPos.y=pcPosYIn;
+	//Hardness matrix
+	for(i=0;i<MAPHEIGHT;++i){
+		for(j=0;j<MAPWIDTH;++j){
+			enum BlockType newBlockType;
+			uint8_t hardness = hardnessesIn[i][j];
+			if(hardness == 0){
+				newBlockType = corridor;
+			}else if(hardness == 255){
+				newBlockType = bedrock;
+			}else{
+				newBlockType = rock;
+			}
+			struct Block block = newBlock(newBlockType,hardness,false);
+			newMap.block[i][j] = block;
+		}
+	}
+	//Rooms
+	printMap(newMap);
+
+
+
+
 
 
 
