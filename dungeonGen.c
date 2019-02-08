@@ -556,14 +556,8 @@ struct Map * readFile(){
 
 	//----Construct map----
 
-	// uint16_t roomCountIn;
-	// uint8_t * roomSpecsIn;//Remember to malloc AND free this sucker
-	// uint16_t upStairCountIn;
-	// uint8_t * upStairSpecsIn;//And this one
-	// uint16_t downStairCountIn;
-	// uint8_t * downStairSpecsIn;//And this one!
-
 	struct Map newMap;
+	initializeMap(&newMap);
 	//PC Position
 	newMap.pcPos.x=pcPosXIn;
 	newMap.pcPos.y=pcPosYIn;
@@ -584,6 +578,43 @@ struct Map * readFile(){
 		}
 	}
 	//Rooms
+	int k;
+	for(i=0; i<roomCountIn; ++i){
+		struct Room newRoom;
+		newRoom.position.x = roomSpecsIn[4*i];
+		newRoom.position.y = roomSpecsIn[4*i+1];
+		newRoom.width = roomSpecsIn[4*i+2];
+		newRoom.height = roomSpecsIn[4*i+3];
+		newMap.room[i] = newRoom;
+
+		for(j=0; j<newRoom.height; ++j){
+			for(k=0; k<newRoom.width; ++k){
+				placeNewRoom(&newMap, &newRoom);
+			}
+		}
+	}
+	printRoomList(newMap.room);
+
+	for(i=0; i<upStairCountIn; ++i){
+		newMap.block
+			[upStairSpecsIn[2*i+1]]
+			[upStairSpecsIn[2*i]]
+			.type = upstairs;
+	}
+
+	for(i=0; i<downStairCountIn; ++i){
+		newMap.block
+			[downStairSpecsIn[2*i+1]]
+			[downStairSpecsIn[2*i]]
+			.type = downstairs;
+	}
+
+
+
+	free(roomSpecsIn);
+	free(upStairSpecsIn);
+	free(downStairSpecsIn);
+
 	printMap(newMap);
 
 
