@@ -513,6 +513,47 @@ struct Map * readFile(){
 		printf("\n");
 	}
 
+	//Room count
+	fread(&roomCountIn,2,1,fp);
+	roomCountIn = be16toh(roomCountIn);
+	printf("Rooms:%u\n",roomCountIn);
+
+	//Room specs
+	roomSpecsIn = malloc(4*roomCountIn);
+	printf("Room specs:\n");
+	for(i=0; i<4*roomCountIn; ++i){
+		fread(&roomSpecsIn[i],1,1,fp);
+		printf("%d|%d\n",i,roomSpecsIn[i]);
+	}
+
+	//Up stairs count
+	fread(&upStairCountIn,2,1,fp);
+	upStairCountIn = be16toh(upStairCountIn);
+	printf("Up stairs:%d\n", upStairCountIn);
+
+	//Up stairs specs
+	printf("Up stair specs:\n");
+	upStairSpecsIn = malloc(upStairCountIn*2);
+	for(i=0;i<upStairCountIn*2;++i){
+		fread(&upStairSpecsIn[i],1,1,fp);
+		printf("%d|%d\n", i,upStairSpecsIn[i]);
+	}
+
+
+	//Down stairs count
+	fread(&downStairCountIn,2,1,fp);
+	downStairCountIn = be16toh(downStairCountIn);
+	printf("Down stairs:%d\n", downStairCountIn);
+
+	//Down stairs specs
+	printf("Down stair specs:\n");
+	downStairSpecsIn = malloc(downStairCountIn*2);
+	for(i=0;i<downStairCountIn*2;++i){
+		fread(&downStairSpecsIn[i],1,1,fp);
+		printf("%d|%d\n",i,downStairSpecsIn[i] );
+	}
+
+
 
 	closeFile();
 	return 0;
