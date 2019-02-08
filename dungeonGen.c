@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <stdint.h>
+#include <string.h>
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21
@@ -16,7 +17,7 @@
 #define MAX_ROOM_COUNT 10 //Exclusive
 #define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
-#define SECOND_CLOSEST_ROOM_CONNECTION_ODDS 3
+#define SECOND_CLOSEST_ROOM_CONNECTION_ODDS 3//One in...
 
 enum BlockType{
 	rock,
@@ -83,23 +84,30 @@ bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate
 //-----------------------Constructors----------------------------
 struct Block newBlock(enum BlockType blockType, uint8_t hardness, bool isRoomBorder);
 
+int openFile(char * mode);
+int readFile(void);
+int closeFile(void);
+int writeFile(void);
 //TODO Debug mode
 int main(int argc, char *argv[]){
-	long seed;
-	if(argc == 2){
-		seed = atoi(argv[1]);
-	}else{
-		seed = time(0);
-	}
-	printf("Seed:%ld\n", seed);
-	srand(seed);
+	// long seed;
+	// if(argc == 2){
+	// 	seed = atoi(argv[1]);
+	// }else{
+	// 	seed = time(0);
+	// }
+	// printf("Seed:%ld\n", seed);
+	// srand(seed);
 
-	struct Map theMap;
-	initializeMap(&theMap);
-	populateWithRooms(&theMap);
-	populateWithCorridors(&theMap);
-	populateWithStairs(&theMap);
-	printMap(theMap);
+	// struct Map theMap;
+	// initializeMap(&theMap);
+	// populateWithRooms(&theMap);
+	// populateWithCorridors(&theMap);
+	// populateWithStairs(&theMap);
+	// printMap(theMap);
+
+	writeFile();
+	readFile();
 
 	return 0;
 }
@@ -424,4 +432,52 @@ struct Block newBlock(enum BlockType blockType, uint8_t hardness, bool isRoomBor
 	retBlock.hardness = hardness;
 	retBlock.isRoomBorder = false;
 	return retBlock;
+}
+
+
+//---------------------------Map Files-------------------------------------
+#define FILE_PATH "/.rlg327/dungeon"
+FILE * fp;
+
+int openFile(char * mode){
+	int l = strlen(getenv("HOME")) + strlen(FILE_PATH) + 1; 
+	char * filePath = malloc(l);
+	strcpy(filePath,getenv("HOME"));
+	strcat(filePath,FILE_PATH);
+	if(!(fp=fopen(filePath,mode))){
+		fprintf(stderr, "Failed to open file.\n");
+		return -1;
+	}
+	free(filePath);
+	return 0;
+}
+
+int closeFile(){
+	if(fclose(fp)!=0){
+		fprintf(stderr, "Failed to close file\n");
+		return -1;
+	}
+	return 0;
+}
+
+int readFile(){
+	openFile("rb");
+	char data1, data2;
+	fread(&data1,1,1,fp);
+	fread(&data2,1,1,fp);
+	closeFile();
+
+	printf("Read from file: %c, %c.\n", data1, data2);
+	return 0;
+}
+
+int writeFile(){
+	openFile("wb");
+	char data1 = 'x';
+	char data2 = 'y';
+	fwrite(&data1,1,1,fp);
+	fwrite(&data2,1,1,fp);
+	closeFile();
+
+	return 0;
 }
