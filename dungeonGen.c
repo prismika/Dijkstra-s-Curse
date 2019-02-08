@@ -8,11 +8,11 @@
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21
-//Keep in mind these measurements include the room border
-#define MIN_ROOM_WIDTH 6 //6
-#define MIN_ROOM_HEIGHT 5 //5
-#define MAX_ROOM_WIDTH 18 //Exclusive
-#define MAX_ROOM_HEIGHT 12	//Exclusive
+
+#define MIN_ROOM_WIDTH 4 //4
+#define MIN_ROOM_HEIGHT 3 //3
+#define MAX_ROOM_WIDTH 14 //Exclusive
+#define MAX_ROOM_HEIGHT 10	//Exclusive
 
 #define MIN_ROOM_COUNT 6 //6
 #define MAX_ROOM_COUNT 10 //Exclusive
@@ -92,27 +92,27 @@ int closeFile(void);
 int writeFile(void);
 //TODO Debug mode
 int main(int argc, char *argv[]){
-	// long seed;
-	// if(argc == 2){
-	// 	seed = atoi(argv[1]);
-	// }else{
-	// 	seed = time(0);
-	// }
-	// printf("Seed:%ld\n", seed);
-	// srand(seed);
+	long seed;
+	if(argc == 2){
+		seed = atoi(argv[1]);
+	}else{
+		seed = time(0);
+	}
+	printf("Seed:%ld\n", seed);
+	srand(seed);
 
-	// struct Map theMap;
-	// initializeMap(&theMap);
-	// populateWithRooms(&theMap);
-	// populateWithCorridors(&theMap);
-	// populateWithStairs(&theMap);
-	// printMap(theMap);
+	struct Map theMap;
+	initializeMap(&theMap);
+	populateWithRooms(&theMap);
+	populateWithCorridors(&theMap);
+	populateWithStairs(&theMap);
+	printMap(theMap);
 
-	readFile();
+	// readFile();
 
 	return 0;
 }
-
+//TODO remove isRoomBorder from block and check for bordering rooms manually
 void initializeMap(struct Map *map){
 	// printf("Initializing map...\n");
 
@@ -183,14 +183,14 @@ struct Room generateNewRoom(struct Map *map){
 
 /*Returns 	0:Legal
 			-1:Encountered Bedrock
-			-2:Encountered border of another room
-			-3:Encountered floor of another room
+			-2:Encountered floor of another room
 */
 int isLegalRoom(struct Room *room, struct Map *map){
 	struct Room newRoom = *room;
 	// printf("Attempting room: %d,%d,%d,%d\n",newRoom.position.x,newRoom.position.y,newRoom.width,newRoom.height);
 	
 	int i, j;
+	//Check for bedrock inside the room
 	for(i=newRoom.position.y; i < newRoom.position.y + newRoom.height; ++i){
 		for(j=newRoom.position.x; j < newRoom.position.x + newRoom.width; ++j){
 			struct Block curBlock = map->block[i][j];
@@ -203,12 +203,20 @@ int isLegalRoom(struct Room *room, struct Map *map){
 
 
 			if(curBlock.type == bedrock){
-				return -1; //Bedrock encountered
-			}else if(curBlock.isRoomBorder
-					&&	!isOnBorder(curBlockCoord,newRoom.position,lowerRight)){
-				return -2; //Room border encountered
-			}else if(curBlock.type == floor){
-				return -3; //Another room's floor was encountered
+				return -1; //Bedrock encountered 
+			}
+		}
+	}
+
+	//Check for floors around the room
+	for(i=0;i<newRoom.height +2; ++i){
+		for(j=0;j<newRoom.width +2; ++j){
+			struct Block curBlock
+				= map->block
+					[newRoom.position.y+i-1]
+					[newRoom.position.x+j-1];
+			if(curBlock.type == floor){
+				return -2;
 			}
 		}
 	}
@@ -227,7 +235,7 @@ void placeNewRoom(struct Map *map, struct Room *room){
 			struct Block newBlock;
 			if(	i==yPos || i==yPos+height-1
 			||	j==xPos || j==xPos+width-1){
-				newBlock.type = rock;
+				newBlock.type = floor;
 				newBlock.isRoomBorder = true;
 			}else{
 				newBlock.type = floor;
@@ -279,14 +287,12 @@ int dist(struct Room *r1, struct Room *r2){
 
 struct Corridor * generateNewCorridor(struct Coordinate c1, struct Coordinate c2){
 	static struct Corridor cor;
-	//TODO This is what technical debt looks like.
-	//Put the offset where it belongs
-	cor.start.x = c1.x+1;
-	cor.start.y = c1.y+1;
-	cor.midpoint.x = c2.x+1;
-	cor.midpoint.y = c1.y+1;
-	cor.end.x = c2.x+1;
-	cor.end.y = c2.y+1;
+	cor.start.x = c1.x;
+	cor.start.y = c1.y;
+	cor.midpoint.x = c2.x;
+	cor.midpoint.y = c1.y;
+	cor.end.x = c2.x;
+	cor.end.y = c2.y;
 
 	// printf("From (%d,%d) through (%d,%d) to (%d,%d)\n",
 	// 	cor.start.x,cor.start.y,
