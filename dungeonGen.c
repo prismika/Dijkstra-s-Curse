@@ -4,6 +4,7 @@
 #include <time.h>
 #include <stdint.h>
 #include <string.h>
+#include <endian.h>
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21
@@ -48,6 +49,7 @@ struct Room{
 struct Map{
 	struct Block block[MAPHEIGHT][MAPWIDTH];
 	struct Room room[MAX_ROOM_COUNT+1];//Extra spot for sentinel value
+	struct Coordinate pcPos;
 };
 /*It is assumed that the corridor goes horizontally from start
 and vertically to end*/
@@ -85,7 +87,7 @@ bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate
 struct Block newBlock(enum BlockType blockType, uint8_t hardness, bool isRoomBorder);
 
 int openFile(char * mode);
-int readFile(void);
+struct Map * readFile(void);
 int closeFile(void);
 int writeFile(void);
 //TODO Debug mode
@@ -106,7 +108,6 @@ int main(int argc, char *argv[]){
 	// populateWithStairs(&theMap);
 	// printMap(theMap);
 
-	writeFile();
 	readFile();
 
 	return 0;
@@ -137,6 +138,9 @@ void initializeMap(struct Map *map){
 		sentinelRoom.position.y = 0;
 		map->room[i] = sentinelRoom;
 	}
+
+	map -> pcPos.x = -1;
+	map -> pcPos.y = -1;
 
 	// printf("Map initialized\n");
 }
@@ -436,14 +440,16 @@ struct Block newBlock(enum BlockType blockType, uint8_t hardness, bool isRoomBor
 
 
 //---------------------------Map Files-------------------------------------
-#define FILE_PATH "/.rlg327/dungeon"
+#define FILE_PATH "/.rlg327/jerBear/01.rlg327" //"/.rlg327/dungeon"
 FILE * fp;
 
 int openFile(char * mode){
 	int l = strlen(getenv("HOME")) + strlen(FILE_PATH) + 1; 
 	char * filePath = malloc(l);
 	strcpy(filePath,getenv("HOME"));
+	printf("Home: %s\n", filePath);
 	strcat(filePath,FILE_PATH);
+	printf("Path: %s\n",filePath);
 	if(!(fp=fopen(filePath,mode))){
 		fprintf(stderr, "Failed to open file.\n");
 		return -1;
@@ -460,14 +466,55 @@ int closeFile(){
 	return 0;
 }
 
-int readFile(){
-	openFile("rb");
-	char data1, data2;
-	fread(&data1,1,1,fp);
-	fread(&data2,1,1,fp);
-	closeFile();
+struct Map * readFile(){
+	// openFile("rb");
+	// char data1, data2;
+	// fread(&data1,1,1,fp);
+	// fread(&data2,1,1,fp);
+	// printf("Read from file: %c, %c.\n", data1, data2);
+	char uselessInfoIn[16];
+	uint32_t fileSizeIn;
+	uint8_t pcPosXIn;
+	uint8_t pcPosYIn;
+	uint8_t hardnessesIn[MAPHEIGHT][MAPWIDTH];
+	uint16_t roomCountIn;
+	uint8_t * roomSpecsIn;//Remember to malloc AND free this sucker
+	uint16_t upStairCountIn;
+	uint8_t * upStairSpecsIn;//And this one
+	uint16_t downStairCountIn;
+	uint8_t * downStairSpecsIn;//And this one!
 
-	printf("Read from file: %c, %c.\n", data1, data2);
+
+	openFile("rb");
+	//Header things
+	fread(&uselessInfoIn,1,16,fp);
+	for(int i=0; i<16; ++i){
+		printf("%c\n", uselessInfoIn[i]);
+	}
+	printf("-------\n");
+
+	//File size
+	fread(&fileSizeIn,4,1,fp);
+	fileSizeIn = be32toh(fileSizeIn);
+	printf("Size:%u\n",fileSizeIn);
+
+	//PC Coordinate
+	fread(&pcPosXIn,1,1,fp);
+	fread(&pcPosYIn,1,1,fp);
+	printf("PC is at: %d, %d\n",pcPosXIn,pcPosYIn);
+
+	//Hardness
+	int i,j;
+	for(i=0; i<MAPHEIGHT; ++i){
+		for(j=0; j<MAPWIDTH; ++j){
+			fread(&hardnessesIn[i][j],1,1,fp);
+			printf("%3d", hardnessesIn[i][j]);
+		}
+		printf("\n");
+	}
+
+
+	closeFile();
 	return 0;
 }
 
