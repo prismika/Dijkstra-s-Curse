@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <endian.h>
+#include "mapElements.h"
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21
@@ -24,38 +25,10 @@
 //"/.rlg327/jerBear/04.rlg327"
 FILE * fp;
 
-enum BlockType{
-	rock,
-	bedrock,
-	corridor,
-	floor,
-	upstairs,
-	downstairs
-};
-struct Block{
-	enum BlockType type;
-	uint8_t hardness;
-};
-struct Coordinate{
-	int y;
-	int x;
-};
-struct Room{
-	struct Coordinate position;
-	int height;
-	int width;
-};
 struct Map{
 	struct Block block[MAPHEIGHT][MAPWIDTH];
 	struct Room room[MAX_ROOM_COUNT+1];//Extra spot for sentinel value
 	struct Coordinate pcPos;
-};
-/*It is assumed that the corridor goes horizontally from start
-and vertically to end*/
-struct Corridor{
-	struct Coordinate start;
-	struct Coordinate midpoint;
-	struct Coordinate end;
 };
 enum IncomingCommand{
 	nothing,
