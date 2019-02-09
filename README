@@ -1,2 +1,16 @@
-This is the first iteration of Dijkstra's Curse, an ASCII-based rogue-like game. This iteration only has one file, dungeonGen.c, which compiles to form dungeonGen, a dungeon generator. When called with no arguments, dungeonGen chooses a random seed and prints both the seed and the resulting dungeon. You may instead elect to give dungeonGen an integer as an argument, which it will use as a custom seed. Either way, the result is a dungeon with 6 to 9 rooms of varying sizes, well-connected with corridors, with up and down staircases placed randomly. Rooms, maps, and blocks are all internally represented with structs, while block types are represented with an enum.
-Hope your snow days were relaxing.
+This is Dijkstra's Curse, an ASCII-based rogue-like game. This iteration only has one file, dungeonGen.c.
+
+Usage:
+./dungeonGen
+	Prints randomly generated dungeon along with the seed
+./dungeonGen --save
+	Same as with no arguments, except the dungeon is saved to ~/.rlg327/ under the name "dungeon," if the directory exists.
+./dungeonGen --load
+	Loads the dungeon at ~/.rlg327/dungeon if it exists, and displays it.
+./dungeonGen --save --load
+	Loads the dungeon at ~/.rlg327/dungeon, displays it, and saves it again.
+
+Known bugs:
+	The program performs fine on the "pixel art" maps that the instructor provided, except that a segfault occurs just before the program terminates. I expect this is because there are no stairs in those maps. Thankfully a map up to specs will have both up and down stairs.
+
+Enjoy your Valentine's Day!

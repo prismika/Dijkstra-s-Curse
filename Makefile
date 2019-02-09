@@ -1,4 +1,4 @@
-all: dungeonGen mapFile
+all: dungeonGen
 
 dungeonGen: dungeonGen.c
 	gcc -Wall -ggdb3 dungeonGen.c -o dungeonGen -lm
