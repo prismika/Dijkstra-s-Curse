@@ -66,6 +66,7 @@ enum IncomingCommand{
 
 int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed);
 
+void generateNewMap(struct Map * map, long seed);
 void initializeMap(struct Map *map);
 void populateWithRooms(struct Map *map);
 struct Room generateNewRoom(struct Map *map);
@@ -102,16 +103,38 @@ int main(int argc, char *argv[]){
 
 	long seed;
 	enum IncomingCommand whatsup;
-	parseCLI(argc,argv,&whatsup,&seed);
-	printf("Seed:%ld\n", seed);
-	srand(seed);
+	if(parseCLI(argc,argv,&whatsup,&seed)!=0){
+		printf("Incorrect usage\n");
+		return -1;
+	}
 	struct Map theMap;
+	switch(whatsup){
+		case nothing:
+		printf("Seed:%ld\n", seed);
+		generateNewMap(&theMap,seed);
+		printMap(&theMap);
+		return 0;
 
-	initializeMap(&theMap);
-	populateWithRooms(&theMap);
-	populateWithCorridors(&theMap);
-	populateWithStairs(&theMap);
-	printMap(&theMap);
+		case load:
+		readFile(&theMap);
+		printMap(&theMap);
+		return 0;
+
+		case save:
+		printf("Seed:%ld\n", seed);
+		generateNewMap(&theMap,seed);
+		printMap(&theMap);
+		writeFile(&theMap);
+		return 0;
+
+		case load_save:
+		readFile(&theMap);
+		printMap(&theMap);
+		writeFile(&theMap);
+		return 0;
+	}
+	
+	
 
 	
 	writeFile(&theMap);
@@ -127,7 +150,6 @@ int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * see
 	if(argc > 3){
 		return -1;
 	}
-
 	if(argc == 3){
 		*command = load_save;
 	}else if(argc == 1){
@@ -140,11 +162,16 @@ int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * see
 		return -2;
 	}
 	return 0;
-
 }
 
 
-
+void generateNewMap(struct Map * map, long seed){
+	srand(seed);
+	initializeMap(map);
+	populateWithRooms(map);
+	populateWithCorridors(map);
+	populateWithStairs(map);
+}
 void initializeMap(struct Map *map){
 	// printf("Initializing map...\n");
 
