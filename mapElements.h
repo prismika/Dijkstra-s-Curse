@@ -3,46 +3,39 @@
 
 #include<stdint.h>
 
-//TODO typedefs
-enum BlockType{
+typedef enum BlockType{
 	rock,
 	bedrock,
 	corridor,
 	floor,
 	upstairs,
 	downstairs
-};
-// typedef enum BlockType BlockType;
+} BlockType;
 
-struct Block{
-	enum BlockType type;
+typedef struct Block{
+	BlockType type;
 	uint8_t hardness;
-};
-// typedef struct Block Block;
+} Block;
 
-struct Coordinate{
+typedef struct Coordinate{
 	int y;
 	int x;
-};
-// typedef struct Coordinate Coordinate;
+} Coordinate;
 
-struct Room{
-	struct Coordinate position;
+typedef struct Room{
+	Coordinate position;
 	int height;
 	int width;
-};
-// typedef struct Room Room;
-
+} Room;
 
 /*It is assumed that the corridor goes horizontally from start
 and vertically to end*/
-struct Corridor{
-	struct Coordinate start;
-	struct Coordinate midpoint;
-	struct Coordinate end;
-};
-//typedef struct Corridor Corridor;
+typedef struct Corridor{
+	Coordinate start;
+	Coordinate midpoint;
+	Coordinate end;
+} Corridor;
 
-struct Block block_create(enum BlockType blockType, uint8_t hardness);
+Block block_create(BlockType blockType, uint8_t hardness);
 
 #endif
