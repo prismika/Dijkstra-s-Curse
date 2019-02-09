@@ -11,8 +11,8 @@
 
 #define MIN_ROOM_WIDTH 4 //4
 #define MIN_ROOM_HEIGHT 3 //3
-#define MAX_ROOM_WIDTH 14 //Exclusive
-#define MAX_ROOM_HEIGHT 10	//Exclusive
+#define MAX_ROOM_WIDTH 12 //Exclusive
+#define MAX_ROOM_HEIGHT 8	//Exclusive
 
 #define MIN_ROOM_COUNT 6 //6
 #define MAX_ROOM_COUNT 10 //Exclusive
