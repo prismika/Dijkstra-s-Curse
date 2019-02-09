@@ -57,7 +57,14 @@ struct Corridor{
 	struct Coordinate midpoint;
 	struct Coordinate end;
 };
+enum IncomingCommand{
+	nothing,
+	save,
+	load,
+	load_save
+};
 
+int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed);
 
 void initializeMap(struct Map *map);
 void populateWithRooms(struct Map *map);
@@ -94,29 +101,49 @@ int writeFile(struct Map * theMap);
 int main(int argc, char *argv[]){
 
 	long seed;
-	if(argc == 2){
-		seed = atoi(argv[1]);
-	}else{
-		seed = time(0);
-	}
+	enum IncomingCommand whatsup;
+	parseCLI(argc,argv,&whatsup,&seed);
 	printf("Seed:%ld\n", seed);
 	srand(seed);
-	struct Map m;
-	struct Map * theMap = &m;
+	struct Map theMap;
 
-	initializeMap(theMap);
-	populateWithRooms(theMap);
-	populateWithCorridors(theMap);
-	populateWithStairs(theMap);
-	printMap(theMap);
+	initializeMap(&theMap);
+	populateWithRooms(&theMap);
+	populateWithCorridors(&theMap);
+	populateWithStairs(&theMap);
+	printMap(&theMap);
 
 	
-	writeFile(theMap);
-	readFile(theMap);
-	printMap(theMap);
+	writeFile(&theMap);
+	readFile(&theMap);
+	printMap(&theMap);
 
 	return 0;
 }
+
+//TODO Custom seeds again
+int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed){
+	*seed = time(0);
+	if(argc > 3){
+		return -1;
+	}
+
+	if(argc == 3){
+		*command = load_save;
+	}else if(argc == 1){
+		*command = nothing;
+	}else if(!(strcmp(argv[1],"--load"))){
+		*command = load;
+	}else if(!(strcmp(argv[1],"--save"))){
+		*command = save;
+	}else{
+		return -2;
+	}
+	return 0;
+
+}
+
+
 
 void initializeMap(struct Map *map){
 	// printf("Initializing map...\n");
@@ -233,7 +260,7 @@ void placeNewRoom(struct Map *map, struct Room *room){
 
 //-----------------------------CORRIDORS------------------------
 void populateWithCorridors(struct Map *map){
-	printRoomList(map->room);
+	// printRoomList(map->room);
 	int i=1;
 	while(!isSentinel(map->room[i])){
 		struct Room curRoom = map->room[i];
@@ -252,7 +279,7 @@ void populateWithCorridors(struct Map *map){
 				secondClosestRoom = otherRoom;
 			}
 		}
-		printf("Calculating corridors from room %d\n",i);
+		// printf("Calculating corridors from room %d\n",i);
 		struct Corridor newCorridor= *generateNewCorridor(
 			curRoom.position, closestRoom.position);
 		placeNewCorridor(newCorridor,map);
