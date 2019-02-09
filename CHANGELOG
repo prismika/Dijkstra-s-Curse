@@ -15,3 +15,14 @@
 1/30/19:-Debug corridor population crash. Dungeons are properly connected.
 		-Flip x and y in all 2-d arrays because Dr. Sheaffer and the C language itself demanded it of me.
 		-Add stair placement. Remove map border.
+2/4/19:	-Cleaning
+		-Add hardness property to blocks
+2/5/19:	-Refactor by putting room list inside map struct
+2/8/19: -Test binary read/write and add stubs for read/write functions.
+		-Successfully read file up to hardness matrix.
+		-Successfully parse map file.
+		-Successfully construct map from file, except for room size bug.
+		-Fix room size bug. Successfully load map from file.
+		-Successfully generate, write, and read same file.with fidelity.
+		-Clean up print statements and comments.
+		-Refactor main. Parse command line successfully.
