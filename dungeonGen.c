@@ -31,7 +31,6 @@ enum BlockType{
 
 struct Block{
 	enum BlockType type;
-	bool isRoomBorder;
 	uint8_t hardness;
 };
 
@@ -84,12 +83,13 @@ void glog(char *string);
 void testMapPrint(void);
 bool isOnBorder(struct Coordinate point, struct Coordinate ul, struct Coordinate lr);
 //-----------------------Constructors----------------------------
-struct Block newBlock(enum BlockType blockType, uint8_t hardness, bool isRoomBorder);
+struct Block newBlock(enum BlockType blockType, uint8_t hardness);
 
 int openFile(char * mode);
 struct Map * readFile(void);
 int closeFile(void);
-int writeFile(void);
+int writeFile(struct Map * theMap);
+
 //TODO Debug mode
 int main(int argc, char *argv[]){
 	long seed;
@@ -108,25 +108,24 @@ int main(int argc, char *argv[]){
 	populateWithStairs(&theMap);
 	printMap(theMap);
 
-	// readFile();
+	writeFile(&theMap);
 
 	return 0;
 }
-//TODO remove isRoomBorder from block and check for bordering rooms manually
+
 void initializeMap(struct Map *map){
 	// printf("Initializing map...\n");
 
 	int i,j;
 	for(i = 0; i < MAPHEIGHT; ++i){
 		for(j = 0; j < MAPWIDTH; ++j){
-			struct Block newBlock;
+			struct Block block;
 			if((i==0||i==MAPHEIGHT-1)||(j==0||j==MAPWIDTH-1)){
-				newBlock.type = bedrock;
+				block = newBlock(bedrock,255);
 			}else{
-				newBlock.type = rock;
+				block = newBlock(rock,100);
 			}
-			newBlock.isRoomBorder = false;
-			map->block[i][j] = newBlock;
+			map->block[i][j] = block;
 		}
 	}
 
@@ -232,16 +231,8 @@ void placeNewRoom(struct Map *map, struct Room *room){
 	// printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
 	for(i = yPos; i < yPos + height; ++i){
 		for(j = xPos; j < xPos + width; ++j){
-			struct Block newBlock;
-			if(	i==yPos || i==yPos+height-1
-			||	j==xPos || j==xPos+width-1){
-				newBlock.type = floor;
-				newBlock.isRoomBorder = true;
-			}else{
-				newBlock.type = floor;
-				newBlock.isRoomBorder = false;
-			}
-			map->block[i][j] = newBlock;
+			struct Block block = newBlock(floor,0);
+			map->block[i][j] = block;
 		}
 	}
 }
@@ -436,17 +427,17 @@ void glog(char *string){
 //------------------------------Constructors---------------------------------------
 
 
-struct Block newBlock(enum BlockType blockType, uint8_t hardness, bool isRoomBorder){
+struct Block newBlock(enum BlockType blockType, uint8_t hardness){
 	struct Block retBlock;
 	retBlock.type = blockType;
 	retBlock.hardness = hardness;
-	retBlock.isRoomBorder = false;
 	return retBlock;
 }
 
 
 //---------------------------Map Files-------------------------------------
-#define FILE_PATH "/.rlg327/jerBear/01.rlg327" //"/.rlg327/dungeon"
+#define FILE_PATH "/.rlg327/dungeon"
+//"/.rlg327/jerBear/01.rlg327"
 FILE * fp;
 
 int openFile(char * mode){
@@ -560,7 +551,7 @@ struct Map * readFile(){
 	}
 
 
-	//----Construct map----
+	//----Construct map from extracted values----
 
 	struct Map newMap;
 	initializeMap(&newMap);
@@ -579,7 +570,7 @@ struct Map * readFile(){
 			}else{
 				newBlockType = rock;
 			}
-			struct Block block = newBlock(newBlockType,hardness,false);
+			struct Block block = newBlock(newBlockType,hardness);
 			newMap.block[i][j] = block;
 		}
 	}
@@ -615,30 +606,133 @@ struct Map * readFile(){
 			.type = downstairs;
 	}
 
-
-
 	free(roomSpecsIn);
 	free(upStairSpecsIn);
 	free(downStairSpecsIn);
 
 	printMap(newMap);
 
-
-
-
-
-
-
 	closeFile();
 	return 0;
 }
 
-int writeFile(){
+int writeFile(struct Map * theMap){
 	openFile("wb");
-	char data1 = 'x';
-	char data2 = 'y';
-	fwrite(&data1,1,1,fp);
-	fwrite(&data2,1,1,fp);
+
+	//Things to write
+	char uselessInfoOut[17] = "RLG327-S2019\0\0\0\0";
+	uint32_t fileSizeOut;						//Calculate (Last)
+	uint8_t pcPosXOut = theMap->pcPos.x;
+	uint8_t pcPosYOut = theMap->pcPos.y;
+	uint8_t hardnessesOut[MAPHEIGHT][MAPWIDTH];	//Fill (Map passover 1)
+	uint16_t roomCountOut = 0;	//Count (Room passover)
+//	uint8_t * roomSpecsOut;		//Fill  (Room passover)
+	uint16_t upStairCountOut=0;	//Count (Map passover 1)
+//	uint8_t * upStairSpecsOut;	//Fill  (Map passover 2)
+	uint16_t downStairCountOut=0;//Count (Map passover 1)
+//	uint8_t * downStairSpecsOut;//Fill  (Map passover 2)
+
+	//Map passover 1
+	int i,j;
+	for(i=0;i<MAPHEIGHT;++i){
+		for(j=0;j<MAPWIDTH;++j){
+			struct Block curBlock = theMap->block[i][j];
+			hardnessesOut[i][j]=curBlock.hardness;
+			if(curBlock.type == upstairs){
+				upStairCountOut++;
+			}else if(curBlock.type == downstairs){
+				downStairCountOut++;
+			}
+		}
+	}
+	uint8_t * upStairSpecsOut;
+	uint8_t  * downStairSpecsOut;
+	if(!(upStairSpecsOut = malloc(2*upStairCountOut))
+	|| !(downStairSpecsOut = malloc(2*downStairCountOut))){
+		printf("Failed to malloc.\n");
+		return -1;
+	}
+
+
+	//Map passover 2
+	int upIndex = 0;
+	int downIndex = 0;
+	for(i=0;i<MAPHEIGHT;++i){
+		for(j=0;j<MAPWIDTH;++j){
+			struct Block curBlock = theMap->block[i][j];
+			if(curBlock.type == upstairs){
+				upStairSpecsOut[upIndex++] = j;
+				upStairSpecsOut[upIndex++] = i;
+			}else if(curBlock.type == downstairs){
+				downStairSpecsOut[downIndex++] = j;
+				downStairSpecsOut[downIndex++] = i;
+			}
+		}
+	}
+
+	//Room passover 1
+	for(i=0; i<MAX_ROOM_COUNT; ++i){
+		if(isSentinel(theMap->room[i])){
+			break;
+		}
+		roomCountOut++;
+	}
+	uint8_t * roomSpecsOut = malloc(4*roomCountOut);
+
+	//Room passover 2
+	for(i=0;i<roomCountOut;++i){
+		roomSpecsOut[i]=theMap->room[i].position.x;
+		roomSpecsOut[i+1]=theMap->room[i].position.y;
+		roomSpecsOut[i+2]=theMap->room[i].width;
+		roomSpecsOut[i+3]=theMap->room[i].height;
+	}
+
+	fileSizeOut = 1708
+	+ 4*roomCountOut
+	+ 2*upStairCountOut
+	+ 2*downStairCountOut;
+
+	//--------Write calculated values to file-----------
+
+	printf("Writing header stuff: %s\n", uselessInfoOut);
+	for(i=0;i<16; ++i){
+		fwrite(uselessInfoOut+i,1,1,fp);
+	}
+
+	printf("Writing file size: %d\n", fileSizeOut);
+	printf("Writing PC position: (%d,%d)\n", pcPosXOut, pcPosYOut);
+	printf("Writing hardness array:\n");
+	for(i=0; i<MAPHEIGHT; ++i){
+		for(j=0; j<MAPWIDTH; ++j){
+			printf("%3d",hardnessesOut[i][j]);
+		}
+		printf("\n");
+	}
+	printf("Writing room count: %d\n", roomCountOut);
+	printf("Writing room specs:");
+	for(i=0;i<roomCountOut;++i){
+		printf("X|%d Y|%d W|%d H|%d\n",
+			roomSpecsOut[4*i],
+			roomSpecsOut[4*i+1],
+			roomSpecsOut[4*i+2],
+			roomSpecsOut[4*i+3]);
+	}
+	printf("Writing stairs:\n");
+	
+	for(i=0;i<upStairCountOut;++i){
+		printf("Up: X|%d Y|%d\n",
+			upStairSpecsOut[2*i],upStairSpecsOut[2*i+1]);
+	}
+	for(i=0;i<downStairCountOut;++i){
+		printf("Down: X|%d Y|%d\n",
+			downStairSpecsOut[2*i],downStairSpecsOut[2*i+1]);
+	}
+
+
+	// fwrite(&data1,1,1,fp);
+	// fwrite(&data2,1,1,fp);
+	free(upStairSpecsOut);
+	free(downStairSpecsOut);
 	closeFile();
 
 	return 0;
