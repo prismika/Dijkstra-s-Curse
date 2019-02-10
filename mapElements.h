@@ -3,6 +3,10 @@
 
 #include<stdint.h>
 
+#define MAPWIDTH 80
+#define MAPHEIGHT 21
+#define MAX_ROOM_COUNT 10
+
 typedef enum BlockType{
 	rock,
 	bedrock,
@@ -36,6 +40,18 @@ typedef struct Corridor{
 	Coordinate end;
 } Corridor;
 
+typedef struct Map{
+	Block block[MAPHEIGHT][MAPWIDTH];
+	Room room[MAX_ROOM_COUNT+1];//DONT FORGET extra spot for sentinel value
+	Coordinate pcPos;
+	int width;
+	int height;
+} Map;
+
 Block block_create(BlockType blockType, uint8_t hardness);
+void map_init(Map * map);
+int map_getBlock(Map * map, int x, int y, Block * outputBlock);
+int map_setBlock(Map * map, int x, int y, Block * inputBlock);
+void map_generate(Map * map, long seed);
 
 #endif

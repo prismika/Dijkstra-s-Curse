@@ -7,7 +7,7 @@
 #include <endian.h>
 #include "mapElements.h"
 
-#define MAPWIDTH 80
+#define MAPWIDTH 80 //These are duplicated in mapElements.h because of malloc
 #define MAPHEIGHT 21
 
 #define MIN_ROOM_WIDTH 4 //4
@@ -15,8 +15,8 @@
 #define MAX_ROOM_WIDTH 12 //Exclusive
 #define MAX_ROOM_HEIGHT 8	//Exclusive
 
-#define MIN_ROOM_COUNT 6 //6
-#define MAX_ROOM_COUNT 10 //Exclusive
+#define MIN_ROOM_COUNT 6 //6 
+#define MAX_ROOM_COUNT 10 //Exclusive (Also duplicated in mapElements.h)
 #define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
 #define SECOND_CLOSEST_ROOM_CONNECTION_ODDS 3//One in...
@@ -25,11 +25,7 @@
 //"/.rlg327/jerBear/04.rlg327"
 FILE * fp;
 
-typedef struct Map{
-	Block block[MAPHEIGHT][MAPWIDTH];
-	Room room[MAX_ROOM_COUNT+1];//Extra spot for sentinel value
-	Coordinate pcPos;
-} Map;
+
 enum IncomingCommand{
 	nothing,
 	save,
@@ -80,6 +76,7 @@ int main(int argc, char *argv[]){
 		return -1;
 	}
 	Map theMap;
+	map_init(&theMap);
 	switch(whatsup){
 		case nothing:
 		printf("Seed:%ld\n", seed);
@@ -156,7 +153,7 @@ void initializeMap(Map *map){
 			}else{
 				block = block_create(rock,100);
 			}
-			map->block[i][j] = block;
+			map_setBlock(map, j, i, &block);
 		}
 	}
 
@@ -220,7 +217,8 @@ int isLegalRoom(Room *room, Map *map){
 	//Check for bedrock inside the room
 	for(i=newRoom.position.y; i < newRoom.position.y + newRoom.height; ++i){
 		for(j=newRoom.position.x; j < newRoom.position.x + newRoom.width; ++j){
-			Block curBlock = map->block[i][j];
+			Block curBlock;
+			map_getBlock(map,j,i,&curBlock);
 
 			if(curBlock.type == bedrock){
 				return -1; //Bedrock encountered 
@@ -231,10 +229,11 @@ int isLegalRoom(Room *room, Map *map){
 	//Check for floors around the room
 	for(i=0;i<newRoom.height +2; ++i){
 		for(j=0;j<newRoom.width +2; ++j){
-			Block curBlock
-				= map->block
-					[newRoom.position.y+i-1]
-					[newRoom.position.x+j-1];
+			Block curBlock;
+			map_getBlock(map,
+				newRoom.position.x+j-1,
+				newRoom.position.y+i-1,
+				&curBlock);
 			if(curBlock.type == floor){
 				return -2;
 			}
@@ -251,8 +250,8 @@ void placeNewRoom(Map *map, Room *room){
 	// printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
 	for(i = yPos; i < yPos + height; ++i){
 		for(j = xPos; j < xPos + width; ++j){
-			Block block = block_create(floor,0);
-			map->block[i][j] = block;
+			Block newBlock = block_create(floor,0);
+			map_setBlock(map,j,i,&newBlock);
 		}
 	}
 }
@@ -337,9 +336,11 @@ void placePartialCorridor(Coordinate origin, int dist, bool horizontal, Map *map
 	for(i=0;i<=abs(dist);++i){
 		int yCoord = origin.y + i*incrementerVertical;
 		int xCoord = origin.x + i*incrementerHorizontal;
-		if(map -> block[yCoord][xCoord].type == rock){
+		Block curBlock;
+		map_getBlock(map, xCoord, yCoord, &curBlock);
+		if(curBlock.type == rock){
 			Block replacementBlock = block_create(corridor,0);
-			map -> block[yCoord][xCoord] = replacementBlock;
+			map_setBlock(map,xCoord,yCoord,&replacementBlock);
 		}
 	}
 }
@@ -359,13 +360,17 @@ void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[]
 	while(true){
 		int yCoord = rand()%MAPHEIGHT;
 		int xCoord = rand()%MAPWIDTH;
-		enum BlockType type = map -> block[yCoord][xCoord].type;
+		Block curBlock;
+		map_getBlock(map,xCoord,yCoord,&curBlock);
 
 		//check if it is permissible to replace the selected block
 		int i;
 		for(i=0;i<canReplaceSize; ++i){
-			if(canReplace[i] == type){
-				map -> block[yCoord][xCoord].type = toPlace;
+			if(canReplace[i] == curBlock.type){
+				Block newTypeBlock;
+				map_getBlock(map,xCoord,yCoord,&newTypeBlock);
+				newTypeBlock.type = toPlace;
+				map_setBlock(map,xCoord,yCoord,&newTypeBlock);
 				return;
 			}
 		}
@@ -379,7 +384,9 @@ void printMap(Map * map){
 	int i,j;
 	for(i=0;i<MAPHEIGHT;++i){
 		for(j=0; j<MAPWIDTH; ++j){
-			Block curBlock = map->block[i][j];
+			Block curBlock;
+			map_getBlock(map,j,i,&curBlock);
+			//TODO Fix this shenannigans
 			char blockVisual[1];
 			blockVisual[0] = getVisual(curBlock.type);
 
@@ -415,16 +422,6 @@ bool isOnBorder(Coordinate point, Coordinate ul, Coordinate lr){
 		||	point.x==lr.x
 		||  point.y==ul.y
 		|| 	point.y==lr.y;
-}
-void testMapPrint(void){
-	Map map;
-	int i,j;
-	for(i=0;i<MAPHEIGHT;++i){
-		for(j=0; j<MAPWIDTH; ++j){
-			map.block[i][j].type = floor;
-		}
-	}
-	printMap(&map);
 }
 
 /*
@@ -564,7 +561,7 @@ int readFile(Map * newMap){
 				newType = rock;
 			}
 			Block createBlock = block_create(newType,hardness);
-			newMap->block[i][j] = createBlock;
+			map_setBlock(newMap,j,i,&createBlock);
 		}
 	}
 	//Rooms
@@ -586,17 +583,25 @@ int readFile(Map * newMap){
 	// printRoomList(newMap->room);
 
 	for(i=0; i<upStairCountIn; ++i){
-		newMap->block
-			[upStairSpecsIn[2*i+1]]
-			[upStairSpecsIn[2*i]]
-			.type = upstairs;
+		Block blockToStairs;
+		map_getBlock(newMap,upStairSpecsIn[2*i],
+			upStairSpecsIn[2*i+1],
+			&blockToStairs);
+		blockToStairs.type = upstairs;
+		map_setBlock(newMap,upStairSpecsIn[2*i],
+			upStairSpecsIn[2*i+1],
+			&blockToStairs);
 	}
 
 	for(i=0; i<downStairCountIn; ++i){
-		newMap->block
-			[downStairSpecsIn[2*i+1]]
-			[downStairSpecsIn[2*i]]
-			.type = downstairs;
+		Block blockToStairs;
+		map_getBlock(newMap,downStairSpecsIn[2*i],
+			downStairSpecsIn[2*i+1],
+			&blockToStairs);
+		blockToStairs.type = downstairs;
+		map_setBlock(newMap,downStairSpecsIn[2*i],
+			downStairSpecsIn[2*i+1],
+			&blockToStairs);
 	}
 
 	free(roomSpecsIn);
@@ -628,7 +633,8 @@ int writeFile(Map * theMap){
 	int i,j;
 	for(i=0;i<MAPHEIGHT;++i){
 		for(j=0;j<MAPWIDTH;++j){
-			Block curBlock = theMap->block[i][j];
+			Block curBlock;
+			map_getBlock(theMap,j,i,&curBlock);
 			hardnessesOut[i][j]=curBlock.hardness;
 			if(curBlock.type == upstairs){
 				upStairCountOut++;
@@ -651,7 +657,8 @@ int writeFile(Map * theMap){
 	int downIndex = 0;
 	for(i=0;i<MAPHEIGHT;++i){
 		for(j=0;j<MAPWIDTH;++j){
-			Block curBlock = theMap->block[i][j];
+			Block curBlock;
+			map_getBlock(theMap,j,i,&curBlock);
 			if(curBlock.type == upstairs){
 				upStairSpecsOut[upIndex++] = j;
 				upStairSpecsOut[upIndex++] = i;
