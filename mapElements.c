@@ -24,6 +24,10 @@ int map_setBlock(Map * map, int x, int y, Block * inputBlock){
 	map->block[y][x] = *inputBlock;
 	return 0;
 }
-void map_generate(Map * map, long seed){
+int get_distance(DistanceMap * dist, int x, int y){
+	return dist->dist[y][x];
+}
 
+void set_distance(DistanceMap * dist, int x,int y,int d){
+	dist->dist[y][x] = d;
 }

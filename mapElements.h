@@ -1,5 +1,7 @@
 #ifndef MAPELEMENTS_H
 #define MAPELEMENTS_H
+/*This is for housing all types related to a map, including
+blocks, coordinates, and the map itself.*/
 
 #include<stdint.h>
 #include"mapElements.h"
@@ -55,10 +57,17 @@ typedef struct Map{
 	int height;
 } Map;
 
+typedef struct{
+	int dist[MAPHEIGHT][MAPWIDTH];
+}DistanceMap;
+
 Block block_create(BlockType blockType, uint8_t hardness);
 void map_init(Map * map);
 int map_getBlock(Map * map, int x, int y, Block * outputBlock);
 int map_setBlock(Map * map, int x, int y, Block * inputBlock);
-void map_generate(Map * map, long seed);
+int get_distance(DistanceMap * dist, int x, int y);
+void set_distance(DistanceMap * dist, int x, int y, int d);
+
+
 
 #endif

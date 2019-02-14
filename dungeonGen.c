@@ -6,6 +6,7 @@
 #include <string.h>
 #include <endian.h>
 #include "mapElements.h"
+#include "dij.h"
 
 #define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
@@ -92,10 +93,7 @@ int main(int argc, char *argv[]){
 		writeFile(&theMap);
 		return 0;
 	}
-	
-	
 
-	
 	writeFile(&theMap);
 	readFile(&theMap);
 	printMap(&theMap);
@@ -370,6 +368,7 @@ void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[]
 
 //-----------------------------PRINTING-------------------------
 
+//TODO Refactor this stuff into display
 void printMap(Map * map){
 	int i,j;
 	for(i=0;i<MAPHEIGHT;++i){
