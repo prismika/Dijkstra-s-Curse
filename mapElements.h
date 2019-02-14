@@ -2,10 +2,17 @@
 #define MAPELEMENTS_H
 
 #include<stdint.h>
+#include"mapElements.h"
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21
+#define MIN_ROOM_COUNT 6
 #define MAX_ROOM_COUNT 10
+
+#define MIN_ROOM_WIDTH 4 //4
+#define MIN_ROOM_HEIGHT 3 //3
+#define MAX_ROOM_WIDTH 12 //Exclusive
+#define MAX_ROOM_HEIGHT 8	//Exclusive
 
 typedef enum BlockType{
 	rock,

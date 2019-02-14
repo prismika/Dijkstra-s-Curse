@@ -7,19 +7,9 @@
 #include <endian.h>
 #include "mapElements.h"
 
-#define MAPWIDTH 80 //These are duplicated in mapElements.h because of malloc
-#define MAPHEIGHT 21
-
-#define MIN_ROOM_WIDTH 4 //4
-#define MIN_ROOM_HEIGHT 3 //3
-#define MAX_ROOM_WIDTH 12 //Exclusive
-#define MAX_ROOM_HEIGHT 8	//Exclusive
-
-#define MIN_ROOM_COUNT 6 //6 
-#define MAX_ROOM_COUNT 10 //Exclusive (Also duplicated in mapElements.h)
 #define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
-#define SECOND_CLOSEST_ROOM_CONNECTION_ODDS 3//One in...
+#define SECOND_CLOSEST_ROOM_CONNECTION_ODDS/*One in...*/ 3
 
 #define FILE_PATH "/.rlg327/dungeon"
 //"/.rlg327/jerBear/04.rlg327"
