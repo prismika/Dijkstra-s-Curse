@@ -7,6 +7,7 @@
 #include <endian.h>
 #include "mapElements.h"
 #include "dij.h"
+#include "display.h"
 
 #define FAILED_ROOM_ATTEMPTS_LIMIT 32
 
@@ -370,42 +371,14 @@ void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[]
 
 //TODO Refactor this stuff into display
 void printMap(Map * map){
-	int i,j;
-	for(i=0;i<MAPHEIGHT;++i){
-		for(j=0; j<MAPWIDTH; ++j){
-			Block curBlock;
-			map_getBlock(map,j,i,&curBlock);
-			//TODO Fix this shenannigans
-			char blockVisual[1];
-			blockVisual[0] = getVisual(curBlock.type);
-
-			printf(blockVisual);
-		}
-		printf("\n");
-	}
+	display_map(map);
 }
+
 void printRoomList(Room *roomList){
-	printf("Rooms:\n");
+	display_room_list(roomList);
+}
 
-	int i;
-	for(i=0;i<MAX_ROOM_COUNT;++i){
-		Room curRoom = roomList[i];
-		printf("\tRoom %d: X|%d Y|%d W|%d H|%d\n",
-			i,curRoom.position.x,curRoom.position.y,
-			curRoom.width,curRoom.height);
-	}
-}
-char getVisual(enum BlockType type){
-	switch(type){
-		case rock:		return ' ';
-		case floor:		return '.';
-		case corridor:	return '#';
-		case upstairs:	return '<';
-		case downstairs:return '>';
-		case bedrock: 	return '|';
-		default:		return '!';
-	}
-}
+
 bool isOnBorder(Coordinate point, Coordinate ul, Coordinate lr){
 	return	point.x==ul.x
 		||	point.x==lr.x
@@ -569,7 +542,6 @@ int readFile(Map * newMap){
 			}
 		}
 	}
-	// printRoomList(newMap->room);
 
 	for(i=0; i<upStairCountIn; ++i){
 		Block blockToStairs;
