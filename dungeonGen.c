@@ -68,6 +68,7 @@ int main(int argc, char *argv[]){
 		return -1;
 	}
 	Map theMap;
+	//TODO generateNewMap also inits map. Which one should have that?
 	map_init(&theMap);
 	switch(whatsup){
 		case nothing:
@@ -132,32 +133,7 @@ void generateNewMap(Map * map, long seed){
 }
 void initializeMap(Map *map){
 	// printf("Initializing map...\n");
-
-	int i,j;
-	for(i = 0; i < MAPHEIGHT; ++i){
-		for(j = 0; j < MAPWIDTH; ++j){
-			Block block;
-			if((i==0||i==MAPHEIGHT-1)||(j==0||j==MAPWIDTH-1)){
-				block = block_create(bedrock,255);
-			}else{
-				block = block_create(rock,100);
-			}
-			map_setBlock(map, j, i, &block);
-		}
-	}
-
-	for(i=0;i<MAX_ROOM_COUNT+1;i++){
-		Room sentinelRoom;
-		sentinelRoom.height=-1;
-		sentinelRoom.width=-1;
-		sentinelRoom.position.x = 0;
-		sentinelRoom.position.y = 0;
-		map->room[i] = sentinelRoom;
-	}
-
-	map -> pcPos.x = -1;
-	map -> pcPos.y = -1;
-
+	map_init(map);
 	// printf("Map initialized\n");
 }
 

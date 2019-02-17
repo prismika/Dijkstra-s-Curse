@@ -21,7 +21,7 @@ int main(void){
 	newPair.goods = 1000;
 	newPair.hn = heap_insert(&heap,&newPair);
 	heap_pair_t newPair2;
-	newPair2.key = 5;
+	newPair2.key = 2;
 	newPair2.goods = 200;
 	newPair2.hn = heap_insert(&heap,&newPair2);
 	heap_pair_t newPair3;
@@ -30,8 +30,9 @@ int main(void){
 	newPair3.hn = heap_insert(&heap,&newPair3);
 	heap_pair_t newPair4;
 	newPair4.key = 5;
-	newPair4.goods = 500;
+	newPair4.goods = 0;
 	newPair4.hn = heap_insert(&heap,&newPair4);
+	newPair4.key = 0;
 	heap_decrease_key_no_replace(&heap, newPair4.hn);
 	heap_pair_t * result = (heap_pair_t *) heap_remove_min(&heap);
 	printf("%d\n", result->goods);

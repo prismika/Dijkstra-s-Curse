@@ -4,7 +4,6 @@
 blocks, coordinates, and the map itself.*/
 
 #include<stdint.h>
-#include"mapElements.h"
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21

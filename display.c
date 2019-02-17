@@ -31,7 +31,7 @@ int display_distance_map(DistanceMap * dist){
 			int d = get_distance(dist,j,i);
 			if(d==-1) printf(" ");
 			else{
-				printf("%d",d%10);
+				printf("%d",d % 10);
 			}
 		}
 		printf("\n");
