@@ -106,8 +106,11 @@ int main(int argc, char *argv[]){
 		generateNewMap(&theMap,seed);
 		printMap(&theMap);
 		DistanceMap dist;
+		DistanceMap distWithTunneling;
 		get_distance_map(&theMap,theMap.pcPos,&dist);
+		get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
 		display_distance_map(&dist);
+		display_distance_map(&distWithTunneling);
 		return 0;
 
 		default:

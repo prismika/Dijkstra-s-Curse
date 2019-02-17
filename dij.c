@@ -67,8 +67,9 @@ int displayDistanceMap(DistanceMap * dist){
 }
 
 
+
 //Dijkstra's algorithm
-int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
+int get_distance_map_hidden(Map * map, Coordinate source, DistanceMap * dist, int tunnelingHardnessMax){
 	int i, j;
 	heap_t heap;
 	heap_init(&heap,compare_heap_pairs,NULL);
@@ -125,7 +126,7 @@ int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
 			//If nbr is immutable, continue
 			Block nbrBlock;
 			map_getBlock(map,nbr.x,nbr.y,&nbrBlock);
-			if(nbrBlock.hardness == 255){
+			if(nbrBlock.hardness > tunnelingHardnessMax){
 				continue;
 			}
 			//If nbr has been processed, continue
@@ -151,6 +152,14 @@ int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
 	heap_delete(&heap);
 
 	return 0;
+}
+
+int get_distance_map_tunneling(Map * map, Coordinate source, DistanceMap * dist){
+	return get_distance_map_hidden(map,source,dist,254);
+}
+
+int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
+	return get_distance_map_hidden(map,source,dist,0);
 }
 
 
