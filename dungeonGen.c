@@ -13,8 +13,8 @@
 
 #define SECOND_CLOSEST_ROOM_CONNECTION_ODDS/*One in...*/ 3
 
-#define FILE_PATH "/.rlg327/jerBear/06.rlg327" //"/.rlg327/dungeon"
-//"/.rlg327/jerBear/04.rlg327" //
+#define FILE_PATH "/.rlg327/dungeon"
+//"/.rlg327/jerBear/06.rlg327" //
 FILE * fp;
 
 //TODO make this a struct with some boolean flags
