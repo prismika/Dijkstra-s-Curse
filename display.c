@@ -25,29 +25,43 @@ int display_map(Map * map){
 		}
 		printf("\n");
 	}
+	printf("\n");
 
 	return 0;
 }
 
 int display_distance_map(DistanceMap * dist){
-	int i, j;
-	for(i=0; i<MAPHEIGHT; ++i){
-		for(j=0; j<MAPWIDTH; ++j){
-			int d = get_distance(dist,j,i);
+	int x, y;
+	char output[MAPHEIGHT][MAPWIDTH];
+
+	for(y=0; y<MAPHEIGHT; ++y){
+		for(x=0; x<MAPWIDTH; ++x){
+			char out;
+			int d = get_distance(dist,x,y);
 			switch(d){
-				case INT_MAX:printf("X");
+				case INT_MAX: out = ' ';
 				break;
-
-				case 0:		printf("@");
+				case 0:		out = '@';
 				break;
-
-				default:	printf("%d",d % 10);
+				default:	out = (d % 10) + '0';
 				break;
 
 			}
+			if(		y==0 || y==MAPHEIGHT -1
+				||	x==0 || x==MAPWIDTH -1){
+				out = 'X';
+			}
+			output[y][x] = out;
+		}
+	}
+
+	for(y=0; y<MAPHEIGHT; ++y){
+		for(x=0; x<MAPWIDTH; ++x){
+			printf("%c",output[y][x]);
 		}
 		printf("\n");
 	}
+	printf("\n");
 
 	return 0;
 }
