@@ -1,7 +1,7 @@
 all: dungeonGen
 
-dungeonGen: dungeonGen.c mapElements dij display
-	gcc -Wall -ggdb3 dungeonGen.c mapElements.o display.o -o dungeonGen -lm
+dungeonGen: dungeonGen.c mapElements dij display heap
+	gcc -Wall -ggdb3 dungeonGen.c mapElements.o display.o dij.o heap.o -o dungeonGen -lm
 
 mapElements: mapElements.h mapElements.c
 	gcc -Wall -ggdb3 -o mapElements.o -c mapElements.c

@@ -17,14 +17,17 @@
 //"/.rlg327/jerBear/04.rlg327"
 FILE * fp;
 
-
+//TODO make this a struct with some boolean flags
+//TODO Strategy pattern by storing a function pointer.
 enum IncomingCommand{
 	nothing,
 	save,
 	load,
-	load_save
+	load_save,
+	distances
 };
 
+//TODO What a mess
 int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed);
 
 void generateNewMap(Map * map, long seed);
@@ -69,6 +72,7 @@ int main(int argc, char *argv[]){
 	}
 	Map theMap;
 	//TODO generateNewMap also inits map. Which one should have that?
+	//TODO Support custom seeds
 	map_init(&theMap);
 	switch(whatsup){
 		case nothing:
@@ -94,6 +98,15 @@ int main(int argc, char *argv[]){
 		printMap(&theMap);
 		writeFile(&theMap);
 		return 0;
+
+		case distances:
+		printf("Seed:%ld\n", seed);
+		generateNewMap(&theMap,seed);
+		printMap(&theMap);
+		DistanceMap dist;
+		Coordinate pcPos = {10,5};
+		get_distance_map(&theMap,pcPos,&dist);
+		display_distance_map(&dist);
 	}
 
 	writeFile(&theMap);
@@ -117,6 +130,8 @@ int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * see
 		*command = load;
 	}else if(!(strcmp(argv[1],"--save"))){
 		*command = save;
+	}else if(!(strcmp(argv[1],"--distances"))){
+		*command = distances;
 	}else{
 		return -2;
 	}

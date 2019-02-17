@@ -83,7 +83,7 @@ int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
 			set_distance(dist,j,i,INT_MAX);
 		}
 	}
-	set_distance(dist,source.y,source.x,0);
+	set_distance(dist,source.x,source.y,0);
 
 	//Initialize heap pairs and fill heap
 	for(i=0; i < MAPHEIGHT; ++i){
@@ -101,11 +101,6 @@ int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
 			processed[i][j] = false;
 		}
 	}
-	//Add source to heap
-	heap_pair_t src;
-	heap_pair_create(&src, 0,source.x, source.y);
-	heap_insert(&heap,&src);
-
 
 	//While heap is nonempty, remove point from heap, cur
 	heap_pair_t * cur;

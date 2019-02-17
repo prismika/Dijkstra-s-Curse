@@ -10,7 +10,8 @@ int main(int argc, char *argv[]){
 	Map map;
 	map_init(&map);
 	Coordinate source;
-	source.x = source.y = 1;
+	source.x = 16;
+	source.y = 17;
 	DistanceMap dist;
 	get_distance_map(&map,source,&dist);
 
