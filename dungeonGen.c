@@ -13,8 +13,8 @@
 
 #define SECOND_CLOSEST_ROOM_CONNECTION_ODDS/*One in...*/ 3
 
-#define FILE_PATH "/.rlg327/dungeon"
-//"/.rlg327/jerBear/04.rlg327"
+#define FILE_PATH "/.rlg327/jerBear/06.rlg327" //"/.rlg327/dungeon"
+//"/.rlg327/jerBear/04.rlg327" //
 FILE * fp;
 
 //TODO make this a struct with some boolean flags
@@ -101,22 +101,20 @@ int main(int argc, char *argv[]){
 
 		case distances:
 		printf("Seed:%ld\n", seed);
-		generateNewMap(&theMap,seed);
+		readFile(&theMap);
 		printMap(&theMap);
 		DistanceMap dist;
-		Coordinate pcPos = {10,5};
-		get_distance_map(&theMap,pcPos,&dist);
+		get_distance_map(&theMap,theMap.pcPos,&dist);
 		display_distance_map(&dist);
+		return 0;
+
+		default:
+		printf("That command is unfortunately not supported right now.\n");
+		return 0;
 	}
-
-	writeFile(&theMap);
-	readFile(&theMap);
-	printMap(&theMap);
-
-	return 0;
 }
 
-//TODO Custom seeds again
+
 int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed){
 	*seed = time(0);
 	if(argc > 3){

@@ -108,6 +108,8 @@ int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
 		int curX = cur->coordinate.x;
 		int curY = cur->coordinate.y;
 		int curDist = get_distance(dist,curX,curY);
+		Block curBlock;
+		map_getBlock(map, curX, curY, &curBlock);
 		// printf("Removed from heap: --\tX|%d, Y|%d, D|%d, Size|%d --\n",
 		// 	curX,curY,curDist,heap.size);
 		//Mark cur as processed
@@ -124,8 +126,7 @@ int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
 			//If nbr is immutable, continue
 			Block nbrBlock;
 			map_getBlock(map,nbr.x,nbr.y,&nbrBlock);
-			int nbrHardness = nbrBlock.hardness;
-			if(nbrHardness == 255){
+			if(nbrBlock.hardness == 255){
 				continue;
 			}
 			//If nbr has been processed, continue
@@ -133,7 +134,7 @@ int get_distance_map(Map * map, Coordinate source, DistanceMap * dist){
 				continue;
 			}
 			//Calculate cost from cur to nbr
-			int nbrCost = 1+ (nbrHardness / 85);
+			int nbrCost = 1+ (curBlock.hardness / 85);
 			//Calculate total distance to nbr
 			int nbrDist = curDist + nbrCost;
 			//If new distance is less than old one,

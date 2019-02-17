@@ -35,8 +35,8 @@ void map_init(Map * map){
 		retMap.room[i] = sentinelRoom;
 	}
 
-	retMap.pcPos.x = -1;
-	retMap.pcPos.y = -1;
+	retMap.pcPos.x = 1;
+	retMap.pcPos.y = 1;
 
 	*map = retMap;
 }
