@@ -42,7 +42,7 @@ void map_init(Map * map){
 }
 //TODO check bounds on this and setBlock
 int map_getBlock(Map * map, int x, int y, Block * outputBlock){
-	if(x<0||x>=MAPWIDTH){
+	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
 		fprintf(stderr, "!!!Tried to get block from map at (%d,%d)!!!\n",x,y);
 		return -1;
 	}
@@ -50,7 +50,7 @@ int map_getBlock(Map * map, int x, int y, Block * outputBlock){
 	return 0;
 }
 int map_setBlock(Map * map, int x, int y, Block * inputBlock){
-	if(x<0||x>=MAPWIDTH){
+	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
 		fprintf(stderr, "!!!Tried to set block in map at (%d,%d)!!!\n",x,y);
 		return -1;
 	}
@@ -58,9 +58,16 @@ int map_setBlock(Map * map, int x, int y, Block * inputBlock){
 	return 0;
 }
 int get_distance(DistanceMap * dist, int x, int y){
+	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
+		fprintf(stderr, "!!!Tried to get distance from (%d,%d)!!!\n",x,y);
+		return -1;
+	}
 	return dist->dist[y][x];
 }
 
 void set_distance(DistanceMap * dist, int x,int y,int d){
+	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
+		fprintf(stderr, "!!!Tried to set distance from (%d,%d)!!!\n",x,y);
+	}
 	dist->dist[y][x] = d;
 }

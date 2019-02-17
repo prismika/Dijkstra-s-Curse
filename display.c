@@ -8,19 +8,24 @@
 char getBlockVisual(enum BlockType type);
 
 int display_map(Map * map){
-	int i,j;
-	for(i=0;i<MAPHEIGHT;++i){
-		for(j=0; j<MAPWIDTH; ++j){
+	int x,y;
+	char output[MAPHEIGHT][MAPWIDTH];
+	for(y=0;y<MAPHEIGHT;++y){
+		for(x=0; x<MAPWIDTH; ++x){
 			Block curBlock;
-			map_getBlock(map,j,i,&curBlock);
-			//TODO Fix this shenannigans
-			char blockVisual[1];
-			blockVisual[0] = getBlockVisual(curBlock.type);
+			map_getBlock(map,x,y,&curBlock);
+			output [y][x] = getBlockVisual(curBlock.type);
+		}
+	}
+	output[map->pcPos.y][map->pcPos.x] ='@';
 
-			printf(blockVisual);
+	for(y=0;y<MAPHEIGHT;++y){
+		for(x=0; x<MAPWIDTH; ++x){
+			printf("%c",output[y][x]);
 		}
 		printf("\n");
 	}
+
 	return 0;
 }
 

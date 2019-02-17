@@ -47,6 +47,8 @@ bool isSentinel(Room room);
 void populateWithStairs(Map *map);
 void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[], int canReplaceSize, Map *map);
 
+void populateWithPC(Map * map);
+
 void printMap(Map * map);
 void printRoomList(Room *roomList);
 char getVisual(enum BlockType type);
@@ -143,6 +145,7 @@ void generateNewMap(Map * map, long seed){
 	populateWithRooms(map);
 	populateWithCorridors(map);
 	populateWithStairs(map);
+	populateWithPC(map);
 }
 void initializeMap(Map *map){
 	// printf("Initializing map...\n");
@@ -354,6 +357,13 @@ void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[]
 		}
 		//The chosen block was of a type not in the canReplace list.
 	}
+}
+
+//-----------------------------Entities-------------------------
+
+void populateWithPC(Map * map){
+	map->pcPos.x = map->room[0].position.x;
+	map->pcPos.y = map->room[0].position.y;
 }
 
 //-----------------------------PRINTING-------------------------
