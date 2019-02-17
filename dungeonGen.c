@@ -101,7 +101,7 @@ int main(int argc, char *argv[]){
 
 		case distances:
 		printf("Seed:%ld\n", seed);
-		readFile(&theMap);
+		generateNewMap(&theMap,seed);
 		printMap(&theMap);
 		DistanceMap dist;
 		get_distance_map(&theMap,theMap.pcPos,&dist);

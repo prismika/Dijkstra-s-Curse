@@ -1,6 +1,6 @@
-
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
 #include "display.h"
 #include "mapElements.h"
 
@@ -29,9 +29,16 @@ int display_distance_map(DistanceMap * dist){
 	for(i=0; i<MAPHEIGHT; ++i){
 		for(j=0; j<MAPWIDTH; ++j){
 			int d = get_distance(dist,j,i);
-			if(d==-1) printf(" ");
-			else{
-				printf("%d",d % 10);
+			switch(d){
+				case INT_MAX:printf("X");
+				break;
+
+				case 0:		printf("@");
+				break;
+
+				default:	printf("%d",d % 10);
+				break;
+
 			}
 		}
 		printf("\n");
