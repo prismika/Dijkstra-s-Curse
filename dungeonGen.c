@@ -45,7 +45,7 @@ void placePartialCorridor(Coordinate origin, int dist, bool horizontal, Map *map
 bool isSentinel(Room room);
 
 void populateWithStairs(Map *map);
-void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[], int canReplaceSize, Map *map);
+void chooseRandomBlock(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord);
 
 void populateWithPC(Map * map);
 
@@ -334,31 +334,43 @@ bool isSentinel(Room room){
 
 
 //--------------------------STAIRS------------------------------
+void map_change_block_type(Map * map, int x, int y, BlockType type){
+	Block blockToChange;
+	map_getBlock(map,x,y,&blockToChange);
+	blockToChange.type = type;
+	map_setBlock(map,x,y,&blockToChange);
+}
 
 void populateWithStairs(Map *map){
-	enum BlockType canReplace[] = {floor,corridor};
-	assignTypeToRandomBlock(upstairs,canReplace,2,map);
-	assignTypeToRandomBlock(downstairs,canReplace,2,map);
+	enum BlockType 	canReplace[] 	= {floor,corridor};
+	int 			canReplaceSize	= 2;
+
+	Coordinate upStairCoord;
+	Coordinate downStairCoord;
+	chooseRandomBlock(map,canReplace,canReplaceSize,&upStairCoord);
+	chooseRandomBlock(map,canReplace,canReplaceSize,&downStairCoord);
+	map_change_block_type(map,upStairCoord.x,upStairCoord.y,upstairs);
+	map_change_block_type(map,downStairCoord.x,downStairCoord.y,downstairs);
 }
-void assignTypeToRandomBlock(enum BlockType toPlace, enum BlockType canReplace[], int canReplaceSize, Map *map){
+void chooseRandomBlock(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord){
 	while(true){
 		int yCoord = rand()%MAPHEIGHT;
 		int xCoord = rand()%MAPWIDTH;
 		Block curBlock;
 		map_getBlock(map,xCoord,yCoord,&curBlock);
 
-		//check if it is permissible to replace the selected block
+		//check if it is permissible to choose curBlock
 		int i;
-		for(i=0;i<canReplaceSize; ++i){
-			if(canReplace[i] == curBlock.type){
+		for(i=0;i<canChooseSize; ++i){
+			if(canChoose[i] == curBlock.type){
 				Block newTypeBlock;
 				map_getBlock(map,xCoord,yCoord,&newTypeBlock);
-				newTypeBlock.type = toPlace;
-				map_setBlock(map,xCoord,yCoord,&newTypeBlock);
+				returnCoord->x = xCoord;
+				returnCoord->y = yCoord;
 				return;
 			}
 		}
-		//The chosen block was of a type not in the canReplace list.
+		//The chosen block was of a type not in the canChoose list.
 	}
 }
 

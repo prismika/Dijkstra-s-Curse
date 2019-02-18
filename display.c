@@ -39,7 +39,7 @@ int display_distance_map(DistanceMap * dist){
 			char out;
 			int d = get_distance(dist,x,y);
 			switch(d){
-				case INT_MAX: out = ' ';
+				case INT_MAX:out = ' ';
 				break;
 				case 0:		out = '@';
 				break;
