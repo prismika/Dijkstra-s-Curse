@@ -17,8 +17,6 @@
 //"/.rlg327/jerBear/06.rlg327" //
 FILE * fp;
 
-//TODO make this a struct with some boolean flags
-//TODO Strategy pattern by storing a function pointer.
 enum IncomingCommand{
 	nothing,
 	save,
@@ -27,11 +25,10 @@ enum IncomingCommand{
 	distances
 };
 
-//TODO What a mess
+
 int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed);
 
 void generateNewMap(Map * map, long seed);
-void initializeMap(Map *map);
 void populateWithRooms(Map *map);
 Room generateNewRoom(Map *map);
 int isLegalRoom(Room *room, Map *map);
@@ -62,7 +59,6 @@ int readFile(Map * newMap);
 int closeFile(void);
 int writeFile(Map * theMap);
 
-//TODO Debug mode
 int main(int argc, char *argv[]){
 
 	long seed;
@@ -73,7 +69,6 @@ int main(int argc, char *argv[]){
 	}
 	Map theMap;
 	//TODO generateNewMap also inits map. Which one should have that?
-	//TODO Support custom seeds
 	map_init(&theMap);
 	switch(whatsup){
 		case nothing:
@@ -143,16 +138,10 @@ int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * see
 
 void generateNewMap(Map * map, long seed){
 	srand(seed);
-	initializeMap(map);
 	populateWithRooms(map);
 	populateWithCorridors(map);
 	populateWithStairs(map);
 	populateWithPC(map);
-}
-void initializeMap(Map *map){
-	// printf("Initializing map...\n");
-	map_init(map);
-	// printf("Map initialized\n");
 }
 
 //----------------------------ROOMS------------------------------
@@ -175,7 +164,7 @@ void populateWithRooms(Map *map){
 			// printMap(*map);
 			failures = 0;
 			roomCount = 0;
-			initializeMap(map);
+			map_init(map);
 		}
 	} 
 }
@@ -495,7 +484,7 @@ int readFile(Map * newMap){
 
 	//----Construct map from extracted values----
 
-	initializeMap(newMap);
+	map_init(newMap);
 	//PC Position
 	newMap->pcPos.x=pcPosXIn;
 	newMap->pcPos.y=pcPosYIn;
