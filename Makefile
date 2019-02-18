@@ -7,10 +7,10 @@ mapElements: mapElements.h mapElements.c
 	gcc -Wall -ggdb3 -o mapElements.o -c mapElements.c
 
 dij: dij.c dij.h heap
-	gcc -Wall -ggdb3 -o dij.o heap.o -c dij.c
+	gcc -Wall -ggdb3 -o dij.o -c dij.c
 
 display: display.h display.c mapElements
-	gcc -Wall -ggdb3 -o display.o mapElements.o -c display.c
+	gcc -Wall -ggdb3 -o display.o -c display.c
 
 heap: heap.c heap.h
 	gcc -Wall -ggdb3 -c heap.c -o heap.o
