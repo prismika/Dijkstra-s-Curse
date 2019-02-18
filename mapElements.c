@@ -1,6 +1,7 @@
 #include "mapElements.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 
 
@@ -56,6 +57,33 @@ int map_setBlock(Map * map, int x, int y, Block * inputBlock){
 	}
 	map->block[y][x] = *inputBlock;
 	return 0;
+}
+void map_change_block_type(Map * map, int x, int y, BlockType type){
+	Block blockToChange;
+	map_getBlock(map,x,y,&blockToChange);
+	blockToChange.type = type;
+	map_setBlock(map,x,y,&blockToChange);
+}
+void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord){
+	while(true){
+		int yCoord = rand()%MAPHEIGHT;
+		int xCoord = rand()%MAPWIDTH;
+		Block curBlock;
+		map_getBlock(map,xCoord,yCoord,&curBlock);
+
+		//check if it is permissible to choose curBlock
+		int i;
+		for(i=0;i<canChooseSize; ++i){
+			if(canChoose[i] == curBlock.type){
+				Block newTypeBlock;
+				map_getBlock(map,xCoord,yCoord,&newTypeBlock);
+				returnCoord->x = xCoord;
+				returnCoord->y = yCoord;
+				return;
+			}
+		}
+		//The chosen block was of a type not in the canChoose list.
+	}
 }
 int get_distance(DistanceMap * dist, int x, int y){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
