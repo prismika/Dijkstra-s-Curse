@@ -1,7 +1,9 @@
 This is Dijkstra's Curse, an ASCII-based rogue-like game. This iteration has multiple files, with an architecture consisting of three layers:
-Layer 1: dungeonGen (Generates maps, reads and writes map files, parses CLI)
-Layer 2: dij (Implements Dijkstra's algorithm)
-Layer 3: heap (Dr. Sheaffer's heap) and mapElements (stores map specs and defines types such as Map, Block, BlockType, etc.)
+
+Layer 1: 	dungeonGen (Generates maps, reads and writes map files, parses CLI)
+Layer 2: 	dij (Implements Dijkstra's algorithm)
+Layer 3: 	heap (Dr. Sheaffer's heap)
+			mapElements (stores map specs and defines types such as Map, Block, BlockType, etc.)
 
 Usage:
 ./dungeonGen

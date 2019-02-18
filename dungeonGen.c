@@ -45,7 +45,6 @@ void populateWithStairs(Map *map);
 
 void populateWithPC(Map * map);
 
-void printMap(Map * map);
 void printRoomList(Room *roomList);
 char getVisual(enum BlockType type);
 void glog(char *string);
@@ -68,37 +67,36 @@ int main(int argc, char *argv[]){
 		return -1;
 	}
 	Map theMap;
-	//TODO generateNewMap also inits map. Which one should have that?
 	map_init(&theMap);
 	switch(whatsup){
 		case nothing:
 		printf("Seed:%ld\n", seed);
 		generateNewMap(&theMap,seed);
-		printMap(&theMap);
+		display_map(&theMap);
 		return 0;
 
 		case load:
 		readFile(&theMap);
-		printMap(&theMap);
+		display_map(&theMap);
 		return 0;
 
 		case save:
 		printf("Seed:%ld\n", seed);
 		generateNewMap(&theMap,seed);
-		printMap(&theMap);
+		display_map(&theMap);
 		writeFile(&theMap);
 		return 0;
 
 		case load_save:
 		readFile(&theMap);
-		printMap(&theMap);
+		display_map(&theMap);
 		writeFile(&theMap);
 		return 0;
 
 		case distances:
 		printf("Seed:%ld\n", seed);
 		generateNewMap(&theMap,seed);
-		printMap(&theMap);
+		display_map(&theMap);
 		DistanceMap dist;
 		DistanceMap distWithTunneling;
 		get_distance_map(&theMap,theMap.pcPos,&dist);
@@ -161,7 +159,7 @@ void populateWithRooms(Map *map){
 		}
 		if(failures > FAILED_ROOM_ATTEMPTS_LIMIT){
 			// printf("Too many failed placements. Here is the map.\n");
-			// printMap(*map);
+			// display_map(*map);
 			failures = 0;
 			roomCount = 0;
 			map_init(map);
@@ -290,7 +288,7 @@ void placeNewCorridor(Corridor cor, Map *map){
 	placePartialCorridor(cor.midpoint,xDistance,true,map);
 	placePartialCorridor(cor.midpoint,yDistance,false,map);
 }
-//TODO Refactor this by using a "Place region" function
+
 void placePartialCorridor(Coordinate origin, int dist, bool horizontal, Map *map){
 	int incrementerVertical;
 	int incrementerHorizontal;
@@ -347,10 +345,7 @@ void populateWithPC(Map * map){
 
 //-----------------------------PRINTING-------------------------
 
-//TODO Refactor this stuff into display
-void printMap(Map * map){
-	display_map(map);
-}
+
 
 void printRoomList(Room *roomList){
 	display_room_list(roomList);
@@ -547,7 +542,7 @@ int readFile(Map * newMap){
 	free(upStairSpecsIn);
 	free(downStairSpecsIn);
 
-	// printMap(&newMap);
+	// displayMap(&newMap);
 
 	closeFile();
 	return 0;

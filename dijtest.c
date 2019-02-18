@@ -13,7 +13,7 @@ int main(int argc, char *argv[]){
 	source.x = 16;
 	source.y = 17;
 	DistanceMap dist;
-	get_distance_map(&map,source,&dist);
+	get_distance_map_tunneling(&map,source,&dist);
 
 	display_distance_map(&dist);
 

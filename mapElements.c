@@ -41,7 +41,7 @@ void map_init(Map * map){
 
 	*map = retMap;
 }
-//TODO check bounds on this and setBlock
+
 int map_getBlock(Map * map, int x, int y, Block * outputBlock){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
 		fprintf(stderr, "!!!Tried to get block from map at (%d,%d)!!!\n",x,y);
