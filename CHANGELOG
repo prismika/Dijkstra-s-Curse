@@ -26,4 +26,20 @@
 		-Successfully generate, write, and read same file.with fidelity.
 		-Clean up print statements and comments.
 		-Refactor main. Parse command line successfully.
-		
+2/9/19:	-Update README and CHANGELOG
+		-Create mapElements library to house map-related types
+		-Add typedef to map types
+2/10/19:-Utilize new mapElements interface
+2/14/19:-Refactor map specification constants into mapElements.c
+		-Create display library
+2/15/19:-Create dij library for Dijkstra's algorithm
+2/17/19:-Debug dij library
+		-Implement dij library in dungeonGen
+		-Expand display library functionality to print X's for immutable blocks and @ for the PC in distance maps
+		-New maps place PC in the corner of room 0
+		-Display library prints @ for the PC when displaying the map
+		-Add support for distance maps for non-tunneling creatures
+		-Display library prints spaces for rock in non-tunneling maps
+		-Refactor stair placement to separate out the random block selection
+		-Utilize newly refactored random block selection to place PC in a random legal position when a map is generated
+		-Update README and CHANGELOG
