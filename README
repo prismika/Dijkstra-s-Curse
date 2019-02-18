@@ -1,4 +1,7 @@
-This is Dijkstra's Curse, an ASCII-based rogue-like game. This iteration only has one file, dungeonGen.c.
+This is Dijkstra's Curse, an ASCII-based rogue-like game. This iteration has multiple files, with an architecture consisting of three layers:
+Layer 1: dungeonGen (Generates maps, reads and writes map files, parses CLI)
+Layer 2: dij (Implements Dijkstra's algorithm)
+Layer 3: heap (Dr. Sheaffer's heap) and mapElements (stores map specs and defines types such as Map, Block, BlockType, etc.)
 
 Usage:
 ./dungeonGen
@@ -9,8 +12,8 @@ Usage:
 	Loads the dungeon at ~/.rlg327/dungeon if it exists, and displays it.
 ./dungeonGen --save --load
 	Loads the dungeon at ~/.rlg327/dungeon, displays it, and saves it again.
+*NEW*
+./dungeonGen --distances
+	Randomly generates a dungeon, prints the seed and dungeon, followed by distance maps for both tunneling and non-tunneling entities.
 
-Known bugs:
-	The program performs fine on the "pixel art" maps that the instructor provided, except that a segfault occurs just before the program terminates. I expect this is because there are no stairs in those maps. Thankfully a map up to specs will have both up and down stairs.
-
-Enjoy your Valentine's Day!
+I hope your semester is going well!

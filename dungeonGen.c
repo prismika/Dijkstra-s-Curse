@@ -349,8 +349,11 @@ void populateWithStairs(Map *map){
 //-----------------------------Entities-------------------------
 
 void populateWithPC(Map * map){
-	map->pcPos.x = map->room[0].position.x;
-	map->pcPos.y = map->room[0].position.y;
+	Coordinate coordForPC;
+	BlockType 	canChoose 		= {floor};
+	int 		canChooseSize 	= 1;
+	map_choose_random_block(map,&canChoose,canChooseSize,&coordForPC);
+	map->pcPos = coordForPC;
 }
 
 //-----------------------------PRINTING-------------------------
