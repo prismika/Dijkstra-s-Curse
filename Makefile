@@ -1,7 +1,7 @@
 CC = gcc
 CXX = g++
 ECHO = echo
-RM = rm -f
+RM = rm
 TAR = tar cvfz
 
 ASSIGNMENT = 1.03
@@ -9,9 +9,9 @@ ASSIGNMENT = 1.03
 CFLAGS = -Wall -ggdb3
 
 BIN = dungeonGen
-OBJS = dungeonGen.o mapElements.o dij.o display.o heap.o
-CSUBMISSION = mapElements.c dij.c display.c heap.c dungeonGen.c 
-HSUBMISSION = mapElements.h dij.h display.h heap.h
+OBJS = dungeonGen.o mapElements.o dij.o display.o heap.o mapBuilder.o mapIO.o
+CSUBMISSION = mapElements.c dij.c display.c heap.c mapBuilder.c mapio.c dungeonGen.c
+HSUBMISSION = mapElements.h dij.h display.h heap.h mapBuilder.h mapio.h
 TXTSUBMISSION = README CHANGELOG Makefile
 TESTS = test dijtest
 

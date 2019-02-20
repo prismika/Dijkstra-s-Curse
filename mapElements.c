@@ -85,6 +85,7 @@ void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChoose
 		//The chosen block was of a type not in the canChoose list.
 	}
 }
+
 int get_distance(DistanceMap * dist, int x, int y){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
 		fprintf(stderr, "!!!Tried to get distance from (%d,%d)!!!\n",x,y);
@@ -98,4 +99,10 @@ void set_distance(DistanceMap * dist, int x,int y,int d){
 		fprintf(stderr, "!!!Tried to set distance from (%d,%d)!!!\n",x,y);
 	}
 	dist->dist[y][x] = d;
+}
+
+
+
+bool room_is_sentinel(Room room){
+	return room.height == -1;
 }

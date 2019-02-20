@@ -4,6 +4,7 @@
 blocks, coordinates, and the map itself.*/
 
 #include<stdint.h>
+#include<stdbool.h>
 
 #define MAPWIDTH 80
 #define MAPHEIGHT 21
@@ -68,6 +69,7 @@ void map_change_block_type(Map * map, int x, int y, BlockType type);
 void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord);
 int get_distance(DistanceMap * dist, int x, int y);
 void set_distance(DistanceMap * dist, int x, int y, int d);
+bool room_is_sentinel(Room room);
 
 
 
