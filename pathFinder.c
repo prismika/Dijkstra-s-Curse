@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "dij.h"
+#include "pathFinder.h"
 #include "mapElements.h"
 #include "heap.h"
 

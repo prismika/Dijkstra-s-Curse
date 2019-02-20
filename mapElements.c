@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-
-
 struct Block block_create(enum BlockType blockType, uint8_t hardness){
 	struct Block newBlock;
 	newBlock.type = blockType;

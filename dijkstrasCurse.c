@@ -6,7 +6,7 @@
 #include "mapIO.h"
 #include "mapElements.h"
 #include "mapBuilder.h"
-#include "dij.h"
+#include "pathFinder.h"
 #include "display.h"
 
 enum IncomingCommand{
@@ -20,8 +20,6 @@ enum IncomingCommand{
 
 int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed);
 
-
-void glog(char *string);
 
 //-----------I/O--------------------
 
@@ -100,11 +98,4 @@ int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * see
 	return 0;
 }
 
-
-/*
-string must point to a char array ending in a newline character
-*/
-void glog(char *string){
-	fprintf(stderr,string);
-}
 

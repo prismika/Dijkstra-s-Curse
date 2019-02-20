@@ -1,5 +1,5 @@
-#ifndef	DIJ_H
-#define DIJ_H
+#ifndef	PATHFINDER_H
+#define PATHFINDER_H
 
 #include "mapElements.h"
 

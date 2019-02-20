@@ -8,17 +8,17 @@ ASSIGNMENT = 1.03
 
 CFLAGS = -Wall -ggdb3
 
-BIN = dungeonGen
-OBJS = dungeonGen.o mapElements.o dij.o display.o heap.o mapBuilder.o mapIO.o
-CSUBMISSION = mapElements.c dij.c display.c heap.c mapBuilder.c mapio.c dungeonGen.c
-HSUBMISSION = mapElements.h dij.h display.h heap.h mapBuilder.h mapio.h
+BIN = dijkstrasCurse
+OBJS = dijkstrasCurse.o mapElements.o pathFinder.o display.o heap.o mapBuilder.o mapIO.o
+CSUBMISSION = mapElements.c pathFinder.c display.c heap.c mapBuilder.c mapio.c dijkstrasCurse.c
+HSUBMISSION = mapElements.h pathFinder.h display.h heap.h mapBuilder.h mapio.h
 TXTSUBMISSION = README CHANGELOG Makefile
-TESTS = test dijtest
+TESTS = test
 
 all: $(BIN)
 
-# dungeonGen: dungeonGen.c mapElements dij display heap
-# 	gcc -Wall -ggdb3 dungeonGen.c mapElements.o display.o dij.o heap.o -o dungeonGen -lm
+# dijkstrasCurse: dijkstrasCurse.c mapElements dij display heap
+# 	gcc -Wall -ggdb3 dijkstrasCurse.c mapElements.o display.o pathFinder.o heap.o -o dijkstrasCurse -lm
 $(BIN): $(OBJS)
 	@$(ECHO) Linking $@
 	@$(CC) $^ -o $@
@@ -32,8 +32,8 @@ $(BIN): $(OBJS)
 # mapElements: mapElements.h mapElements.c
 # 	gcc -Wall -ggdb3 -o mapElements.o -c mapElements.c
 
-# dij: dij.c dij.h heap
-# 	gcc -Wall -ggdb3 -o dij.o -c dij.c
+# dij: pathFinder.c pathFinder.h heap
+# 	gcc -Wall -ggdb3 -o pathFinder.o -c pathFinder.c
 
 # display: display.h display.c mapElements
 # 	gcc -Wall -ggdb3 -o display.o -c display.c
@@ -46,10 +46,7 @@ test: test.c heap.o
 	@$(ECHO) Linking $@
 	@$(CC) $^ -o $@
 
-dijtest: dijtest.c mapElements.o dij.o display.o heap.o
-	@$(ECHO) Linking $@
-	@$(CC) $^ -o $@
-
+	
 #Make the tarball
 
 tarball: clean
