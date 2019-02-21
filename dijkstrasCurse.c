@@ -9,93 +9,174 @@
 #include "pathFinder.h"
 #include "display.h"
 
-enum IncomingCommand{
-	nothing,
-	save,
-	load,
-	load_save,
-	distances
+long seed;
+Map theMap;
+int nummon;
+
+struct IncomingCommand{
+	int (*execute)(void);
 };
 
+int executeSave(void);
+int executeLoad(void);
+int executeLoadSave(void);
+int executeDistances(void);
+int executeDefault(void);
 
-int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed);
+int parseCLI(int argc, char * argv[], struct IncomingCommand * command){
+	struct
+	{
+		bool save;
+		bool load;
+		bool distances;
+		bool seed;
+		long theSeed;
+		bool nummon;
+		int monsters;
+	}flags;
+	flags.save=flags.load=flags.distances=flags.seed=flags.nummon=false;
+	flags.theSeed = flags.monsters = 0;
 
-
-//-----------I/O--------------------
-
-int main(int argc, char *argv[]){
-
-	long seed;
-	enum IncomingCommand whatsup;
-	if(parseCLI(argc,argv,&whatsup,&seed)!=0){
-		printf("Incorrect usage\n");
-		return -1;
+	//Iterate through the command line input
+	int i;
+	for(i = 1; i < argc; ++i){
+		if(!strcmp(argv[i],"--save")){
+			flags.save = true;
+		}else if(!strcmp(argv[i],"--load")){
+			flags.load = true;
+		}else if(!strcmp(argv[i],"--distances")){
+			flags.distances = true;
+		}else if(!strcmp(argv[i],"--seed")){
+			if(i<argc-1){
+				i++;
+				flags.seed = true;
+				flags.theSeed = strtol(argv[i],NULL,10);
+				printf("Seed should be %ld\n", flags.theSeed);
+			}else{
+				return -1;
+			}
+		}else if(!strcmp(argv[i],"--nummon")){
+			if(i<argc-1){
+				i++;
+				flags.nummon = true;
+				flags.monsters = atoi(argv[i]);
+			}else{
+				return -1;
+			}
+		}else{
+			return -1;
+		}
 	}
-	Map theMap;
-	map_init(&theMap);
-	switch(whatsup){
-		case nothing:
-		printf("Seed:%ld\n", seed);
-		generate_map(&theMap,seed);
-		display_map(&theMap);
-		return 0;
 
-		case load:
-		readFile(&theMap);
-		display_map(&theMap);
-		return 0;
-
-		case save:
-		printf("Seed:%ld\n", seed);
-		generate_map(&theMap,seed);
-		display_map(&theMap);
-		writeFile(&theMap);
-		return 0;
-
-		case load_save:
-		readFile(&theMap);
-		display_map(&theMap);
-		writeFile(&theMap);
-		return 0;
-
-		case distances:
-		printf("Seed:%ld\n", seed);
-		generate_map(&theMap,seed);
-		display_map(&theMap);
-		DistanceMap dist;
-		DistanceMap distWithTunneling;
-		get_distance_map(&theMap,theMap.pcPos,&dist);
-		get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
-		display_distance_map(&dist);
-		display_distance_map(&distWithTunneling);
-		return 0;
-
-		default:
-		printf("That command is unfortunately not supported right now.\n");
-		return 0;
-	}
-}
-
-
-int parseCLI(int argc, char * argv[], enum IncomingCommand * command, long * seed){
-	*seed = time(0);
-	if(argc > 3){
-		return -1;
-	}
-	if(argc == 3){
-		*command = load_save;
-	}else if(argc == 1){
-		*command = nothing;
-	}else if(!(strcmp(argv[1],"--load"))){
-		*command = load;
-	}else if(!(strcmp(argv[1],"--save"))){
-		*command = save;
-	}else if(!(strcmp(argv[1],"--distances"))){
-		*command = distances;
+	//Unpack the flags struct
+	if(flags.seed){
+		seed = flags.theSeed;
 	}else{
-		return -2;
+		seed = time(0);
+	}
+	if(flags.nummon){
+		nummon = flags.monsters;
+	}
+	if(flags.save && !flags.load){
+		command->execute = executeSave;
+	}else if(flags.load && !flags.save){
+		command->execute = executeLoad;
+	}else if(flags.load && flags.save){
+		command->execute = executeLoadSave;
+	}else if(flags.distances){
+		command->execute = executeDistances;
+	}else{
+		command->execute = executeDefault;
 	}
 	return 0;
 }
 
+int main(int argc, char *argv[]){
+	struct IncomingCommand whatsup;
+	if(parseCLI(argc,argv,&whatsup)!=0){
+		printf("Incorrect usage\n");
+		return -1;
+	}
+	map_init(&theMap);
+	whatsup.execute();
+	return 0;
+	// switch(whatsup){
+	// 	case nothing:
+	// 	printf("Seed:%ld\n", seed);
+	// 	generate_map(&theMap,seed);
+	// 	display_map(&theMap);
+	// 	return 0;
+
+	// 	case load:
+	// 	readFile(&theMap);
+	// 	display_map(&theMap);
+	// 	return 0;
+
+	// 	case save:
+	// 	printf("Seed:%ld\n", seed);
+	// 	generate_map(&theMap,seed);
+	// 	display_map(&theMap);
+	// 	writeFile(&theMap);
+	// 	return 0;
+
+	// 	case load_save:
+	// 	readFile(&theMap);
+	// 	display_map(&theMap);
+	// 	writeFile(&theMap);
+	// 	return 0;
+
+	// 	case distances:
+	// 	printf("Seed:%ld\n", seed);
+	// 	generate_map(&theMap,seed);
+	// 	display_map(&theMap);
+	// 	DistanceMap dist;
+	// 	DistanceMap distWithTunneling;
+	// 	get_distance_map(&theMap,theMap.pcPos,&dist);
+	// 	get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
+	// 	display_distance_map(&dist);
+	// 	display_distance_map(&distWithTunneling);
+	// 	return 0;
+
+	// 	default:
+	// 	printf("That command is unfortunately not supported right now.\n");
+	// 	return 0;
+	// }
+}
+
+int executeLoad(){
+	readFile(&theMap);
+	display_map(&theMap);
+	return 0;
+}
+
+int executeSave(){
+	executeDefault();
+	writeFile(&theMap);
+	return 0;
+}
+
+int executeLoadSave(){
+	readFile(&theMap);
+	display_map(&theMap);
+	writeFile(&theMap);
+	return 0;
+}
+
+int executeDistances(){
+	executeDefault();
+	DistanceMap dist;
+	DistanceMap distWithTunneling;
+	get_distance_map(&theMap,theMap.pcPos,&dist);
+	get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
+	display_distance_map(&dist);
+	display_distance_map(&distWithTunneling);
+	return 0;
+}
+
+int executeDefault(){
+	printf("Seed:%ld\n", seed);
+	generate_map(&theMap,seed);
+	display_map(&theMap);
+	return 0;
+}
 
