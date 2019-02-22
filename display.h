@@ -1,7 +1,7 @@
-
 #ifndef DISPLAY_H
 #define DISPLAY_H
 #include "mapElements.h"
+#include "map.h"
 
 int display_map(Map * map);
 int display_distance_map(DistanceMap * dist);

@@ -5,6 +5,7 @@
 #include "mapBuilder.h"
 #include "mapIO.h"
 #include "mapElements.h"
+#include "map.h"
 
 #define FILE_PATH "/.rlg327/dungeon"
 //"/.rlg327/jerBear/06.rlg327" //

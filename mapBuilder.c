@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "map.h"
 #include "mapBuilder.h"
 #include "mapElements.h"
 

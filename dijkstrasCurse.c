@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include "map.h"
 #include "mapIO.h"
 #include "mapElements.h"
 #include "mapBuilder.h"
@@ -13,6 +14,7 @@ long seed;
 Map theMap;
 int nummon;
 
+//Strategy for strategy pattern
 struct IncomingCommand{
 	int (*execute)(void);
 };
@@ -52,23 +54,17 @@ int parseCLI(int argc, char * argv[], struct IncomingCommand * command){
 				flags.seed = true;
 				flags.theSeed = strtol(argv[i],NULL,10);
 				printf("Seed should be %ld\n", flags.theSeed);
-			}else{
-				return -1;
-			}
+			}else return -1;
 		}else if(!strcmp(argv[i],"--nummon")){
 			if(i<argc-1){
 				i++;
 				flags.nummon = true;
 				flags.monsters = atoi(argv[i]);
-			}else{
-				return -1;
-			}
-		}else{
-			return -1;
-		}
+			}else return -1;
+		}else return -1;
 	}
 
-	//Unpack the flags struct
+	//Unpack the flags struct and assign a strategy
 	if(flags.seed){
 		seed = flags.theSeed;
 	}else{
@@ -100,47 +96,11 @@ int main(int argc, char *argv[]){
 	map_init(&theMap);
 	whatsup.execute();
 	return 0;
-	// switch(whatsup){
-	// 	case nothing:
-	// 	printf("Seed:%ld\n", seed);
-	// 	generate_map(&theMap,seed);
-	// 	display_map(&theMap);
-	// 	return 0;
+}
 
-	// 	case load:
-	// 	readFile(&theMap);
-	// 	display_map(&theMap);
-	// 	return 0;
-
-	// 	case save:
-	// 	printf("Seed:%ld\n", seed);
-	// 	generate_map(&theMap,seed);
-	// 	display_map(&theMap);
-	// 	writeFile(&theMap);
-	// 	return 0;
-
-	// 	case load_save:
-	// 	readFile(&theMap);
-	// 	display_map(&theMap);
-	// 	writeFile(&theMap);
-	// 	return 0;
-
-	// 	case distances:
-	// 	printf("Seed:%ld\n", seed);
-	// 	generate_map(&theMap,seed);
-	// 	display_map(&theMap);
-	// 	DistanceMap dist;
-	// 	DistanceMap distWithTunneling;
-	// 	get_distance_map(&theMap,theMap.pcPos,&dist);
-	// 	get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
-	// 	display_distance_map(&dist);
-	// 	display_distance_map(&distWithTunneling);
-	// 	return 0;
-
-	// 	default:
-	// 	printf("That command is unfortunately not supported right now.\n");
-	// 	return 0;
-	// }
+void legacyFlag(){
+	printf("You used a legacy flag. ");
+	printf("That functionality is no longer supported :(\n");
 }
 
 int executeLoad(){
@@ -150,7 +110,9 @@ int executeLoad(){
 }
 
 int executeSave(){
-	executeDefault();
+	printf("Seed:%ld\n", seed);
+	generate_map(&theMap,seed);
+	display_map(&theMap);
 	writeFile(&theMap);
 	return 0;
 }
@@ -163,7 +125,9 @@ int executeLoadSave(){
 }
 
 int executeDistances(){
-	executeDefault();
+	printf("Seed:%ld\n", seed);
+	generate_map(&theMap,seed);
+	display_map(&theMap);
 	DistanceMap dist;
 	DistanceMap distWithTunneling;
 	get_distance_map(&theMap,theMap.pcPos,&dist);
@@ -179,4 +143,3 @@ int executeDefault(){
 	display_map(&theMap);
 	return 0;
 }
-

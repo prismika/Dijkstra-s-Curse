@@ -49,24 +49,12 @@ typedef struct Corridor{
 	Coordinate end;
 } Corridor;
 
-typedef struct Map{
-	Block block[MAPHEIGHT][MAPWIDTH];
-	Room room[MAX_ROOM_COUNT+1];//DONT FORGET extra spot for sentinel value
-	Coordinate pcPos;
-	int width;
-	int height;
-} Map;
 
 typedef struct{
 	int dist[MAPHEIGHT][MAPWIDTH];
 }DistanceMap;
 
 Block block_create(BlockType blockType, uint8_t hardness);
-void map_init(Map * map);
-int map_getBlock(Map * map, int x, int y, Block * outputBlock);
-int map_setBlock(Map * map, int x, int y, Block * inputBlock);
-void map_change_block_type(Map * map, int x, int y, BlockType type);
-void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord);
 int get_distance(DistanceMap * dist, int x, int y);
 void set_distance(DistanceMap * dist, int x, int y, int d);
 bool room_is_sentinel(Room room);
