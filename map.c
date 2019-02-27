@@ -31,6 +31,13 @@ void map_init(Map * map){
 	retMap.pcPos.x = 1;
 	retMap.pcPos.y = 1;
 
+
+	for(i = 0; i < MAPHEIGHT; ++i){
+		for(j = 0; j < MAPWIDTH; ++j){
+			retMap.population[i][j] = NULL;
+		}
+	}
+
 	*map = retMap;
 }
 
@@ -55,6 +62,13 @@ void map_change_block_type(Map * map, int x, int y, BlockType type){
 	map_getBlock(map,x,y,&blockToChange);
 	blockToChange.type = type;
 	map_setBlock(map,x,y,&blockToChange);
+}
+void map_set_entity(Map * map, int x, int y, Entity * ent){
+	map->population[y][x] = ent;
+	Coordinate coord;
+	coord.x = x;
+	coord.y = y;
+	ent->position = coord;
 }
 void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord){
 	while(true){
