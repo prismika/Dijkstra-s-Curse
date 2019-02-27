@@ -24,6 +24,7 @@ int executeLoad(void);
 int executeLoadSave(void);
 int executeDistances(void);
 int executeDefault(void);
+int legacyFlag(void);
 
 int parseCLI(int argc, char * argv[], struct IncomingCommand * command){
 	struct
@@ -80,7 +81,7 @@ int parseCLI(int argc, char * argv[], struct IncomingCommand * command){
 	}else if(flags.load && flags.save){
 		command->execute = executeLoadSave;
 	}else if(flags.distances){
-		command->execute = executeDistances;
+		command->execute = legacyFlag;//executeDistances;
 	}else{
 		command->execute = executeDefault;
 	}
@@ -98,9 +99,10 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
-void legacyFlag(){
+int legacyFlag(){
 	printf("You used a legacy flag. ");
 	printf("That functionality is no longer supported :(\n");
+	return 0;
 }
 
 int executeLoad(){
@@ -130,8 +132,9 @@ int executeDistances(){
 	display_map(&theMap);
 	DistanceMap dist;
 	DistanceMap distWithTunneling;
-	get_distance_map(&theMap,theMap.pcPos,&dist);
-	get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
+	//Broken
+	// get_distance_map(&theMap,theMap.pcPos,&dist);
+	// get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
 	display_distance_map(&dist);
 	display_distance_map(&distWithTunneling);
 	return 0;

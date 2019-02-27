@@ -28,9 +28,6 @@ void map_init(Map * map){
 		retMap.room[i] = sentinelRoom;
 	}
 
-	retMap.pcPos.x = 1;
-	retMap.pcPos.y = 1;
-
 
 	for(i = 0; i < MAPHEIGHT; ++i){
 		for(j = 0; j < MAPWIDTH; ++j){
@@ -70,6 +67,13 @@ void map_set_entity(Map * map, int x, int y, Entity * ent){
 	coord.y = y;
 	ent->position = coord;
 }
+bool map_has_entity_at(Map * map, int x, int y){
+	return !(map->population[y][x] == NULL);
+}
+void map_get_entity(Map * map, int x, int y, Entity * ent){
+	*ent = *(map->population[y][x]);
+}
+
 void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord){
 	while(true){
 		int yCoord = rand()%MAPHEIGHT;

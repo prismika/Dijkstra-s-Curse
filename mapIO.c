@@ -123,8 +123,12 @@ int readFile(Map * newMap){
 
 	map_init(newMap);
 	//PC Position
-	newMap->pcPos.x=pcPosXIn;
-	newMap->pcPos.y=pcPosYIn;
+	Coordinate pcPos;
+	pcPos.x=pcPosXIn;
+	pcPos.y=pcPosYIn;
+	Entity pc;
+	init_entity_pc(&pc,pcPos,'@');
+	map_set_entity(newMap, pcPos.x,pcPos.y, &pc);
 	//Hardness matrix
 	for(i=0;i<MAPHEIGHT;++i){
 		for(j=0;j<MAPWIDTH;++j){
@@ -195,8 +199,8 @@ int writeFile(Map * theMap){
 	//Things to write
 	char uselessInfoOut[17] = "RLG327-S2019\0\0\0\0";
 	uint32_t fileSizeOut;						//Calculate (Last)
-	uint8_t pcPosXOut = theMap->pcPos.x;
-	uint8_t pcPosYOut = theMap->pcPos.y;
+	uint8_t pcPosXOut;
+	uint8_t pcPosYOut;
 	uint8_t hardnessesOut[MAPHEIGHT][MAPWIDTH];	//Fill (Map passover 1)
 	uint16_t roomCountOut = 0;	//Count (Room passover)
 	// uint8_t * roomSpecsOut;		//Fill  (Room passover)
@@ -216,6 +220,15 @@ int writeFile(Map * theMap){
 				upStairCountOut++;
 			}else if(curBlock.type == downstairs){
 				downStairCountOut++;
+			}
+			if(map_has_entity_at(theMap,j,i)){
+				Entity curEnt;
+				map_get_entity(theMap, j, i, &curEnt);
+				//TODO This line was written by satan
+				if(curEnt.symbol == '@'){
+					pcPosXOut = j;
+					pcPosYOut = i;
+				}
 			}
 		}
 	}

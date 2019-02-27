@@ -12,12 +12,17 @@ int display_map(Map * map){
 	char output[MAPHEIGHT][MAPWIDTH];
 	for(y=0;y<MAPHEIGHT;++y){
 		for(x=0; x<MAPWIDTH; ++x){
-			Block curBlock;
-			map_getBlock(map,x,y,&curBlock);
-			output [y][x] = getBlockVisual(curBlock.type);
+			if(map_has_entity_at(map, x, y)){
+				Entity curEnt;
+				map_get_entity(map,x,y,&curEnt);
+				output[y][x] = curEnt.symbol;
+			}else{
+				Block curBlock;
+				map_getBlock(map,x,y,&curBlock);
+				output [y][x] = getBlockVisual(curBlock.type);
+			}
 		}
 	}
-	output[map->pcPos.y][map->pcPos.x] ='@';
 
 	for(y=0;y<MAPHEIGHT;++y){
 		for(x=0; x<MAPWIDTH; ++x){
