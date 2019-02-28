@@ -166,7 +166,7 @@ int executeDefault(){
 		DistanceMap * dist = map_get_distance_map_tunneling(&theMap);
 		entity_get_move(nextTurnEnt, dist, &moveCoord);
 		printf("Entity wants to move to (%d,%d)\n",moveCoord.x,moveCoord.y);
-		// map_move_entity(&theMap, &nextTurnEnt, moveCoord);
+		map_move_entity(&theMap, nextTurnEnt, moveCoord);
 		if(nextTurnEnt->isPC){
 			// Coordinate source = ...;
 			// DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);

@@ -71,8 +71,13 @@ void map_set_entity(Map * map, int x, int y, Entity * ent){
 	coord.y = y;
 	ent->position = coord;
 }
+void map_remove_entity(Map * map, int x, int y){
+	map->populationMap[y][x] = NULL;
+}
 void map_move_entity(Map * map, Entity * ent, Coordinate coord){
-	//TODO SKELETON
+	Coordinate position = ent->position;
+	map_remove_entity(map, position.x,position.y);
+	map_set_entity(map, coord.x, coord.y, ent);
 }
 Entity ** map_get_population_matrix(Map * map){
 	return &(map->populationMap[0][0]);
