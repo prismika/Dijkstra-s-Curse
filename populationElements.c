@@ -50,7 +50,7 @@ void init_entity_npc(Entity *ent, Coordinate coord, char symbol, uint32_t charac
 	ent->position = coord;
 	ent->symbol = symbol;
 	ent->dead = false;
-	ent->speed = 5;
+	ent->speed = (rand()%10) + 5;
 	ent->isPC = false;
 	//end->pc = NULL;
 	//ent->npc = &npc;
