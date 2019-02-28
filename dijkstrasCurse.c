@@ -9,6 +9,7 @@
 #include "mapBuilder.h"
 #include "pathFinder.h"
 #include "display.h"
+#include "mapPopulator.h"
 
 long seed;
 Map theMap;
@@ -73,6 +74,8 @@ int parseCLI(int argc, char * argv[], struct IncomingCommand * command){
 	}
 	if(flags.nummon){
 		nummon = flags.monsters;
+	}else{
+		nummon = 5;
 	}
 	if(flags.save && !flags.load){
 		command->execute = executeSave;
@@ -143,6 +146,7 @@ int executeDistances(){
 int executeDefault(){
 	printf("Seed:%ld\n", seed);
 	generate_map(&theMap,seed);
+	populate_map(&theMap,nummon);
 	display_map(&theMap);
 	return 0;
 }

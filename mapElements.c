@@ -10,6 +10,16 @@ struct Block block_create(enum BlockType blockType, uint8_t hardness){
 	return newBlock;
 }
 
+
+void distance_map_init(DistanceMap * dist){
+	int x,y;
+	for(y=0; y<MAPHEIGHT; y++){
+		for(x=0; x<MAPHEIGHT; x++){
+			dist-> dist[y][x] = 0;
+		}
+	}
+}
+
 int get_distance(DistanceMap * dist, int x, int y){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
 		fprintf(stderr, "!!!Tried to get distance from (%d,%d)!!!\n",x,y);

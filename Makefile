@@ -30,7 +30,7 @@ $(BIN): $(OBJS)
 	@$(CC) $(CFLAGS) -MMD -MF $*.d -c $<
 
 #Test things
-test: heap.o mapElements.o populationElements.o map.o display.o mapBuilder.o test.o mapPopulator.o
+test: heap.o mapElements.o populationElements.o map.o display.o mapBuilder.o test.o mapPopulator.o pathFinder.o
 	@$(ECHO) Linking $@
 	@$(CC) $^ -o $@
 

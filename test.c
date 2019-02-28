@@ -7,6 +7,7 @@
 #include "display.h"
 #include "mapBuilder.h"
 #include "mapPopulator.h"
+#include "pathFinder.h"
 typedef struct heap_pair{
 	heap_node_t * hn;
 	int key;
@@ -63,6 +64,14 @@ int main(void){
 	populate_map(&theMap,5);
 	display_map(&theMap);
 	display_population(&theMap);
+
+	DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
+	Coordinate source = {2,2};
+	get_distance_map(&theMap,source,dist);
+	display_distance_map(dist);
+	dist = map_get_distance_map_tunneling(&theMap);
+	get_distance_map_tunneling(&theMap,source,dist);
+	display_distance_map(dist);
 
 	return 0;
 }

@@ -11,6 +11,8 @@ typedef struct Map{
 	int width;
 	int height;
 	Entity * populationMap[MAPHEIGHT][MAPWIDTH];
+	DistanceMap distanceMapNonTunneling;
+	DistanceMap distanceMapTunneling;
 } Map;
 
 void map_init(Map * map);
@@ -23,6 +25,7 @@ void map_set_entity(Map * map, int x, int y, Entity * ent);
 bool map_has_entity_at(Map * map, int x, int y);
 void map_get_entity(Map * map, int x, int y, Entity * ent);
 void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord);
-
+DistanceMap * map_get_distance_map_non_tunneling(Map * map);
+DistanceMap * map_get_distance_map_tunneling(Map * map);
 
 #endif

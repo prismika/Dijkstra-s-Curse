@@ -35,6 +35,9 @@ void map_init(Map * map){
 		}
 	}
 
+	distance_map_init(&retMap.distanceMapNonTunneling);
+	distance_map_init(&retMap.distanceMapTunneling);
+
 	*map = retMap;
 }
 
@@ -105,4 +108,11 @@ void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChoose
 		}
 		//The chosen block was of a type not in the canChoose list.
 	}
+}
+
+DistanceMap * map_get_distance_map_non_tunneling(Map * map){
+	return &(map->distanceMapNonTunneling);
+}
+DistanceMap * map_get_distance_map_tunneling(Map * map){
+	return &(map->distanceMapTunneling);
 }
