@@ -6,6 +6,7 @@
 #include "populationElements.h"
 #include "display.h"
 #include "mapBuilder.h"
+#include "mapPopulator.h"
 typedef struct heap_pair{
 	heap_node_t * hn;
 	int key;
@@ -59,13 +60,7 @@ int main(void){
 	Map theMap;
 	map_init(&theMap);
 	generate_map(&theMap,13);
-	Coordinate coord;
-	// coord.x = 1;
-	// coord.y = 1;
-	// funfunkyfunc(&theMap, coord);
-	coord.x = 2;
-	coord.y = 1;
-	funfunkyfunc(&theMap, coord);
+	populate_map(&theMap,5);
 	display_map(&theMap);
 	display_population(&theMap);
 
