@@ -9,6 +9,7 @@ typedef struct{
 	// NPC *npc;
 	Coordinate position;
 	char symbol;
+	int speed;
 	bool dead;
 } Entity;
 
