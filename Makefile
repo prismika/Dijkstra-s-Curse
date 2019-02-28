@@ -9,9 +9,9 @@ ASSIGNMENT = 1.04
 CFLAGS = -Wall -ggdb3
 
 BIN = dijkstrasCurse
-OBJS = 			mapElements.o pathFinder.o display.o heap.o mapBuilder.o mapIO.o map.o populationElements.o mapPopulator.o dijkstrasCurse.o
-CSUBMISSION = 	mapElements.c pathFinder.c display.c heap.c mapBuilder.c mapIO.c map.c populationElements.c mapPopulator.c dijkstrasCurse.c
-HSUBMISSION = 	mapElements.h pathFinder.h display.h heap.h mapBuilder.h mapIO.h map.h populationElements.h mapPopulator.h
+OBJS = 			mapElements.o pathFinder.o display.o heap.o mapBuilder.o mapIO.o map.o populationElements.o mapPopulator.o turnMaster.o dijkstrasCurse.o
+CSUBMISSION = 	mapElements.c pathFinder.c display.c heap.c mapBuilder.c mapIO.c map.c populationElements.c mapPopulator.c turnMaster.c dijkstrasCurse.c
+HSUBMISSION = 	mapElements.h pathFinder.h display.h heap.h mapBuilder.h mapIO.h map.h populationElements.h mapPopulator.h turnMaster.h
 TXTSUBMISSION = README CHANGELOG Makefile
 TESTS = test
 
@@ -30,7 +30,7 @@ $(BIN): $(OBJS)
 	@$(CC) $(CFLAGS) -MMD -MF $*.d -c $<
 
 #Test things
-test: heap.o mapElements.o populationElements.o map.o display.o mapBuilder.o test.o mapPopulator.o pathFinder.o
+test: heap.o mapElements.o populationElements.o map.o display.o mapBuilder.o test.o mapPopulator.o pathFinder.o turnMaster.o
 	@$(ECHO) Linking $@
 	@$(CC) $^ -o $@
 

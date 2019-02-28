@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "map.h"
 #include "mapElements.h"
+#include "populationElements.h"
 
 
 void map_init(Map * map){
@@ -70,8 +71,11 @@ void map_set_entity(Map * map, int x, int y, Entity * ent){
 	coord.y = y;
 	ent->position = coord;
 }
-void map_move_entity(Entity * ent, Coordinate coord){
+void map_move_entity(Map * map, Entity * ent, Coordinate coord){
 	//TODO SKELETON
+}
+Entity ** map_get_population_matrix(Map * map){
+	return &(map->populationMap[0][0]);
 }
 void map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	Entity * ent = malloc(sizeof(Entity));

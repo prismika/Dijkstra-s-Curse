@@ -11,6 +11,7 @@
 #include "pathFinder.h"
 #include "display.h"
 #include "mapPopulator.h"
+#include "TurnMaster.h"
 
 long seed;
 Map theMap;
@@ -148,12 +149,20 @@ int executeDefault(){
 	printf("Seed:%ld\n", seed);
 	generate_map(&theMap,seed);
 	populate_map(&theMap,nummon);
-	//Create and init turnmaster
+	TurnMaster turnMaster;
+	turnmaster_init(&turnMaster);
+	//Get population matrix from map
+	Entity **populationMatrix = map_get_population_matrix(&theMap);
+	//Give population to turnmaster
+	turnmaster_fill_from_matrix(&turnMaster, populationMatrix);
 	display_map(&theMap);
 	while(true){
 		usleep(250000);
-		// Entity nextTurnEnt;
-		//	turnmaster_get_turn()
+		Entity * nextTurnEnt;
+		nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
+		if (nextTurnEnt == NULL){
+			return -1;
+		}
 		// Coordinate moveCoord;
 		// entity_get_move(&nextTurnEnt, &theMap, &moveCoord);
 		// map_move_entity(&theMap, &nextTurnEnt, moveCoord);
