@@ -43,3 +43,12 @@
 		-Refactor stair placement to separate out the random block selection
 		-Utilize newly refactored random block selection to place PC in a random legal position when a map is generated
 		-Update README and CHANGELOG
+2/18/19 -Trick out the Makefile
+2/20/19 -Move read/write responsibilities to MapIO
+2/21/19 -Refactor to use command pattern when parsing CLI
+		-Refactor the map into a higher file to avoid circular dependencies in the future
+2/26/19 -Stub Entity type and interfaces for that type
+2/27/19 -Add population to map struct
+		-Add interfaces for accessing population in map struct
+		-Stub the map populator
+		-Place distance maps inside the map

@@ -70,6 +70,9 @@ void map_set_entity(Map * map, int x, int y, Entity * ent){
 	coord.y = y;
 	ent->position = coord;
 }
+void map_move_entity(Entity * ent, Coordinate coord){
+	//TODO SKELETON
+}
 void map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	Entity * ent = malloc(sizeof(Entity));
 	char symbol = 'a' + (char) characteristics;

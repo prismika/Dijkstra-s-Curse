@@ -37,13 +37,12 @@ test: heap.o mapElements.o populationElements.o map.o display.o mapBuilder.o tes
 	
 #Make the tarball
 
-tarball: clean
+tarball:
 	@$(ECHO) Turning your hard work into a literal ball of tar
-	@$(RM) ../tarballs/Vose_Brantley-assignment-$(ASSIGNMENT).tar.gz
 	mkdir -p Vose_Brantley-assignment-$(ASSIGNMENT)
 	cp $(CSUBMISSION) $(HSUBMISSION) $(TXTSUBMISSION)  Vose_Brantley-assignment-$(ASSIGNMENT)
 	$(TAR) ../tarballs/Vose_Brantley-assignment-$(ASSIGNMENT).tar.gz Vose_Brantley-assignment-$(ASSIGNMENT)
-	rm -r Vose_Brantley-assignment-$(ASSIGNMENT)
+
 
 #Clean up!
 clean:

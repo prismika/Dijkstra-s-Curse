@@ -1,21 +1,20 @@
-This is Dijkstra's Curse, an ASCII-based rogue-like game. This iteration has multiple files, with an architecture consisting of three layers:
+This is Dijkstra's Curse, an ASCII-based rogue-like game. This iteration has multiple files, with an architecture consisting of four rough layers:
 
-Layer 1: 	dungeonGen (Generates maps, reads and writes map files, parses CLI)
-Layer 2: 	dij (Implements Dijkstra's algorithm)
-Layer 3: 	heap (Dr. Sheaffer's heap)
-			mapElements (stores map specs and defines types such as Map, Block, BlockType, etc.)
+Layer 1: 	+dijkstrasCurse (parses CLI)
+Layer 2: 	+mapBuilder (generates map)
+			+mapPopulator (populates map with NPC's)
+			+Display (handles output)
+			+mapIO (for writing and reading of map files)[ currently broken :( ]
+Layer 3:	+map (defines Map type and provides hecka interfaces)
+Lower Level:+heap (Dr. Sheaffer's heap)
+			+mapElements (stores map specs and defines types such as Block, BlockType, DistanceMap, etc.)
+			+pathFinder (implements Dijkstra's algorithm and generates distance maps)
+			+populationElements (defines types for characters such as Entity, etc.)
 
 Usage:
-./dungeonGen
-	Prints randomly generated dungeon along with the seed
-./dungeonGen --save
-	Same as with no arguments, except the dungeon is saved to ~/.rlg327/ under the name "dungeon," if the directory exists.
-./dungeonGen --load
-	Loads the dungeon at ~/.rlg327/dungeon if it exists, and displays it.
-./dungeonGen --save --load
-	Loads the dungeon at ~/.rlg327/dungeon, displays it, and saves it again.
-*NEW*
-./dungeonGen --distances
-	Randomly generates a dungeon, prints the seed and dungeon, followed by distance maps for both tunneling and non-tunneling entities.
+./dijkstrasCurse
+	Generates random dungeon and populates with monsters
+./dijkstrasCurse --nummon x
+	Generates dungeon and populates it with x monsters
 
 I hope your semester is going well!

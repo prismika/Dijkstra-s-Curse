@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 #include "map.h"
 #include "mapIO.h"
 #include "mapElements.h"
@@ -147,6 +148,22 @@ int executeDefault(){
 	printf("Seed:%ld\n", seed);
 	generate_map(&theMap,seed);
 	populate_map(&theMap,nummon);
+	//Create and init turnmaster
 	display_map(&theMap);
+	while(true){
+		usleep(250000);
+		// Entity nextTurnEnt;
+		//	turnmaster_get_turn()
+		// Coordinate moveCoord;
+		// entity_get_move(&nextTurnEnt, &theMap, &moveCoord);
+		// map_move_entity(&theMap, &nextTurnEnt, moveCoord);
+		//if it is the pc....
+		// Coordinate source = ...;
+		// DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
+		// get_distance_map(&theMap,source,dist);
+		// dist = map_get_distance_map_tunneling(&theMap);
+		// get_distance_map_tunneling(&theMap,source,dist);
+		display_map(&theMap);
+	}
 	return 0;
 }
