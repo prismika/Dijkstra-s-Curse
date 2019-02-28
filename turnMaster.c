@@ -7,11 +7,6 @@
 
 
 static int32_t compare_entity_heap_entries(const void * v1, const void * v2){
-	if(v1 == v2){
-		printf("God hates you\n");
-	}else{
-		printf("God loves you\n");
-	}
 	const EntityHeapEntry * e1 = v1;
 	const EntityHeapEntry * e2 = v2;
 	return (e1->priority == e2->priority) ?

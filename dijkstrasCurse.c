@@ -157,22 +157,25 @@ int executeDefault(){
 	turnmaster_fill_from_matrix(&turnMaster, populationMatrix);
 	display_map(&theMap);
 	while(true){
-		usleep(250000);
 		Entity * nextTurnEnt;
 		nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
 		if (nextTurnEnt == NULL){
 			return -1;
 		}
-		// Coordinate moveCoord;
-		// entity_get_move(&nextTurnEnt, &theMap, &moveCoord);
+		Coordinate moveCoord;
+		DistanceMap * dist = map_get_distance_map_tunneling(&theMap);
+		entity_get_move(nextTurnEnt, dist, &moveCoord);
+		printf("Entity wants to move to (%d,%d)\n",moveCoord.x,moveCoord.y);
 		// map_move_entity(&theMap, &nextTurnEnt, moveCoord);
-		//if it is the pc....
-		// Coordinate source = ...;
-		// DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
-		// get_distance_map(&theMap,source,dist);
-		// dist = map_get_distance_map_tunneling(&theMap);
-		// get_distance_map_tunneling(&theMap,source,dist);
-		display_map(&theMap);
+		if(nextTurnEnt->isPC){
+			// Coordinate source = ...;
+			// DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
+			// get_distance_map(&theMap,source,dist);
+			// dist = map_get_distance_map_tunneling(&theMap);
+			// get_distance_map_tunneling(&theMap,source,dist);
+			usleep(250000);
+			display_map(&theMap);
+		}
 	}
 	return 0;
 }
