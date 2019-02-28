@@ -12,11 +12,11 @@ typedef struct Entity{
 	int speed;
 	bool dead;
 	bool isPC; //Remove this later
-	Coordinate (*move_strategy)(struct Entity * ent, DistanceMap * map);
+	Coordinate (*move_strategy)(struct Entity * ent, DistanceMap * map, DistanceMap * mapTunnel);
 } Entity;
 
 void init_entity_npc(Entity *ent, Coordinate coord, char symbol, uint32_t characteristics);
 void init_entity_pc(Entity *ent, Coordinate coord, char symbol);
-void entity_get_move(Entity *ent, DistanceMap * map, Coordinate * coord);
+void entity_get_move(Entity *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);
 
 #endif

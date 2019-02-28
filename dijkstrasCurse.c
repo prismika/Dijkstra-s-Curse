@@ -163,15 +163,15 @@ int executeDefault(){
 			return -1;
 		}
 		Coordinate moveCoord;
-		DistanceMap * dist = map_get_distance_map_tunneling(&theMap);
-		entity_get_move(nextTurnEnt, dist, &moveCoord);
-		map_move_entity(&theMap, nextTurnEnt, moveCoord);
+		DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
+		DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
+		entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
+		Coordinate newCoord = map_move_entity(&theMap, nextTurnEnt, moveCoord);
 		if(nextTurnEnt->isPC){
-			// Coordinate source = ...;
-			// DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
-			// get_distance_map(&theMap,source,dist);
-			// dist = map_get_distance_map_tunneling(&theMap);
-			// get_distance_map_tunneling(&theMap,source,dist);
+			DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
+			get_distance_map(&theMap,newCoord,dist);
+			dist = map_get_distance_map_tunneling(&theMap);
+			get_distance_map_tunneling(&theMap,newCoord,dist);
 			usleep(250000);
 			display_map(&theMap);
 		}

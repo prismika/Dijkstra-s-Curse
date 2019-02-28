@@ -2,6 +2,7 @@
 #include "mapElements.h"
 #include "map.h"
 #include "mapPopulator.h"
+#include "pathFinder.h"
 
 #define PC_BUBBLE_SIZE 4
 
@@ -48,6 +49,10 @@ int populate_map(Map * map, int nummon){
 	int canPlaceOnSize = 1;
 	map_choose_random_block(map,canPlaceOn,canPlaceOnSize,&pcCoord);
 	map_new_pc(map,pcCoord);
+	DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(map);
+	DistanceMap * distTunnel = map_get_distance_map_tunneling(map);
+	get_distance_map(map, pcCoord, distNonTunnel);
+	get_distance_map_tunneling(map, pcCoord, distTunnel);
 
 	int i;
 	for(i=0; i<nummon;i++){
