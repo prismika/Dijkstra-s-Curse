@@ -75,10 +75,31 @@ void map_set_entity(Map * map, int x, int y, Entity * ent){
 void map_remove_entity(Map * map, int x, int y){
 	map->populationMap[y][x] = NULL;
 }
-void map_move_entity(Map * map, Entity * ent, Coordinate coord){
+void map_move_entity(Map * map, Entity * ent, Coordinate target){
 	Coordinate position = ent->position;
-	map_remove_entity(map, position.x,position.y);
-	map_set_entity(map, coord.x, coord.y, ent);
+	Block targetBlock;
+	map_getBlock(map, target.x,target.y, &targetBlock);
+	//If target is soft rock, break it (it'll do the next "if" too)
+	if(targetBlock.type == rock && targetBlock.hardness <= 85){
+		targetBlock.hardness = 0;
+		targetBlock.type = corridor;
+		map_setBlock(map, target.x, target.y, &targetBlock);
+	}
+	//If target is open, move there (and kill whatever is there)
+	if(targetBlock.hardness == 0){
+		if(map_has_entity_at(map, target.x,target.y)){
+			Entity ent;
+			map_get_entity(map, target.x, target.y, &ent);
+			ent.dead = true;
+		}
+		map_remove_entity(map, position.x,position.y);
+		map_set_entity(map, target.x, target.y, ent);
+		return;
+	//If target is hard rock, soften it
+	}else if(targetBlock.type == rock){
+		targetBlock.hardness -= 85;
+		map_setBlock(map, target.x, target.y, &targetBlock);
+	}
 }
 Entity ** map_get_population_matrix(Map * map){
 	return &(map->populationMap[0][0]);

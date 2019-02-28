@@ -49,11 +49,15 @@ Entity * turnmaster_get_next_turn(TurnMaster * tm){
 		printf("Turnmaster is empty! No more turns!\n");
 		return NULL;
 	}
+
 	Entity * nextEnt = nextEntry->entity;
 	nextEntry->priority += 1000/(nextEnt->speed);
 	heap_remove_min(&(tm->heap));
-	heap_insert(&(tm->heap),nextEntry);
-	// printf("Returning %c at (%d, %d), new priority %d\n",
-	// 	nextEnt->symbol, nextEnt->position.x, nextEnt->position.y, nextEntry->priority);
-	return nextEnt;
+	if(!nextEnt->dead){
+		heap_insert(&(tm->heap),nextEntry);
+		return nextEnt;
+		// printf("Returning %c at (%d, %d), new priority %d\n",
+		// nextEnt->symbol, nextEnt->position.x, nextEnt->position.y, nextEntry->priority);
+	}
+	return turnmaster_get_next_turn(tm);
 }
