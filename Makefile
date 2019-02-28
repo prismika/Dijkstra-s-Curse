@@ -9,7 +9,7 @@ ASSIGNMENT = 1.03
 CFLAGS = -Wall -ggdb3
 
 BIN = dijkstrasCurse
-OBJS = 			mapElements.o pathFinder.o display.o heap.o mapBuilder.o mapIO.o map.o dijkstrasCurse.o populationElements.o
+OBJS = 			mapElements.o pathFinder.o display.o heap.o mapBuilder.o mapIO.o map.o populationElements.o dijkstrasCurse.o
 CSUBMISSION = 	mapElements.c pathFinder.c display.c heap.c mapBuilder.c mapIO.c map.c populationElements.c dijkstrasCurse.c
 HSUBMISSION = 	mapElements.h pathFinder.h display.h heap.h mapBuilder.h mapIO.h map.h populationElements.h
 TXTSUBMISSION = README CHANGELOG Makefile
@@ -42,7 +42,7 @@ $(BIN): $(OBJS)
 # 	gcc -Wall -ggdb3 -c heap.c -o heap.o
 
 #Test things
-test: test.c heap.o
+test: test.c heap.o mapElements.o populationElements.o map.o display.o
 	@$(ECHO) Linking $@
 	@$(CC) $^ -o $@
 

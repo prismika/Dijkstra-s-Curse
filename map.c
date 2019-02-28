@@ -31,7 +31,7 @@ void map_init(Map * map){
 
 	for(i = 0; i < MAPHEIGHT; ++i){
 		for(j = 0; j < MAPWIDTH; ++j){
-			retMap.population[i][j] = NULL;
+			retMap.populationMap[i][j] = NULL;
 		}
 	}
 
@@ -61,17 +61,23 @@ void map_change_block_type(Map * map, int x, int y, BlockType type){
 	map_setBlock(map,x,y,&blockToChange);
 }
 void map_set_entity(Map * map, int x, int y, Entity * ent){
-	map->population[y][x] = ent;
+	map->populationMap[y][x] = ent;
 	Coordinate coord;
 	coord.x = x;
 	coord.y = y;
 	ent->position = coord;
 }
+void map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
+	Entity * ent = malloc(sizeof(Entity));
+	char symbol = 'a' + (char) characteristics;
+	init_entity_npc(ent,coord,symbol,characteristics);
+	map_set_entity(map, coord.x, coord.y, ent);
+}
 bool map_has_entity_at(Map * map, int x, int y){
-	return !(map->population[y][x] == NULL);
+	return !(map->populationMap[y][x] == NULL);
 }
 void map_get_entity(Map * map, int x, int y, Entity * ent){
-	*ent = *(map->population[y][x]);
+	*ent = *(map->populationMap[y][x]);
 }
 
 void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord){
