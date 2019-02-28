@@ -20,14 +20,12 @@ void placeNewCorridor(Corridor cor, Map *map);
 void placePartialCorridor(Coordinate origin, int dist, bool horizontal, Map *map);
 
 void populateWithStairs(Map *map);
-void populateWithPC(Map * map);
 
 void generate_map(Map * map, long seed){
 	srand(seed);
 	populateWithRooms(map);
 	populateWithCorridors(map);
 	populateWithStairs(map);
-	populateWithPC(map);
 }
 
 //----------------------------ROOMS------------------------------
@@ -218,14 +216,5 @@ void populateWithStairs(Map *map){
 	map_choose_random_block(map,canReplace,canReplaceSize,&downStairCoord);
 	map_change_block_type(map,upStairCoord.x,upStairCoord.y,upstairs);
 	map_change_block_type(map,downStairCoord.x,downStairCoord.y,downstairs);
-}
-
-//-----------------------------Entities-------------------------
-void populateWithPC(Map * map){
-	Coordinate coordForPC;
-	BlockType 	canChoose 		= {floor};
-	int 		canChooseSize 	= 1;
-	map_choose_random_block(map,&canChoose,canChooseSize,&coordForPC);
-	map_new_pc(map, coordForPC);
 }
 

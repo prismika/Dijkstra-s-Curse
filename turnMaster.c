@@ -35,8 +35,8 @@ void turnmaster_fill_from_matrix(TurnMaster * tm, Entity ** matrix){
 				entry->entity = ent;
 				entry->sequenceNumber = tm->heap.size;
 				entry->priority = 0;
-				printf("Adding Entity to Turnmaster: %c, %d, %d\n",
-					ent->symbol, ent->position.x, ent->position.y);
+				// printf("Adding Entity to Turnmaster: %c, %d, %d\n",
+				// 	ent->symbol, ent->position.x, ent->position.y);
 				entry->hn = heap_insert(&(tm->heap),entry);
 			}
 		}
@@ -53,7 +53,7 @@ Entity * turnmaster_get_next_turn(TurnMaster * tm){
 	nextEntry->priority += 1000/(nextEnt->speed);
 	heap_remove_min(&(tm->heap));
 	heap_insert(&(tm->heap),nextEntry);
-	printf("Returning %c at (%d, %d), new priority %d\n",
-		nextEnt->symbol, nextEnt->position.x, nextEnt->position.y, nextEntry->priority);
+	// printf("Returning %c at (%d, %d), new priority %d\n",
+	// 	nextEnt->symbol, nextEnt->position.x, nextEnt->position.y, nextEntry->priority);
 	return nextEnt;
 }

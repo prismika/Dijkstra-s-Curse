@@ -35,8 +35,13 @@ void set_distance(DistanceMap * dist, int x,int y,int d){
 	dist->dist[y][x] = d;
 }
 
-
-
 bool room_is_sentinel(Room room){
 	return room.height == -1;
+}
+
+//L-infinity metric
+int distLInf(Coordinate v1, Coordinate v2){
+	return (abs(v1.x-v2.x)<abs(v1.y-v2.y)) ?
+		abs(v1.y-v2.y) :
+		abs(v1.x-v2.x);
 }

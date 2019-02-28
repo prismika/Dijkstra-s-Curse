@@ -59,6 +59,7 @@ void distance_map_init(DistanceMap * dist);
 int get_distance(DistanceMap * dist, int x, int y);
 void set_distance(DistanceMap * dist, int x, int y, int d);
 bool room_is_sentinel(Room room);
+int distLInf(Coordinate v1, Coordinate v2);
 
 
 

@@ -4,6 +4,7 @@
 #include "mapElements.h"
 #include "populationElements.h"
 
+char symbols[] = "0123456789abcdef";
 
 void map_init(Map * map){
 	Map retMap;
@@ -84,7 +85,7 @@ Entity ** map_get_population_matrix(Map * map){
 }
 void map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	Entity * ent = malloc(sizeof(Entity));
-	char symbol = 'a' + (char) characteristics;
+	char symbol = symbols[characteristics];
 	init_entity_npc(ent,coord,symbol,characteristics);
 	map_set_entity(map, coord.x, coord.y, ent);
 }
