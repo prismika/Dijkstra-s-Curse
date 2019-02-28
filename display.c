@@ -85,6 +85,23 @@ int display_room_list(Room *roomList){
 	return 0;
 }
 
+int display_population(Map * map){
+	int x,y;
+	for(y=0; y<MAPHEIGHT; ++y){
+		for(x=0; x<MAPWIDTH; ++x){
+			if(map_has_entity_at(map,x,y)){
+				Entity curEnt;
+				map_get_entity(map,x,y,&curEnt);
+				printf("%c X|%d Y|%d\n", curEnt.symbol,curEnt.position.x, curEnt.position.y);
+				if(curEnt.position.x != x || curEnt.position.y != y){
+					printf("(at %d   %d in the population map!!!!!!!!!)\n", x,y);
+				}
+			}
+		}
+	}
+	return 0;
+}
+
 
 char getBlockVisual(enum BlockType type){
 	switch(type){

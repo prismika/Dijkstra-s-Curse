@@ -4,7 +4,7 @@ ECHO = echo
 RM = rm
 TAR = tar cvfz
 
-ASSIGNMENT = 1.03
+ASSIGNMENT = 1.04
 
 CFLAGS = -Wall -ggdb3
 
@@ -29,20 +29,8 @@ $(BIN): $(OBJS)
 	@$(ECHO) Compiling $<
 	@$(CC) $(CFLAGS) -MMD -MF $*.d -c $<
 
-# mapElements: mapElements.h mapElements.c
-# 	gcc -Wall -ggdb3 -o mapElements.o -c mapElements.c
-
-# dij: pathFinder.c pathFinder.h heap
-# 	gcc -Wall -ggdb3 -o pathFinder.o -c pathFinder.c
-
-# display: display.h display.c mapElements
-# 	gcc -Wall -ggdb3 -o display.o -c display.c
-
-# heap: heap.c heap.h
-# 	gcc -Wall -ggdb3 -c heap.c -o heap.o
-
 #Test things
-test: test.c heap.o mapElements.o populationElements.o map.o display.o
+test: heap.o mapElements.o populationElements.o map.o display.o mapBuilder.o test.o
 	@$(ECHO) Linking $@
 	@$(CC) $^ -o $@
 

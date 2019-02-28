@@ -5,6 +5,7 @@
 #include "map.h"
 #include "populationElements.h"
 #include "display.h"
+#include "mapBuilder.h"
 typedef struct heap_pair{
 	heap_node_t * hn;
 	int key;
@@ -55,14 +56,18 @@ int main(void){
 	// printf("%d\n", result->goods);
 
 
-
 	Map theMap;
 	map_init(&theMap);
+	generate_map(&theMap,13);
 	Coordinate coord;
-	coord.x = 1;
+	// coord.x = 1;
+	// coord.y = 1;
+	// funfunkyfunc(&theMap, coord);
+	coord.x = 2;
 	coord.y = 1;
 	funfunkyfunc(&theMap, coord);
 	display_map(&theMap);
+	display_population(&theMap);
 
 	return 0;
 }

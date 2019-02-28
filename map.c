@@ -73,6 +73,11 @@ void map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	init_entity_npc(ent,coord,symbol,characteristics);
 	map_set_entity(map, coord.x, coord.y, ent);
 }
+void map_new_pc(Map * map, Coordinate coord){
+	Entity * ent = malloc(sizeof(Entity));
+	init_entity_pc(ent,coord,'@');
+	map_set_entity(map, coord.x, coord.y, ent);
+}
 bool map_has_entity_at(Map * map, int x, int y){
 	return !(map->populationMap[y][x] == NULL);
 }

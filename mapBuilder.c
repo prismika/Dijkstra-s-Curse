@@ -226,8 +226,6 @@ void populateWithPC(Map * map){
 	BlockType 	canChoose 		= {floor};
 	int 		canChooseSize 	= 1;
 	map_choose_random_block(map,&canChoose,canChooseSize,&coordForPC);
-	Entity pc;
-	init_entity_pc(&pc, coordForPC,'@');
-	map_set_entity(map, coordForPC.x, coordForPC.y, &pc);
+	map_new_pc(map, coordForPC);
 }
 
