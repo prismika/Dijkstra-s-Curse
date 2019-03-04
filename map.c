@@ -92,14 +92,6 @@ void map_new_pc(Map * map, Coordinate coord){
 	init_entity_pc(ent,coord,'@');
 	map_set_entity(map, coord.x, coord.y, ent);
 }
-void map_kill_entity(Map * map, Coordinate coord){
-	Entity * targetEnt = map_get_entity_address(map, target.x, target.y);
-	targetEnt->dead = true;
-	map_remove_entity(map, target.x, target.y);
-	if(targetEnt->isPC){
-		pcDead = true;
-	}
-}
 bool map_has_entity_at(Map * map, int x, int y){
 	return !(map->populationMap[y][x] == NULL);
 }
@@ -108,6 +100,14 @@ void map_get_entity(Map * map, int x, int y, Entity * ent){
 }
 static Entity * map_get_entity_address(Map * map, int x, int y){
 	return map->populationMap[y][x];
+}
+void map_kill_entity(Map * map, Coordinate coord){
+	Entity * targetEnt = map_get_entity_address(map, coord.x, coord.y);
+	targetEnt->dead = true;
+	map_remove_entity(map, coord.x, coord.y);
+	if(targetEnt->isPC){
+		pcDead = true;
+	}
 }
 
 //Returns position of entity after move is attempted

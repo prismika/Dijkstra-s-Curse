@@ -4,7 +4,7 @@
 #include "mapPopulator.h"
 #include "pathFinder.h"
 
-#define PC_BUBBLE_SIZE 4
+#define PC_BUBBLE_SIZE 8
 
 Coordinate nextCoord(Coordinate coord){
 	if(coord.x<MAPWIDTH - 1){
