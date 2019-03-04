@@ -87,9 +87,11 @@ int display_room_list(Room *roomList){
 
 int display_population(Map * map){
 	int x,y;
+	int populationSize = 0;
 	for(y=0; y<MAPHEIGHT; ++y){
 		for(x=0; x<MAPWIDTH; ++x){
 			if(map_has_entity_at(map,x,y)){
+				populationSize ++;
 				Entity curEnt;
 				map_get_entity(map,x,y,&curEnt);
 				printf("%c X|%d Y|%d\n", curEnt.symbol,curEnt.position.x, curEnt.position.y);
@@ -98,6 +100,25 @@ int display_population(Map * map){
 				}
 			}
 		}
+	}
+	if(populationSize == 0){
+		printf("Empty population\n");
+	}
+	return 0;
+}
+
+
+int display_entity(Entity * ent){
+	if(ent!=NULL){
+		printf("Entity: Symbol|%c X|%d Y|%d PC|%s Dead|%s Speed%d\n",
+			ent->symbol,
+			ent->position.x,
+			ent->position.y,
+			ent->isPC ? "true":"false",
+			ent->dead ? "true":"false",
+			ent->speed);
+	}else{
+		printf("Entity is Null\n");
 	}
 	return 0;
 }

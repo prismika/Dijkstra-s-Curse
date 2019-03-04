@@ -145,6 +145,21 @@ int executeDistances(){
 	return 0;
 }
 
+static void handleDeath(void){
+	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+"                                 (  .      )\n"
+"                             )           (              )\n"
+"                                   .  '   .   '  .  '  .\n"
+"                          (    , )       (.   )  (   ',    )\n"
+"                           .' ) ( . )    ,  ( ,     )   ( .\n"
+"                        ). , ( .   (  ) ( , ')  .' (  ,    )\n"
+"                       (_,) . ), ) _) _,')  (, ) '. )  ,. (' )\n"
+"                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
+"                   Your hero has fought valliantly,\n"
+"				   but has succumb to Dijkstra's Curse\n\n\n\n"
+	);
+}
+
 int executeDefault(){
 	printf("Seed:%ld\n", seed);
 	generate_map(&theMap,seed);
@@ -175,6 +190,11 @@ int executeDefault(){
 			usleep(250000);
 			display_map(&theMap);
 		}
+		if(map_pc_is_dead(&theMap)){
+			handleDeath();
+			return 0;
+		}
 	}
 	return 0;
 }
+

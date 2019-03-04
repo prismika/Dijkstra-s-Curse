@@ -27,6 +27,7 @@ Entity ** map_get_population_matrix(Map * map);
 bool map_has_entity_at(Map * map, int x, int y);
 void map_get_entity(Map * map, int x, int y, Entity * ent);
 void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord);
+bool map_pc_is_dead(Map * map);
 DistanceMap * map_get_distance_map_non_tunneling(Map * map);
 DistanceMap * map_get_distance_map_tunneling(Map * map);
 

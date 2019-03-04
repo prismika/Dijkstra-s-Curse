@@ -1,10 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
 #include "map.h"
 #include "mapElements.h"
 #include "populationElements.h"
+#include "display.h"
 
 char symbols[] = "0123456789abcdef";
+bool pcDead = false;
 
 void map_init(Map * map){
 	Map retMap;
@@ -75,33 +78,6 @@ void map_set_entity(Map * map, int x, int y, Entity * ent){
 void map_remove_entity(Map * map, int x, int y){
 	map->populationMap[y][x] = NULL;
 }
-Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
-	Coordinate position = ent->position;
-	Block targetBlock;
-	map_getBlock(map, target.x,target.y, &targetBlock);
-	//If target is soft rock, break it (it'll do the next "if" too)
-	if(targetBlock.type == rock && targetBlock.hardness <= 85){
-		targetBlock.hardness = 0;
-		targetBlock.type = corridor;
-		map_setBlock(map, target.x, target.y, &targetBlock);
-	}
-	//If target is open, move there (and kill whatever is there)
-	if(targetBlock.hardness == 0){
-		if(map_has_entity_at(map, target.x,target.y)){
-			Entity ent;
-			map_get_entity(map, target.x, target.y, &ent);
-			ent.dead = true;
-		}
-		map_remove_entity(map, position.x,position.y);
-		map_set_entity(map, target.x, target.y, ent);
-		return target;
-	//If target is hard rock, soften it
-	}else if(targetBlock.type == rock){
-		targetBlock.hardness -= 85;
-		map_setBlock(map, target.x, target.y, &targetBlock);
-	}
-	return position;
-}
 Entity ** map_get_population_matrix(Map * map){
 	return &(map->populationMap[0][0]);
 }
@@ -116,11 +92,53 @@ void map_new_pc(Map * map, Coordinate coord){
 	init_entity_pc(ent,coord,'@');
 	map_set_entity(map, coord.x, coord.y, ent);
 }
+void map_kill_entity(Map * map, Coordinate coord){
+	Entity * targetEnt = map_get_entity_address(map, target.x, target.y);
+	targetEnt->dead = true;
+	map_remove_entity(map, target.x, target.y);
+	if(targetEnt->isPC){
+		pcDead = true;
+	}
+}
 bool map_has_entity_at(Map * map, int x, int y){
 	return !(map->populationMap[y][x] == NULL);
 }
 void map_get_entity(Map * map, int x, int y, Entity * ent){
 	*ent = *(map->populationMap[y][x]);
+}
+static Entity * map_get_entity_address(Map * map, int x, int y){
+	return map->populationMap[y][x];
+}
+
+//Returns position of entity after move is attempted
+Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
+	Coordinate position = ent->position;
+	//If entity isn't even trying to move, we're done
+	if(position.x == target.x && position.y == target.y){
+		return target;
+	}
+	Block targetBlock;
+	map_getBlock(map, target.x,target.y, &targetBlock);
+	//If target is soft rock, break it (it'll do the next "if" block too)
+	if(targetBlock.type == rock && targetBlock.hardness <= 85){
+		targetBlock.hardness = 0;
+		targetBlock.type = corridor;
+		map_setBlock(map, target.x, target.y, &targetBlock);
+	}
+	//If target is open, move there (and kill whatever is there)
+	if(targetBlock.hardness == 0){
+		if(map_has_entity_at(map, target.x,target.y)){
+			map_kill_entity(map,target);
+		}
+		map_remove_entity(map, position.x,position.y);
+		map_set_entity(map, target.x, target.y, ent);
+		return target;
+	//If target is hard rock, soften it
+	}else if(targetBlock.type == rock){
+		targetBlock.hardness -= 85;
+		map_setBlock(map, target.x, target.y, &targetBlock);
+	}
+	return position;
 }
 
 void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord){
@@ -143,6 +161,10 @@ void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChoose
 		}
 		//The chosen block was of a type not in the canChoose list.
 	}
+}
+
+bool map_pc_is_dead(Map * map){
+	return pcDead;
 }
 
 DistanceMap * map_get_distance_map_non_tunneling(Map * map){

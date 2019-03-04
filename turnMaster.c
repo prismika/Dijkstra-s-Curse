@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "turnMaster.h"
 #include "heap.h"
+#include "display.h"
 
 
 static int32_t compare_entity_heap_entries(const void * v1, const void * v2){
@@ -53,11 +54,15 @@ Entity * turnmaster_get_next_turn(TurnMaster * tm){
 	Entity * nextEnt = nextEntry->entity;
 	nextEntry->priority += 1000/(nextEnt->speed);
 	heap_remove_min(&(tm->heap));
-	if(!nextEnt->dead){
+	// printf("Removing from heap: ");
+	// display_entity(nextEnt);
+	// printf("Heap size is now %d\n", tm->heap.size);
+	if(!(nextEnt->dead)){
 		heap_insert(&(tm->heap),nextEntry);
 		return nextEnt;
 		// printf("Returning %c at (%d, %d), new priority %d\n",
 		// nextEnt->symbol, nextEnt->position.x, nextEnt->position.y, nextEntry->priority);
+	}else{
+		return turnmaster_get_next_turn(tm);
 	}
-	return turnmaster_get_next_turn(tm);
 }

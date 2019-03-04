@@ -52,3 +52,8 @@
 		-Add interfaces for accessing population in map struct
 		-Stub the map populator
 		-Place distance maps inside the map
+2/28/19 -Fight Sheaffer's heap valiantly. Create TurnMaster, a discrete event simulator.
+		-Stub movement strategies
+		-Complete MapPopulator
+		-Complete movement strategies
+		-Randomize entity speeds
