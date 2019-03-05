@@ -162,6 +162,7 @@ static void handleDeath(void){
 
 int executeDefault(){
 	printf("Seed:%ld\n", seed);
+	display_init();
 	generate_map(&theMap,seed);
 	populate_map(&theMap,nummon);
 	TurnMaster turnMaster;
@@ -191,6 +192,7 @@ int executeDefault(){
 			display_map(&theMap);
 		}
 		if(map_pc_is_dead(&theMap)){
+			display_delete();
 			handleDeath();
 			return 0;
 		}

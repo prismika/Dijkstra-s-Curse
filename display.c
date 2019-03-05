@@ -1,9 +1,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
+#include <ncurses.h>
 #include "display.h"
 #include "mapElements.h"
 
+#define CURSEMODE
+
+#ifndef CURSEMODE
+
+int display_init(){
+	return 0;
+}
+
+int deisplay_delete(){
+	return 0;
+}
 
 char getBlockVisual(enum BlockType type);
 
@@ -135,3 +147,69 @@ char getBlockVisual(enum BlockType type){
 		default:		return '!';
 	}
 }
+
+#endif
+
+
+
+
+
+/*----------------------------CURSES----------------------------*/
+
+
+
+
+
+
+#ifdef CURSEMODE
+
+int display_init(){
+	initscr();
+	raw();
+	noecho();
+	curs_set(0);
+	keypad(stdscr, TRUE);
+	mvprintw(1,1,"Test");
+	getch();
+	return 0;
+}
+
+int display_delete(){
+	endwin();
+	return 0;
+}
+
+int display_map(Map * map){
+	// int x,y;
+	// for(y=0;y<MAPHEIGHT;++y){
+	// 	for(x=0; x<MAPWIDTH; ++x){
+	// 		if(map_has_entity_at(map, x, y)){
+	// 			Entity curEnt;
+	// 			map_get_entity(map,x,y,&curEnt);
+	// 			output[y][x] = curEnt.symbol;
+	// 		}else{
+	// 			Block curBlock;
+	// 			map_getBlock(map,x,y,&curBlock);
+	// 			output [y][x] = getBlockVisual(curBlock.type);
+	// 		}
+	// 	}
+	// }
+	return 0;
+}
+int display_distance_map(DistanceMap * dist){
+	return 0;
+}
+int display_room_list(Room *roomList){
+	return 0;
+}
+int display_population(Map * map){
+	return 0;
+}
+int display_entity(Entity * ent){
+	return 0;
+}
+
+
+
+
+#endif

@@ -55,10 +55,8 @@ void init_entity_npc(Entity *ent, Coordinate coord, char symbol, uint32_t charac
 	//end->pc = NULL;
 	//ent->npc = &npc;
 	if(characteristics & NPC_TUNNELING){
-		printf("%c: That's a tunneler\n", symbol);
 		ent->move_strategy = tunnelMove;
 	}else{
-		printf("%c: No tunnels here\n", symbol);
 		ent->move_strategy = nonTunnelMove;
 	}
 }

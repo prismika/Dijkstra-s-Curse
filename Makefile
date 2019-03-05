@@ -21,7 +21,7 @@ all: $(BIN)
 # 	gcc -Wall -ggdb3 dijkstrasCurse.c mapElements.o display.o pathFinder.o heap.o -o dijkstrasCurse -lm
 $(BIN): $(OBJS)
 	@$(ECHO) Linking $@
-	@$(CC) $^ -o $@
+	@$(CC) $^ -o $@ -lncurses
 
 -include $(OBJS:.o=.d)
 
@@ -30,9 +30,9 @@ $(BIN): $(OBJS)
 	@$(CC) $(CFLAGS) -MMD -MF $*.d -c $<
 
 #Test things
-test: heap.o mapElements.o populationElements.o map.o display.o mapBuilder.o test.o mapPopulator.o pathFinder.o turnMaster.o
+test: test.o
 	@$(ECHO) Linking $@
-	@$(CC) $^ -o $@
+	@$(CC) $^ -o $@ -lncurses
 
 	
 #Make the tarball
