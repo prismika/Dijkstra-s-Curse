@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include "display.h"
 #include "mapElements.h"
+#include "map.h"
 
 #define CURSEMODE
 
@@ -13,7 +14,7 @@ int display_init(){
 	return 0;
 }
 
-int deisplay_delete(){
+int display_delete(){
 	return 0;
 }
 
@@ -135,19 +136,6 @@ int display_entity(Entity * ent){
 	return 0;
 }
 
-
-char getBlockVisual(enum BlockType type){
-	switch(type){
-		case rock:		return ' ';
-		case floor:		return '.';
-		case corridor:	return '#';
-		case upstairs:	return '<';
-		case downstairs:return '>';
-		case bedrock: 	return '|';
-		default:		return '!';
-	}
-}
-
 #endif
 
 
@@ -162,15 +150,19 @@ char getBlockVisual(enum BlockType type){
 
 
 #ifdef CURSEMODE
+#define SPACE_ABOVE_MAP 1
 
 int display_init(){
+	// initscr();
+	// curs_set(0);
+
 	initscr();
 	raw();
 	noecho();
 	curs_set(0);
 	keypad(stdscr, TRUE);
-	mvprintw(1,1,"Test");
-	getch();
+	mvaddch(1, 1, 'X');
+
 	return 0;
 }
 
@@ -179,21 +171,25 @@ int display_delete(){
 	return 0;
 }
 
+char getBlockVisual(BlockType type);
+
 int display_map(Map * map){
-	// int x,y;
-	// for(y=0;y<MAPHEIGHT;++y){
-	// 	for(x=0; x<MAPWIDTH; ++x){
-	// 		if(map_has_entity_at(map, x, y)){
-	// 			Entity curEnt;
-	// 			map_get_entity(map,x,y,&curEnt);
-	// 			output[y][x] = curEnt.symbol;
-	// 		}else{
-	// 			Block curBlock;
-	// 			map_getBlock(map,x,y,&curBlock);
-	// 			output [y][x] = getBlockVisual(curBlock.type);
-	// 		}
-	// 	}
-	// }
+	mvprintw(0, 1, "Dijkstra's Curse");
+	int x,y;
+	for(y=0;y<MAPHEIGHT;++y){
+		for(x=0; x<MAPWIDTH; ++x){
+			if(map_has_entity_at(map, x, y)){
+				Entity curEnt;
+				map_get_entity(map,x,y,&curEnt);
+				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
+			}else{
+				Block curBlock;
+				map_getBlock(map,x,y,&curBlock);
+				mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
+			}
+		}
+	}
+	refresh();
 	return 0;
 }
 int display_distance_map(DistanceMap * dist){
@@ -213,3 +209,19 @@ int display_entity(Entity * ent){
 
 
 #endif
+
+
+
+
+
+char getBlockVisual(BlockType type){
+	switch(type){
+		case rock:		return ' ';
+		case floor:		return '.';
+		case corridor:	return '#';
+		case upstairs:	return '<';
+		case downstairs:return '>';
+		case bedrock: 	return '|';
+		default:		return '!';
+	}
+}

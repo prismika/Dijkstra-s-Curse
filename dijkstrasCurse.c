@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <ncurses.h>
 #include "map.h"
 #include "mapIO.h"
 #include "mapElements.h"
@@ -156,7 +157,7 @@ static void handleDeath(void){
 "                       (_,) . ), ) _) _,')  (, ) '. )  ,. (' )\n"
 "                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
 "                   Your hero has fought valliantly,\n"
-"				   but has succumb to Dijkstra's Curse\n\n\n\n"
+"				   but has succumb to Dijkstra's Curse\n\n\n\n\n\n"
 	);
 }
 
@@ -199,4 +200,3 @@ int executeDefault(){
 	}
 	return 0;
 }
-

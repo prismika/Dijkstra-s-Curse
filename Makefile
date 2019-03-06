@@ -9,7 +9,7 @@ ASSIGNMENT = 1.04
 CFLAGS = -Wall -ggdb3
 
 BIN = dijkstrasCurse
-OBJS = 			mapElements.o pathFinder.o display.o heap.o mapBuilder.o mapIO.o map.o populationElements.o mapPopulator.o turnMaster.o dijkstrasCurse.o
+OBJS = 			mapElements.o pathFinder.o display.o heap.o mapBuilder.o mapIO.o map.o populationElements.o mapPopulator.o turnMaster.o
 CSUBMISSION = 	mapElements.c pathFinder.c display.c heap.c mapBuilder.c mapIO.c map.c populationElements.c mapPopulator.c turnMaster.c dijkstrasCurse.c
 HSUBMISSION = 	mapElements.h pathFinder.h display.h heap.h mapBuilder.h mapIO.h map.h populationElements.h mapPopulator.h turnMaster.h
 TXTSUBMISSION = README CHANGELOG Makefile
@@ -19,7 +19,7 @@ all: $(BIN)
 
 # dijkstrasCurse: dijkstrasCurse.c mapElements dij display heap
 # 	gcc -Wall -ggdb3 dijkstrasCurse.c mapElements.o display.o pathFinder.o heap.o -o dijkstrasCurse -lm
-$(BIN): $(OBJS)
+$(BIN): $(OBJS) dijkstrasCurse.o
 	@$(ECHO) Linking $@
 	@$(CC) $^ -o $@ -lncurses
 
@@ -30,7 +30,7 @@ $(BIN): $(OBJS)
 	@$(CC) $(CFLAGS) -MMD -MF $*.d -c $<
 
 #Test things
-test: test.o
+test: test.o $(OBJS)
 	@$(ECHO) Linking $@
 	@$(CC) $^ -o $@ -lncurses
 
