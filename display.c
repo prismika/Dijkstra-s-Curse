@@ -8,7 +8,101 @@
 
 #define CURSEMODE
 
+
+
+/*----------------------------CURSES----------------------------*/
+
+
+
+#ifdef CURSEMODE
+#define SPACE_ABOVE_MAP 1
+
+static char getBlockVisual(BlockType type){
+	switch(type){
+		case rock:		return ' ';
+		case floor:		return '.';
+		case corridor:	return '#';
+		case upstairs:	return '<';
+		case downstairs:return '>';
+		case bedrock: 	return '|';
+		default:		return '!';
+	}
+}
+
+int display_init(){
+	// initscr();
+	// curs_set(0);
+
+	initscr();
+	raw();
+	noecho();
+	curs_set(0);
+	keypad(stdscr, TRUE);
+	mvaddch(1, 1, 'X');
+
+	return 0;
+}
+
+int display_delete(){
+	endwin();
+	return 0;
+}
+
+char getBlockVisual(BlockType type);
+
+int display_map(Map * map){
+	mvprintw(0, 1, "Dijkstra's Curse");
+	int x,y;
+	for(y=0;y<MAPHEIGHT;++y){
+		for(x=0; x<MAPWIDTH; ++x){
+			if(map_has_entity_at(map, x, y)){
+				Entity curEnt;
+				map_get_entity(map,x,y,&curEnt);
+				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
+			}else{
+				Block curBlock;
+				map_getBlock(map,x,y,&curBlock);
+				mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
+			}
+		}
+	}
+	refresh();
+	return 0;
+}
+int display_distance_map(DistanceMap * dist){
+	return 0;
+}
+int display_room_list(Room *roomList){
+	return 0;
+}
+int display_population(Map * map){
+	return 0;
+}
+int display_entity(Entity * ent){
+	return 0;
+}
+
+#endif
+
+
+
+
+
+//---------------------------NOT CURSES-------------------------
+
 #ifndef CURSEMODE
+
+static char getBlockVisual(BlockType type){
+	switch(type){
+		case rock:		return ' ';
+		case floor:		return '.';
+		case corridor:	return '#';
+		case upstairs:	return '<';
+		case downstairs:return '>';
+		case bedrock: 	return '|';
+		default:		return '!';
+	}
+}
 
 int display_init(){
 	return 0;
@@ -17,8 +111,6 @@ int display_init(){
 int display_delete(){
 	return 0;
 }
-
-char getBlockVisual(enum BlockType type);
 
 int display_map(Map * map){
 	int x,y;
@@ -137,91 +229,3 @@ int display_entity(Entity * ent){
 }
 
 #endif
-
-
-
-
-
-/*----------------------------CURSES----------------------------*/
-
-
-
-
-
-
-#ifdef CURSEMODE
-#define SPACE_ABOVE_MAP 1
-
-int display_init(){
-	// initscr();
-	// curs_set(0);
-
-	initscr();
-	raw();
-	noecho();
-	curs_set(0);
-	keypad(stdscr, TRUE);
-	mvaddch(1, 1, 'X');
-
-	return 0;
-}
-
-int display_delete(){
-	endwin();
-	return 0;
-}
-
-char getBlockVisual(BlockType type);
-
-int display_map(Map * map){
-	mvprintw(0, 1, "Dijkstra's Curse");
-	int x,y;
-	for(y=0;y<MAPHEIGHT;++y){
-		for(x=0; x<MAPWIDTH; ++x){
-			if(map_has_entity_at(map, x, y)){
-				Entity curEnt;
-				map_get_entity(map,x,y,&curEnt);
-				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
-			}else{
-				Block curBlock;
-				map_getBlock(map,x,y,&curBlock);
-				mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
-			}
-		}
-	}
-	refresh();
-	return 0;
-}
-int display_distance_map(DistanceMap * dist){
-	return 0;
-}
-int display_room_list(Room *roomList){
-	return 0;
-}
-int display_population(Map * map){
-	return 0;
-}
-int display_entity(Entity * ent){
-	return 0;
-}
-
-
-
-
-#endif
-
-
-
-
-
-char getBlockVisual(BlockType type){
-	switch(type){
-		case rock:		return ' ';
-		case floor:		return '.';
-		case corridor:	return '#';
-		case upstairs:	return '<';
-		case downstairs:return '>';
-		case bedrock: 	return '|';
-		default:		return '!';
-	}
-}

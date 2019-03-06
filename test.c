@@ -16,7 +16,8 @@ int main(int argc, char * argv[]){
 	while(i<=21){
 		char input = getch();
 		mvaddch(i++, 1, input);
-		usleep(25000);
+		refresh();
+		usleep(250000);
 	}
 	endwin();
 
