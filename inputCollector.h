@@ -19,12 +19,14 @@ typedef enum{
 typedef struct{
 	InputType lastType;
 	bool isMovement;
+	bool isStair;
 }InputState;
 
 int inputState_init(InputState * inState);
 int inputState_update(InputState * inState);
 InputType inputState_get_last(InputState * inState);
 bool inputState_is_movement(InputState * inState);
+bool inputState_is_stair(InputState * inState);
 
 
 

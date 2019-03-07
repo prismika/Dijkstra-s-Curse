@@ -8,13 +8,14 @@ int inputState_init(InputState * inState){
 	keypad(stdscr, TRUE);
 	inState->lastType = input_null;
 	inState->isMovement = false;
+	inState->isStair = false;
 	return 0;
 }
 
 int inputState_update(InputState * inState){
 	int in = getch();
 	//Is it a movement?
-	InputType newType;
+	InputType newType = input_null;
 	switch(in){
 		case '7':
 		case 'y':
@@ -56,6 +57,43 @@ int inputState_update(InputState * inState){
 		newType = input_left;
 		break;
 
+		case '5':
+		case ' ':
+		case '.':
+		newType = input_rest;
+		break;
+
+		// case 'm':
+		// newType = input_mlist;
+		// break;
+
+		// case KEY_UP:
+		// newType = input_mlist_up;
+		// break;
+
+		// case KEY_DOWN:
+		// newType = input_mlist_down;
+		// break;
+
+		// case KEY_EXIT:
+		// newType = input_escape;
+		// break;
+
+		case 'Q':
+		newType = input_quit;
+		break;
+
+		default: break;
+	}
+	//Did we find a movement?
+	if(newType != input_null){
+		inState->isMovement = true;
+		inState->isStair = false;
+		inState->lastType = newType;
+		return 0;
+	}
+	//Check for stair commands
+	switch(in){
 		case '>':
 		newType = input_downstairs;
 		break;
@@ -64,41 +102,15 @@ int inputState_update(InputState * inState){
 		newType = input_upstairs;
 		break;
 
-		case '5':
-		case ' ':
-		case '.':
-		newType = input_rest;
-		break;
-
-		case 'm':
-		newType = input_mlist;
-		break;
-
-		case KEY_UP:
-		newType = input_mlist_up;
-		break;
-
-		case KEY_DOWN:
-		newType = input_mlist_down;
-		break;
-
-		case KEY_EXIT:
-		newType = input_escape;
-		break;
-
-		case 'Q':
-		newType = input_quit;
-		break;
-
-		default:
-		newType = input_null;
-		break;
+		default: break;
 	}
-	//Did we find a movement?
+	//Did we find a stair command?
 	if(newType != input_null){
-		inState->isMovement = true;
+		inState->isStair = true;
+		inState->isMovement = false;
+		inState->lastType = newType;
+		return 0;
 	}
-	inState->lastType = newType;
 	return 0;
 }
 
@@ -110,3 +122,6 @@ bool inputState_is_movement(InputState * inState){
 	return inState -> isMovement;
 }
 
+bool inputState_is_stair(InputState * inState){
+	return inState -> isStair;
+}

@@ -18,7 +18,20 @@
 
 long seed;
 Map theMap;
+TurnMaster turnMaster;
 int nummon;
+
+char * deathString = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+"                                 (  .      )\n"
+"                             )           (              )\n"
+"                                   .  '   .   '  .  '  .\n"
+"                          (    , )       (.   )  (   ',    )\n"
+"                           .' ) ( . )    ,  ( ,     )   ( .\n"
+"                        ). , ( .   (  ) ( , ')  .' (  ,    )\n"
+"                       (_,) . ), ) _) _,')  (, ) '. )  ,. (' )\n"
+"                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
+"                   Your hero has fought valliantly,\n"
+"				   but has succumb to Dijkstra's Curse\n\n\n\n\n\n";
 
 //Strategy for strategy pattern
 struct IncomingCommand{
@@ -108,6 +121,136 @@ int main(int argc, char *argv[]){
 	return 0;
 }
 
+
+
+
+static void init_level(){
+	map_init(&theMap);
+	generate_map(&theMap,++seed);
+	populate_map(&theMap,nummon);
+	turnmaster_init(&turnMaster);
+	//Get population matrix from map
+	Entity **populationMatrix = map_get_population_matrix(&theMap);
+	//Give population to turnmaster
+	turnmaster_fill_from_matrix(&turnMaster, populationMatrix);
+}
+
+static void delete_level(){
+	//delete map
+}
+
+static void interpret_pc_input(Entity * pc, InputState * inState){
+	InputType inputType = inputState_get_last(inState);
+	if(inputState_is_movement(inState)){
+		Coordinate moveCoord = pc->position;
+		switch(inputType){
+			case input_upleft:
+				moveCoord.y--;
+				moveCoord.x--;
+			break;
+			case input_up:
+				moveCoord.y--;
+			break;
+			case input_upright:
+				moveCoord.x++;
+				moveCoord.y--;
+			break;
+			case input_right:
+				moveCoord.x++;
+			break;
+			case input_downright:
+				moveCoord.y++;
+				moveCoord.x++;
+			break;
+			case input_down:
+				moveCoord.y++;
+			break;
+			case input_downleft:
+				moveCoord.y++;
+				moveCoord.x--;
+			break;
+			case input_left:
+				moveCoord.x--;
+			break;
+			default:break;
+		}
+		//Move the PC accordingly
+		Coordinate newCoord = map_move_entity(&theMap, pc, moveCoord);
+		//Update distance maps
+		DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
+		get_distance_map(&theMap,newCoord,dist);
+		dist = map_get_distance_map_tunneling(&theMap);
+		get_distance_map_tunneling(&theMap,newCoord,dist);
+
+	}//Check if the input was a stair movement
+	else if(inputState_is_stair(inState)){
+		display_message("That's a stair key");
+		// TODO delete_level
+		init_level();
+	}
+}
+
+static void handle_death(void){
+	display_map(&theMap);
+	display_message("Press any key to continue");
+	getch();
+	display_delete();
+	printf(deathString);
+}
+
+int executeDefault(){
+	//Display seed for posterity
+	printf("Seed:%ld\n", seed);
+	//Init things
+	display_init();
+	InputState inputState;
+	inputState_init(&inputState);
+	//Generate!
+	init_level();
+	//Main loop
+	while(true){
+		//Get next turn from turnMaster
+		Entity * nextTurnEnt;
+		nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
+		//turnMaster should never be empty
+		if (nextTurnEnt == NULL){
+			return -1;
+		}
+		
+		//Special things happen if current entity is the PC
+		if(nextTurnEnt->isPC){
+			//Display map and get input
+			display_map(&theMap);
+			inputState_update(&inputState);
+			//Interpret and execute input with helper function 
+			interpret_pc_input(nextTurnEnt, &inputState);
+		}else{//Extra special things happen if current entity is not the PC
+			//Calculate attempted move of entity with current turn
+			Coordinate moveCoord;
+			DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
+			DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
+			entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
+			//Make the move
+			map_move_entity(&theMap, nextTurnEnt, moveCoord);
+		}
+		//If the PC is dead
+		if(map_pc_is_dead(&theMap)){
+			//Press f to pay respects
+			handle_death();
+			//End the loop
+			return 0;
+		}
+	}
+	return 0;
+}
+
+
+
+
+
+
+
+//--------------------Other modes no one cares about------------
 int legacyFlag(){
 	printf("You used a legacy flag. ");
 	printf("That functionality is no longer supported :(\n");
@@ -146,123 +289,5 @@ int executeDistances(){
 	// get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
 	display_distance_map(&dist);
 	display_distance_map(&distWithTunneling);
-	return 0;
-}
-
-static void interpret_pc_input(Entity * pc, InputState * inState){
-	InputType inputType = inputState_get_last(inState);
-	if(inputState_is_movement(inState)){
-		Coordinate moveCoord = pc->position;
-		switch(inputType){
-			case input_upleft:
-				moveCoord.y--;
-				moveCoord.x--;
-			break;
-			case input_up:
-				moveCoord.y--;
-			break;
-			case input_upright:
-				moveCoord.x++;
-				moveCoord.y--;
-			break;
-			case input_right:
-				moveCoord.x++;
-			break;
-			case input_downright:
-				moveCoord.y++;
-				moveCoord.x++;
-			break;
-			case input_down:
-				moveCoord.y++;
-			break;
-			case input_downleft:
-				moveCoord.y++;
-				moveCoord.x--;
-			break;
-			case input_left:
-				moveCoord.x--;
-			break;
-
-			default:
-			break;
-		}
-		//Move the PC accordingly
-		Coordinate newCoord = map_move_entity(&theMap, pc, moveCoord);
-		//Update distance maps
-		DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
-		get_distance_map(&theMap,newCoord,dist);
-		dist = map_get_distance_map_tunneling(&theMap);
-		get_distance_map_tunneling(&theMap,newCoord,dist);
-	}
-}
-
-static void handleDeath(void){
-	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
-"                                 (  .      )\n"
-"                             )           (              )\n"
-"                                   .  '   .   '  .  '  .\n"
-"                          (    , )       (.   )  (   ',    )\n"
-"                           .' ) ( . )    ,  ( ,     )   ( .\n"
-"                        ). , ( .   (  ) ( , ')  .' (  ,    )\n"
-"                       (_,) . ), ) _) _,')  (, ) '. )  ,. (' )\n"
-"                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
-"                   Your hero has fought valliantly,\n"
-"				   but has succumb to Dijkstra's Curse\n\n\n\n\n\n"
-	);
-}
-
-int executeDefault(){
-	//Display seed for posterity
-	printf("Seed:%ld\n", seed);
-	//Init things
-	display_init();
-	InputState inputState;
-	inputState_init(&inputState);
-	//Generate!
-	generate_map(&theMap,seed);
-	populate_map(&theMap,nummon);
-	TurnMaster turnMaster;
-	turnmaster_init(&turnMaster);
-	//Get population matrix from map
-	Entity **populationMatrix = map_get_population_matrix(&theMap);
-	//Give population to turnmaster
-	turnmaster_fill_from_matrix(&turnMaster, populationMatrix);
-
-	//Main loop
-	while(true){
-		//Get next turn from turnMaster
-		Entity * nextTurnEnt;
-		nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
-		//turnMaster should never be empty
-		if (nextTurnEnt == NULL){
-			return -1;
-		}
-		
-		//Special things happen if current entity is the PC
-		if(nextTurnEnt->isPC){
-			//Display map and get input
-			display_map(&theMap);
-			inputState_update(&inputState);
-			//Interpret and execute input with helper function 
-			interpret_pc_input(nextTurnEnt, &inputState);
-		}else{//Extra special things happen if current entity is not the PC
-			//Calculate attempted move of entity with current turn
-			Coordinate moveCoord;
-			DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
-			DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
-			entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
-			//Make the move
-			map_move_entity(&theMap, nextTurnEnt, moveCoord);
-		}
-		//If the PC is dead
-		if(map_pc_is_dead(&theMap)){
-			//deinit what needs to be deinited
-			display_delete();
-			//Press f to pay respects
-			handleDeath();
-			//End the loop
-			return 0;
-		}
-	}
 	return 0;
 }

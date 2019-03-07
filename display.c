@@ -49,7 +49,6 @@ int display_delete(){
 char getBlockVisual(BlockType type);
 
 int display_map(Map * map){
-	mvprintw(0, 1, "Dijkstra's Curse");
 	int x,y;
 	for(y=0;y<MAPHEIGHT;++y){
 		for(x=0; x<MAPWIDTH; ++x){
@@ -82,6 +81,8 @@ int display_entity(Entity * ent){
 
 
 int display_message(char * s){
+	move(0,0);
+	clrtoeol();
 	mvprintw(0,1,s);
 	return 0;
 }
