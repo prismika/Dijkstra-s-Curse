@@ -2,7 +2,17 @@
 #define INPUTCOLLECTOR_H
 
 typedef enum{
-	noInput, up
+	input_upleft,		input_up, 		input_upright,
+	input_left,			input_null,		input_right,
+	input_downleft,		input_down,		input_downright,
+	input_downstairs,
+	input_upstairs,
+	input_rest,
+	input_mlist,
+	input_mlist_up,
+	input_mlist_down,
+	input_escape,
+	input_quit
 }InputType;
 
 typedef struct{

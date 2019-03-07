@@ -153,8 +153,11 @@ static Coordinate interpret_pc_input(Entity * pc, InputState * inState){
 	InputType inputType = inputState_get_last(inState);
 	Coordinate returnCoord = pc->position;
 	switch(inputType){
-		case up:
+		case input_up:
 			returnCoord.y--;
+		break;
+		case input_down:
+			returnCoord.x--;
 		break;
 		default:
 		break;
