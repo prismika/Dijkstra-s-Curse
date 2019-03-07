@@ -13,6 +13,8 @@
 #include "display.h"
 #include "mapPopulator.h"
 #include "TurnMaster.h"
+#include "inputCollector.h"
+#include "display.h"
 
 long seed;
 Map theMap;
@@ -101,6 +103,7 @@ int main(int argc, char *argv[]){
 		return -1;
 	}
 	map_init(&theMap);
+	//Execute the function that parseCLI chose
 	whatsup.execute();
 	return 0;
 }
@@ -146,6 +149,19 @@ int executeDistances(){
 	return 0;
 }
 
+static Coordinate interpret_pc_input(Entity * pc, InputState * inState){
+	InputType inputType = inputState_get_last(inState);
+	Coordinate returnCoord = pc->position;
+	switch(inputType){
+		case up:
+			returnCoord.y--;
+		break;
+		default:
+		break;
+	}
+	return returnCoord;
+}
+
 static void handleDeath(void){
 	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 "                                 (  .      )\n"
@@ -162,8 +178,13 @@ static void handleDeath(void){
 }
 
 int executeDefault(){
+	//Display seed for posterity
 	printf("Seed:%ld\n", seed);
+	//Init things
 	display_init();
+	InputState inputState;
+	inputState_init(&inputState);
+	//Generate!
 	generate_map(&theMap,seed);
 	populate_map(&theMap,nummon);
 	TurnMaster turnMaster;
@@ -173,28 +194,49 @@ int executeDefault(){
 	//Give population to turnmaster
 	turnmaster_fill_from_matrix(&turnMaster, populationMatrix);
 	display_map(&theMap);
+
+	//Main loop
 	while(true){
+		//Get next turn from turnMaster
 		Entity * nextTurnEnt;
 		nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
+		//turnMaster should never be empty
 		if (nextTurnEnt == NULL){
 			return -1;
 		}
-		Coordinate moveCoord;
-		DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
-		DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
-		entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
-		Coordinate newCoord = map_move_entity(&theMap, nextTurnEnt, moveCoord);
+		
+		//Special things happen if current entity is the PC
 		if(nextTurnEnt->isPC){
+			//Get input
+			inputState_update(&inputState);
+			//Interpret input with helper function 
+			Coordinate moveCoord = interpret_pc_input(nextTurnEnt, &inputState);
+			//Move the PC accordingly
+			Coordinate newCoord = map_move_entity(&theMap, nextTurnEnt, moveCoord);
+			//Update distance maps
 			DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
 			get_distance_map(&theMap,newCoord,dist);
 			dist = map_get_distance_map_tunneling(&theMap);
 			get_distance_map_tunneling(&theMap,newCoord,dist);
+			//Wait a bit, then display the map
 			usleep(250000);
 			display_map(&theMap);
+		}else{//Extra special things happen if current entity is not the PC
+			//Calculate attempted move of entity with current turn
+			Coordinate moveCoord;
+			DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
+			DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
+			entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
+			//Make the move
+			map_move_entity(&theMap, nextTurnEnt, moveCoord);
 		}
+		//If the PC is dead
 		if(map_pc_is_dead(&theMap)){
+			//deinit what needs to be deinited
 			display_delete();
+			//Press f to pay respects
 			handleDeath();
+			//End the loop
 			return 0;
 		}
 	}

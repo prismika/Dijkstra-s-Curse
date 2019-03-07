@@ -82,6 +82,12 @@ int display_entity(Entity * ent){
 	return 0;
 }
 
+
+int display_message(char * s){
+	mvprintw(0,1,s);
+	return 0;
+}
+
 #endif
 
 
