@@ -12,13 +12,13 @@ int main(int argc, char * argv[]){
 	keypad(stdscr, TRUE);
 	mvaddch(1, 1, 'X');
 
-	int i=0;
-	while(i<=21){
-		char input = getch();
-		mvaddch(i++, 1, input);
-		refresh();
-		usleep(250000);
-	}
+	// int i=0;
+	// while(i<=21){
+	// 	char input = getch();
+	// 	mvaddch(i++, 1, input);
+	// 	refresh();
+	// 	usleep(250000);
+	// }
 	endwin();
 
 	printf("\n\n"

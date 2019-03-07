@@ -1,5 +1,6 @@
 #ifndef INPUTCOLLECTOR_H
 #define INPUTCOLLECTOR_H
+#include <stdbool.h>
 
 typedef enum{
 	input_upleft,		input_up, 		input_upright,
@@ -17,11 +18,13 @@ typedef enum{
 
 typedef struct{
 	InputType lastType;
+	bool isMovement;
 }InputState;
 
 int inputState_init(InputState * inState);
 int inputState_update(InputState * inState);
 InputType inputState_get_last(InputState * inState);
+bool inputState_is_movement(InputState * inState);
 
 
 

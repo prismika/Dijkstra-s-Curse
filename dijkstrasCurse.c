@@ -149,46 +149,51 @@ int executeDistances(){
 	return 0;
 }
 
-static Coordinate interpret_pc_input(Entity * pc, InputState * inState){
+static void interpret_pc_input(Entity * pc, InputState * inState){
 	InputType inputType = inputState_get_last(inState);
-	Coordinate returnCoord = pc->position;
-	switch(inputType){
-		case input_upleft:
-			returnCoord.y--;
-			returnCoord.x--;
-		break;
-		case input_up:
-			returnCoord.y--;
-		break;
-		case input_upright:
-			returnCoord.x++;
-			returnCoord.y--;
-		break;
-		case input_right:
-			returnCoord.x++;
-		break;
-		case input_downright:
-			returnCoord.y++;
-			returnCoord.x++;
-		break;
-		case input_down:
-			returnCoord.y++;
-		break;
-		case input_downleft:
-			returnCoord.y++;
-			returnCoord.x--;
-		break;
-		case input_left:
-			returnCoord.x--;
-		break;
+	if(inputState_is_movement(inState)){
+		Coordinate moveCoord = pc->position;
+		switch(inputType){
+			case input_upleft:
+				moveCoord.y--;
+				moveCoord.x--;
+			break;
+			case input_up:
+				moveCoord.y--;
+			break;
+			case input_upright:
+				moveCoord.x++;
+				moveCoord.y--;
+			break;
+			case input_right:
+				moveCoord.x++;
+			break;
+			case input_downright:
+				moveCoord.y++;
+				moveCoord.x++;
+			break;
+			case input_down:
+				moveCoord.y++;
+			break;
+			case input_downleft:
+				moveCoord.y++;
+				moveCoord.x--;
+			break;
+			case input_left:
+				moveCoord.x--;
+			break;
 
-		
-
-		case input_null:
-		default:
-		break;
+			default:
+			break;
+		}
+		//Move the PC accordingly
+		Coordinate newCoord = map_move_entity(&theMap, pc, moveCoord);
+		//Update distance maps
+		DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
+		get_distance_map(&theMap,newCoord,dist);
+		dist = map_get_distance_map_tunneling(&theMap);
+		get_distance_map_tunneling(&theMap,newCoord,dist);
 	}
-	return returnCoord;
 }
 
 static void handleDeath(void){
@@ -222,7 +227,6 @@ int executeDefault(){
 	Entity **populationMatrix = map_get_population_matrix(&theMap);
 	//Give population to turnmaster
 	turnmaster_fill_from_matrix(&turnMaster, populationMatrix);
-	display_map(&theMap);
 
 	//Main loop
 	while(true){
@@ -236,20 +240,11 @@ int executeDefault(){
 		
 		//Special things happen if current entity is the PC
 		if(nextTurnEnt->isPC){
-			//Get input
-			inputState_update(&inputState);
-			//Interpret input with helper function 
-			Coordinate moveCoord = interpret_pc_input(nextTurnEnt, &inputState);
-			//Move the PC accordingly
-			Coordinate newCoord = map_move_entity(&theMap, nextTurnEnt, moveCoord);
-			//Update distance maps
-			DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
-			get_distance_map(&theMap,newCoord,dist);
-			dist = map_get_distance_map_tunneling(&theMap);
-			get_distance_map_tunneling(&theMap,newCoord,dist);
-			//Wait a bit, then display the map
-			usleep(250000);
+			//Display map and get input
 			display_map(&theMap);
+			inputState_update(&inputState);
+			//Interpret and execute input with helper function 
+			interpret_pc_input(nextTurnEnt, &inputState);
 		}else{//Extra special things happen if current entity is not the PC
 			//Calculate attempted move of entity with current turn
 			Coordinate moveCoord;

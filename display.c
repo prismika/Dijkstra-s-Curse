@@ -12,8 +12,6 @@
 
 /*----------------------------CURSES----------------------------*/
 
-
-
 #ifdef CURSEMODE
 #define SPACE_ABOVE_MAP 1
 
@@ -38,7 +36,7 @@ int display_init(){
 	noecho();
 	curs_set(0);
 	keypad(stdscr, TRUE);
-	mvaddch(1, 1, 'X');
+	mvprintw(1, 1, "Loading...");
 
 	return 0;
 }

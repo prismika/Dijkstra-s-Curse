@@ -7,11 +7,13 @@ int inputState_init(InputState * inState){
 	noecho();
 	keypad(stdscr, TRUE);
 	inState->lastType = input_null;
+	inState->isMovement = false;
 	return 0;
 }
 
 int inputState_update(InputState * inState){
 	int in = getch();
+	//Is it a movement?
 	InputType newType;
 	switch(in){
 		case '7':
@@ -92,11 +94,19 @@ int inputState_update(InputState * inState){
 		newType = input_null;
 		break;
 	}
+	//Did we find a movement?
+	if(newType != input_null){
+		inState->isMovement = true;
+	}
 	inState->lastType = newType;
 	return 0;
 }
 
 InputType inputState_get_last(InputState * inState){
 	return inState->lastType;
+}
+
+bool inputState_is_movement(InputState * inState){
+	return inState -> isMovement;
 }
 
