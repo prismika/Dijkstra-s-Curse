@@ -4,6 +4,12 @@
 #include "mapPopulator.h"
 #include "pathFinder.h"
 
+
+
+
+#include "display.h"
+#include <unistd.h>
+
 #define PC_BUBBLE_SIZE 8
 
 Coordinate nextCoord(Coordinate coord){
@@ -44,11 +50,13 @@ Coordinate findOpenBlock(Map * map, Coordinate pcCoord){
 
 }
 int populate_map(Map * map, int nummon){
+	Entity * entityList[MAPHEIGHT*MAPWIDTH];
+	int entityListIndex = 0;
 	Coordinate pcCoord;
 	BlockType canPlaceOn[] = {floor};
 	int canPlaceOnSize = 1;
 	map_choose_random_block(map,canPlaceOn,canPlaceOnSize,&pcCoord);
-	map_new_pc(map,pcCoord);
+	entityList[entityListIndex++] = map_new_pc(map,pcCoord);
 	DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(map);
 	DistanceMap * distTunnel = map_get_distance_map_tunneling(map);
 	get_distance_map(map, pcCoord, distNonTunnel);
@@ -57,11 +65,20 @@ int populate_map(Map * map, int nummon){
 	int i;
 	for(i=0; i<nummon;i++){
 		Coordinate curCoord = findOpenBlock(map, pcCoord);
-		if(curCoord.x == -1){
-			return 0;
-		}
+		if(curCoord.x == -1) return 0;
 		int chars = rand()%16;
-		map_new_npc(map,curCoord,chars);
+		entityList[entityListIndex++] = map_new_npc(map,curCoord,chars);
 	}
+
+	//Create tighter entity list
+	Entity ** entityList_tight = malloc(sizeof(Entity *) * entityListIndex);
+	for(i=0;i<entityListIndex; i++){
+		entityList_tight[i] = entityList[i];
+	}
+	map->populationList = entityList_tight;
+	map->populationListSize = entityListIndex;
+	display_populationList(entityList_tight, entityListIndex);
+	usleep(5000000);
+
 	return 0;
 }

@@ -99,21 +99,21 @@ int inputState_update(InputState * inState){
 		newType = input_quit;
 		break;
 
-		// case 'm':
-		// newType = input_mlist;
-		// break;
+		case 'm':
+		newType = input_mlist;
+		break;
 
-		// case KEY_UP:
-		// newType = input_mlist_up;
-		// break;
+		case KEY_UP:
+		newType = input_mlist_up;
+		break;
 
-		// case KEY_DOWN:
-		// newType = input_mlist_down;
-		// break;
+		case KEY_DOWN:
+		newType = input_mlist_down;
+		break;
 
-		// case KEY_EXIT:
-		// newType = input_escape;
-		// break;
+		case KEY_EXIT:
+		newType = input_escape;
+		break;
 
 		default:
 		newType = input_null;

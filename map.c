@@ -39,6 +39,8 @@ void map_init(Map * map){
 			retMap.populationMap[i][j] = NULL;
 		}
 	}
+	retMap.populationList = NULL;
+	retMap.populationListSize = 0;
 
 	distance_map_init(&retMap.distanceMapNonTunneling);
 	distance_map_init(&retMap.distanceMapTunneling);
@@ -81,16 +83,18 @@ void map_remove_entity(Map * map, int x, int y){
 Entity ** map_get_population_matrix(Map * map){
 	return &(map->populationMap[0][0]);
 }
-void map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
+Entity * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	Entity * ent = malloc(sizeof(Entity));
 	char symbol = symbols[characteristics];
 	init_entity_npc(ent,coord,symbol,characteristics);
 	map_set_entity(map, coord.x, coord.y, ent);
+	return ent;
 }
-void map_new_pc(Map * map, Coordinate coord){
+Entity * map_new_pc(Map * map, Coordinate coord){
 	Entity * ent = malloc(sizeof(Entity));
 	init_entity_pc(ent,coord,'@');
 	map_set_entity(map, coord.x, coord.y, ent);
+	return ent;
 }
 bool map_has_entity_at(Map * map, int x, int y){
 	return !(map->populationMap[y][x] == NULL);

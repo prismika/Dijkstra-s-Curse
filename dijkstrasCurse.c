@@ -138,9 +138,9 @@ static void init_level(){
 
 /*Deinits stuff from the level*/
 static void delete_level(){
-	//delete map
+	//delete map will go here
 }
-/**/
+/*deinits everything and prints the death message.*/
 static void quit_game(){
 	delete_level();
 	display_delete();
@@ -200,6 +200,9 @@ static int interpret_pc_input(Entity * pc, InputState * inState){
 		}
 		// TODO delete_level
 		init_level();
+	}else if(inputType == input_mlist){
+		//display map
+		display_message("I can't display the monster list yet :(");
 	}else if(inputType == input_quit){
 		quit_game();
 		return -1;

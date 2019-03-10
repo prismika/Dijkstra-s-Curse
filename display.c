@@ -87,6 +87,19 @@ int display_message(char * s){
 	return 0;
 }
 
+
+int display_populationList(Entity ** list, int listSize){
+	erase();
+	mvprintw(0,2,"Monsters");
+	int i;
+	for(i=0;i<listSize; i++){
+		mvprintw(i+2,2,"Monster: %c", list[i]->symbol);
+	}
+
+	refresh();
+	return 0;
+}
+
 #endif
 
 
