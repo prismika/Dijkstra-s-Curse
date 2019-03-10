@@ -63,27 +63,9 @@ int inputState_update(InputState * inState){
 		newType = input_rest;
 		break;
 
-		// case 'm':
-		// newType = input_mlist;
-		// break;
+		default:break;
 
-		// case KEY_UP:
-		// newType = input_mlist_up;
-		// break;
-
-		// case KEY_DOWN:
-		// newType = input_mlist_down;
-		// break;
-
-		// case KEY_EXIT:
-		// newType = input_escape;
-		// break;
-
-		case 'Q':
-		newType = input_quit;
-		break;
-
-		default: break;
+		
 	}
 	//Did we find a movement?
 	if(newType != input_null){
@@ -111,6 +93,36 @@ int inputState_update(InputState * inState){
 		inState->lastType = newType;
 		return 0;
 	}
+	//Check for other command types
+	switch(in){
+		case 'Q':
+		newType = input_quit;
+		break;
+
+		// case 'm':
+		// newType = input_mlist;
+		// break;
+
+		// case KEY_UP:
+		// newType = input_mlist_up;
+		// break;
+
+		// case KEY_DOWN:
+		// newType = input_mlist_down;
+		// break;
+
+		// case KEY_EXIT:
+		// newType = input_escape;
+		// break;
+
+		default:
+		newType = input_null;
+		break;
+	}
+	inState->isStair = false;
+	inState->isMovement = false;
+	inState->lastType = newType;
+	
 	return 0;
 }
 

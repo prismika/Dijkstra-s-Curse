@@ -12,13 +12,14 @@
 #include "pathFinder.h"
 #include "display.h"
 #include "mapPopulator.h"
-#include "TurnMaster.h"
+#include "turnMaster.h"
 #include "inputCollector.h"
 #include "display.h"
 
 long seed;
 Map theMap;
 TurnMaster turnMaster;
+InputState inputState;
 int nummon;
 
 char * deathString = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
@@ -135,11 +136,18 @@ static void init_level(){
 	turnmaster_fill_from_matrix(&turnMaster, populationMatrix);
 }
 
+/*Deinits stuff from the level*/
 static void delete_level(){
 	//delete map
 }
-
-static void interpret_pc_input(Entity * pc, InputState * inState){
+/**/
+static void quit_game(){
+	delete_level();
+	display_delete();
+	printf(deathString);
+}
+/*Returns -1 if quitting*/
+static int interpret_pc_input(Entity * pc, InputState * inState){
 	InputType inputType = inputState_get_last(inState);
 	if(inputState_is_movement(inState)){
 		Coordinate moveCoord = pc->position;
@@ -181,21 +189,28 @@ static void interpret_pc_input(Entity * pc, InputState * inState){
 		get_distance_map(&theMap,newCoord,dist);
 		dist = map_get_distance_map_tunneling(&theMap);
 		get_distance_map_tunneling(&theMap,newCoord,dist);
-
+		return 0;
 	}//Check if the input was a stair movement
 	else if(inputState_is_stair(inState)){
-		display_message("That's a stair key");
+		Block pcBlock;
+		map_getBlock(&theMap,pc->position.x,pc->position.y,&pcBlock);
+		if(!(pcBlock.type == upstairs || pcBlock.type == downstairs)){
+			display_message("Your hero stumbles as he tries to take stairs that do not exist");
+			return 0;
+		}
 		// TODO delete_level
 		init_level();
+	}else if(inputType == input_quit){
+		quit_game();
+		return -1;
 	}
+	return 0;
 }
 
 static void handle_death(void){
 	display_map(&theMap);
 	display_message("Press any key to continue");
 	getch();
-	display_delete();
-	printf(deathString);
 }
 
 int executeDefault(){
@@ -203,7 +218,6 @@ int executeDefault(){
 	printf("Seed:%ld\n", seed);
 	//Init things
 	display_init();
-	InputState inputState;
 	inputState_init(&inputState);
 	//Generate!
 	init_level();
@@ -213,31 +227,30 @@ int executeDefault(){
 		Entity * nextTurnEnt;
 		nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
 		//turnMaster should never be empty
-		if (nextTurnEnt == NULL){
-			return -1;
-		}
-		
+		if (nextTurnEnt == NULL) return -1;
 		//Special things happen if current entity is the PC
 		if(nextTurnEnt->isPC){
-			//Display map and get input
 			display_map(&theMap);
+			//Get user input [Blocking call]
 			inputState_update(&inputState);
+			display_message("");
 			//Interpret and execute input with helper function 
-			interpret_pc_input(nextTurnEnt, &inputState);
+			int interpretStatus = interpret_pc_input(nextTurnEnt, &inputState);
+			if(interpretStatus == -1) return 0;
 		}else{//Extra special things happen if current entity is not the PC
 			//Calculate attempted move of entity with current turn
 			Coordinate moveCoord;
 			DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
 			DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
 			entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
-			//Make the move
+			//Tell the map our intended move
 			map_move_entity(&theMap, nextTurnEnt, moveCoord);
 		}
 		//If the PC is dead
 		if(map_pc_is_dead(&theMap)){
 			//Press f to pay respects
 			handle_death();
-			//End the loop
+			quit_game();
 			return 0;
 		}
 	}
@@ -249,8 +262,7 @@ int executeDefault(){
 
 
 
-
-//--------------------Other modes no one cares about------------
+/*--------------------Other modes no one cares about---------*/
 int legacyFlag(){
 	printf("You used a legacy flag. ");
 	printf("That functionality is no longer supported :(\n");
