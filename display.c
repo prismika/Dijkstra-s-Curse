@@ -88,14 +88,13 @@ int display_message(char * s){
 }
 
 
-int display_populationList(Entity ** list, int listSize){
+int display_population_list(Entity ** list, int listSize){
 	erase();
-	mvprintw(0,2,"Monsters");
+	mvprintw(1,2,"Monsters");
 	int i;
 	for(i=0;i<listSize; i++){
 		mvprintw(i+2,2,"Monster: %c", list[i]->symbol);
 	}
-
 	refresh();
 	return 0;
 }

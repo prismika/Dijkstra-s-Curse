@@ -83,6 +83,16 @@ void map_remove_entity(Map * map, int x, int y){
 Entity ** map_get_population_matrix(Map * map){
 	return &(map->populationMap[0][0]);
 }
+Entity ** map_get_population_list(Map * map){
+	return map->populationList;
+}
+
+int map_get_population_size(Map * map){
+	return map->populationListSize;
+}
+
+
+
 Entity * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	Entity * ent = malloc(sizeof(Entity));
 	char symbol = symbols[characteristics];

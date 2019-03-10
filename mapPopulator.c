@@ -4,12 +4,6 @@
 #include "mapPopulator.h"
 #include "pathFinder.h"
 
-
-
-
-#include "display.h"
-#include <unistd.h>
-
 #define PC_BUBBLE_SIZE 8
 
 Coordinate nextCoord(Coordinate coord){
@@ -77,8 +71,9 @@ int populate_map(Map * map, int nummon){
 	}
 	map->populationList = entityList_tight;
 	map->populationListSize = entityListIndex;
-	display_populationList(entityList_tight, entityListIndex);
-	usleep(5000000);
+	// For testing display population function
+	// display_populationList(entityList_tight, entityListIndex);
+	// usleep(5000000);
 
 	return 0;
 }

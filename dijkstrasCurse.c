@@ -21,6 +21,10 @@ Map theMap;
 TurnMaster turnMaster;
 InputState inputState;
 int nummon;
+enum {
+	mode_map,
+	mode_monster_list
+}mode;
 
 char * deathString = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 "                                 (  .      )\n"
@@ -149,63 +153,78 @@ static void quit_game(){
 /*Returns -1 if quitting*/
 static int interpret_pc_input(Entity * pc, InputState * inState){
 	InputType inputType = inputState_get_last(inState);
-	if(inputState_is_movement(inState)){
-		Coordinate moveCoord = pc->position;
-		switch(inputType){
-			case input_upleft:
-				moveCoord.y--;
-				moveCoord.x--;
-			break;
-			case input_up:
-				moveCoord.y--;
-			break;
-			case input_upright:
-				moveCoord.x++;
-				moveCoord.y--;
-			break;
-			case input_right:
-				moveCoord.x++;
-			break;
-			case input_downright:
-				moveCoord.y++;
-				moveCoord.x++;
-			break;
-			case input_down:
-				moveCoord.y++;
-			break;
-			case input_downleft:
-				moveCoord.y++;
-				moveCoord.x--;
-			break;
-			case input_left:
-				moveCoord.x--;
-			break;
-			default:break;
-		}
-		//Move the PC accordingly
-		Coordinate newCoord = map_move_entity(&theMap, pc, moveCoord);
-		//Update distance maps
-		DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
-		get_distance_map(&theMap,newCoord,dist);
-		dist = map_get_distance_map_tunneling(&theMap);
-		get_distance_map_tunneling(&theMap,newCoord,dist);
-		return 0;
-	}//Check if the input was a stair movement
-	else if(inputState_is_stair(inState)){
-		Block pcBlock;
-		map_getBlock(&theMap,pc->position.x,pc->position.y,&pcBlock);
-		if(!(pcBlock.type == upstairs || pcBlock.type == downstairs)){
-			display_message("Your hero stumbles as he tries to take stairs that do not exist");
+	switch(mode){
+		case mode_map:
+		if(inputState_is_movement(inState)){
+			Coordinate moveCoord = pc->position;
+			switch(inputType){
+				case input_upleft:
+					moveCoord.y--;
+					moveCoord.x--;
+				break;
+				case input_up:
+					moveCoord.y--;
+				break;
+				case input_upright:
+					moveCoord.x++;
+					moveCoord.y--;
+				break;
+				case input_right:
+					moveCoord.x++;
+				break;
+				case input_downright:
+					moveCoord.y++;
+					moveCoord.x++;
+				break;
+				case input_down:
+					moveCoord.y++;
+				break;
+				case input_downleft:
+					moveCoord.y++;
+					moveCoord.x--;
+				break;
+				case input_left:
+					moveCoord.x--;
+				break;
+				default:break;
+			}
+			//Move the PC accordingly
+			Coordinate newCoord = map_move_entity(&theMap, pc, moveCoord);
+			//Update distance maps
+			DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
+			get_distance_map(&theMap,newCoord,dist);
+			dist = map_get_distance_map_tunneling(&theMap);
+			get_distance_map_tunneling(&theMap,newCoord,dist);
 			return 0;
+		}//Check if the input was a stair movement
+		else if(inputState_is_stair(inState)){
+			Block pcBlock;
+			map_getBlock(&theMap,pc->position.x,pc->position.y,&pcBlock);
+			if(!(pcBlock.type == upstairs || pcBlock.type == downstairs)){
+				display_message("Your hero stumbles as he tries to take stairs that do not exist");
+				return 0;
+			}
+			// TODO delete_level
+			init_level();
+		}else if(inputType == input_mlist){
+			mode = mode_monster_list;
+		}else if(inputType == input_quit){
+			quit_game();
+			return -1;
 		}
-		// TODO delete_level
-		init_level();
-	}else if(inputType == input_mlist){
-		//display map
-		display_message("I can't display the monster list yet :(");
-	}else if(inputType == input_quit){
-		quit_game();
-		return -1;
+		break;
+
+
+
+		case mode_monster_list:
+		if(inputType == input_escape){
+			display_message("Back to the map");
+			mode = mode_map;
+		}else if(inputType == input_quit){
+			quit_game();
+			return -1;
+		}
+		break;
 	}
 	return 0;
 }
@@ -220,41 +239,61 @@ int executeDefault(){
 	//Display seed for posterity
 	printf("Seed:%ld\n", seed);
 	//Init things
+	mode = mode_map;
 	display_init();
 	inputState_init(&inputState);
 	//Generate!
 	init_level();
 	//Main loop
+	Entity * nextTurnEnt;
 	while(true){
-		//Get next turn from turnMaster
-		Entity * nextTurnEnt;
-		nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
-		//turnMaster should never be empty
-		if (nextTurnEnt == NULL) return -1;
+		switch(mode){
+			//This is the default mode. Time advances and monsters move and stuff.
+			case mode_map:{
+				//Get next turn from turnMaster
+				nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
+				//turnMaster should never be empty
+				if(nextTurnEnt == NULL) return -1;
+				//If the next turn belongs to an NPC, they gotta do what the gotta do
+				if(nextTurnEnt->isPC){
+					display_map(&theMap);
+					display_message("We are in map mode");
+				}else{
+					//Calculate attempted move of entity with current turn
+					Coordinate moveCoord;
+					DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
+					DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
+					entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
+					//Tell the map our intended move
+					map_move_entity(&theMap, nextTurnEnt, moveCoord);
+				}
+				//Did the PC die???
+				if(map_pc_is_dead(&theMap)){
+					//Press f to pay respects
+					handle_death();
+					quit_game();
+					return 0;
+				}
+
+			}break;
+
+			//This is the mode in which the user can see the list of monsters
+			case mode_monster_list:{
+				display_message("We are in monster list mode");
+				Entity ** populationList = map_get_population_list(&theMap);
+				int populationSize = map_get_population_size(&theMap);
+				display_population_list(populationList, populationSize);
+			}break;
+		}
+		
 		//Special things happen if current entity is the PC
 		if(nextTurnEnt->isPC){
-			display_map(&theMap);
 			//Get user input [Blocking call]
 			inputState_update(&inputState);
 			display_message("");
 			//Interpret and execute input with helper function 
 			int interpretStatus = interpret_pc_input(nextTurnEnt, &inputState);
 			if(interpretStatus == -1) return 0;
-		}else{//Extra special things happen if current entity is not the PC
-			//Calculate attempted move of entity with current turn
-			Coordinate moveCoord;
-			DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
-			DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
-			entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
-			//Tell the map our intended move
-			map_move_entity(&theMap, nextTurnEnt, moveCoord);
-		}
-		//If the PC is dead
-		if(map_pc_is_dead(&theMap)){
-			//Press f to pay respects
-			handle_death();
-			quit_game();
-			return 0;
 		}
 	}
 	return 0;

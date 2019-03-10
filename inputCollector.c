@@ -111,7 +111,7 @@ int inputState_update(InputState * inState){
 		newType = input_mlist_down;
 		break;
 
-		case KEY_EXIT:
+		case 27:
 		newType = input_escape;
 		break;
 

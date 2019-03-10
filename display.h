@@ -12,6 +12,6 @@ int display_room_list(Room *roomList);
 int display_population(Map * map);
 int display_entity(Entity * ent);
 int display_message(char * s);
-int display_populationList(Entity ** list, int listSize);
+int display_population_list(Entity ** list, int listSize);
 
 #endif
