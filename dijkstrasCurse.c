@@ -151,7 +151,7 @@ static void quit_game(){
 	display_delete();
 	printf(deathString);
 }
-/*Returns -1 if quitting*/
+/*Returns -1 if we are quitting the game*/
 static int interpret_pc_input(Entity * pc, InputState * inState){
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent things
@@ -223,17 +223,18 @@ static int interpret_pc_input(Entity * pc, InputState * inState){
 		break;
 
 
-
 		case mode_monster_list:
 		switch(inputType){
 			case input_escape:
 				mode = mode_map;
 				break;
 			case input_mlist_down:
-				scrollOffset++;
+				scrollOffset = scrollOffset < map_get_population_size(&theMap)-2?
+					scrollOffset + 1 :
+					map_get_population_size(&theMap) - 2;
 				break;
 			case input_mlist_up:
-				scrollOffset = scrollOffset>0 ?
+				scrollOffset = scrollOffset > 0 ?
 					scrollOffset - 1 :
 					0;
 				break;

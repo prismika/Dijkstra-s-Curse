@@ -57,3 +57,21 @@
 		-Complete MapPopulator
 		-Complete movement strategies
 		-Randomize entity speeds
+3/3/19	-Fix death mechanic
+3/5/19	-Create skeleton code for curses display
+3/6/19	-Change map display over to curses
+		-Create inputCollector
+		-Refactor display.c
+		-Implement very simple movement of PC
+		-Implement input recognition for all necessary keys
+3/7/19	-Implement all PC movement keys
+		-Refactor interpretation logic in dijkstrasCurse
+		-Generate new level when stair key is pressed
+3/10/19	-Implement 'Q' for quit.
+		-Map struct owns references to entire population.
+		-Create simple buggy monster map display function
+		-Open and close monster list successfully
+3/11/19	-Monster list scrolls
+		-PC restricted from tunneling
+		-Monster list shows relative position, excludes dead monsters
+		-Update README and CHANGELOG
