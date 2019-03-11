@@ -296,9 +296,7 @@ int executeDefault(){
 			//This is the mode in which the user can see the list of monsters
 			case mode_monster_list:{
 				display_message("We are in monster list mode");
-				Entity ** populationList = map_get_population_list(&theMap);
-				int populationSize = map_get_population_size(&theMap);
-				display_population_list_offset(populationList, populationSize, scrollOffset+1);
+				display_population_list_offset(&theMap, scrollOffset+1);
 			}break;
 		}
 		

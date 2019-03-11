@@ -91,7 +91,9 @@ int map_get_population_size(Map * map){
 	return map->populationListSize;
 }
 
-
+Coordinate map_get_pc_position(Map * map){
+	return map->populationList[0]->position;
+}
 
 Entity * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	Entity * ent = malloc(sizeof(Entity));

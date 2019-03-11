@@ -88,20 +88,26 @@ int display_message(char * s){
 }
 
 
-int display_population_list(Entity ** list, int listSize){
+int display_population_list(Entity ** list, int listSize, Coordinate pcPos){
 	erase();
 	mvprintw(1,2,"Monsters");
 	int i;
 	for(i=0;i<listSize; i++){
-		mvprintw(i+2,2,"Monster: %c", list[i]->symbol);
+		if(list[i]->dead) continue;
+		int xDiff = list[i]->position.x - pcPos.x;
+		int yDiff = list[i]->position.y - pcPos.y;
+		mvprintw(i+2,2,"%c Relative position: %d, %d", list[i]->symbol, xDiff, yDiff);
 	}
 	refresh();
 	return 0;
 }
 
-int display_population_list_offset(Entity ** list, int listSize, int offset){
+int display_population_list_offset(Map * map, int offset){
+	Entity ** list = map_get_population_list(map);
+	int listSize = map_get_population_size(map);
+	Coordinate pcPos = map_get_pc_position(map);
 	if(offset > listSize) return -1;
-	display_population_list(list + offset, listSize - offset);
+	display_population_list(list + offset, listSize - offset,pcPos);
 	return 0;
 }
 
