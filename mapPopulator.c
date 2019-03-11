@@ -4,6 +4,9 @@
 #include "mapPopulator.h"
 #include "pathFinder.h"
 
+//TODO Remove
+#include <stdio.h>
+
 #define PC_BUBBLE_SIZE 8
 
 Coordinate nextCoord(Coordinate coord){
@@ -59,7 +62,7 @@ int populate_map(Map * map, int nummon){
 	int i;
 	for(i=0; i<nummon;i++){
 		Coordinate curCoord = findOpenBlock(map, pcCoord);
-		if(curCoord.x == -1) return 0;
+		if(curCoord.x == -1) break; //Map is full
 		int chars = rand()%16;
 		entityList[entityListIndex++] = map_new_npc(map,curCoord,chars);
 	}

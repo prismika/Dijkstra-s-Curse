@@ -49,6 +49,7 @@ int display_delete(){
 char getBlockVisual(BlockType type);
 
 int display_map(Map * map){
+	erase();
 	int x,y;
 	for(y=0;y<MAPHEIGHT;++y){
 		for(x=0; x<MAPWIDTH; ++x){
