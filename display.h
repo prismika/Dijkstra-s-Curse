@@ -13,5 +13,6 @@ int display_population(Map * map);
 int display_entity(Entity * ent);
 int display_message(char * s);
 int display_population_list(Entity ** list, int listSize);
+int display_population_list_offset(Entity ** list, int listSize, int offset);
 
 #endif

@@ -25,6 +25,7 @@ enum {
 	mode_map,
 	mode_monster_list
 }mode;
+int scrollOffset;
 
 char * deathString = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 "                                 (  .      )\n"
@@ -153,6 +154,16 @@ static void quit_game(){
 /*Returns -1 if quitting*/
 static int interpret_pc_input(Entity * pc, InputState * inState){
 	InputType inputType = inputState_get_last(inState);
+	//Mode-independent things
+	if(inputType == input_quit){
+		quit_game();
+		return -1;
+	}else if(inputType == input_null){
+		return -2;
+	}
+
+
+	//Mode-dependent things
 	switch(mode){
 		case mode_map:
 		if(inputState_is_movement(inState)){
@@ -161,31 +172,31 @@ static int interpret_pc_input(Entity * pc, InputState * inState){
 				case input_upleft:
 					moveCoord.y--;
 					moveCoord.x--;
-				break;
+					break;
 				case input_up:
 					moveCoord.y--;
-				break;
+					break;
 				case input_upright:
 					moveCoord.x++;
 					moveCoord.y--;
-				break;
+					break;
 				case input_right:
 					moveCoord.x++;
-				break;
+					break;
 				case input_downright:
 					moveCoord.y++;
 					moveCoord.x++;
-				break;
+					break;
 				case input_down:
 					moveCoord.y++;
-				break;
+					break;
 				case input_downleft:
 					moveCoord.y++;
 					moveCoord.x--;
-				break;
+					break;
 				case input_left:
 					moveCoord.x--;
-				break;
+					break;
 				default:break;
 			}
 			//Move the PC accordingly
@@ -208,23 +219,27 @@ static int interpret_pc_input(Entity * pc, InputState * inState){
 			init_level();
 		}else if(inputType == input_mlist){
 			mode = mode_monster_list;
-		}else if(inputType == input_quit){
-			quit_game();
-			return -1;
 		}
 		break;
 
 
 
 		case mode_monster_list:
-		if(inputType == input_escape){
-			display_message("Back to the map");
-			mode = mode_map;
-		}else if(inputType == input_quit){
-			quit_game();
-			return -1;
+		switch(inputType){
+			case input_escape:
+				mode = mode_map;
+				break;
+			case input_mlist_down:
+				scrollOffset++;
+				break;
+			case input_mlist_up:
+				scrollOffset = scrollOffset>0 ?
+					scrollOffset - 1 :
+					0;
+				break;
+
+			default:break;
 		}
-		break;
 	}
 	return 0;
 }
@@ -244,6 +259,8 @@ int executeDefault(){
 	inputState_init(&inputState);
 	//Generate!
 	init_level();
+
+
 	//Main loop
 	Entity * nextTurnEnt;
 	while(true){
@@ -257,7 +274,6 @@ int executeDefault(){
 				//If the next turn belongs to an NPC, they gotta do what the gotta do
 				if(nextTurnEnt->isPC){
 					display_map(&theMap);
-					display_message("We are in map mode");
 				}else{
 					//Calculate attempted move of entity with current turn
 					Coordinate moveCoord;
@@ -282,17 +298,20 @@ int executeDefault(){
 				display_message("We are in monster list mode");
 				Entity ** populationList = map_get_population_list(&theMap);
 				int populationSize = map_get_population_size(&theMap);
-				display_population_list(populationList, populationSize);
+				display_population_list_offset(populationList, populationSize, scrollOffset+1);
 			}break;
 		}
 		
 		//Special things happen if current entity is the PC
 		if(nextTurnEnt->isPC){
-			//Get user input [Blocking call]
-			inputState_update(&inputState);
 			display_message("");
 			//Interpret and execute input with helper function 
-			int interpretStatus = interpret_pc_input(nextTurnEnt, &inputState);
+			int interpretStatus;
+			do{
+				//Get user input [Blocking call]
+				inputState_update(&inputState);
+				interpretStatus = interpret_pc_input(nextTurnEnt, &inputState);
+			}while(interpretStatus == -2);
 			if(interpretStatus == -1) return 0;
 		}
 	}

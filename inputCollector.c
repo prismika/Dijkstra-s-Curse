@@ -5,7 +5,7 @@
 int inputState_init(InputState * inState){
 	raw();
 	noecho();
-	keypad(stdscr, TRUE);
+	keypad(stdscr, true);
 	inState->lastType = input_null;
 	inState->isMovement = false;
 	inState->isStair = false;

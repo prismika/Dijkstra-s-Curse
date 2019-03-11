@@ -99,6 +99,12 @@ int display_population_list(Entity ** list, int listSize){
 	return 0;
 }
 
+int display_population_list_offset(Entity ** list, int listSize, int offset){
+	if(offset > listSize) return -1;
+	display_population_list(list + offset, listSize - offset);
+	return 0;
+}
+
 #endif
 
 
