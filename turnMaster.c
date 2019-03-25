@@ -32,7 +32,7 @@ void turnmaster_fill_from_matrix(TurnMaster * tm, Entity ** matrix){
 		for(x=0;x<MAPWIDTH;x++){
 			if(matrix[x+MAPWIDTH*y] != NULL){
 				ent = matrix[x+MAPWIDTH*y];
-				EntityHeapEntry * entry = malloc(sizeof(EntityHeapEntry));
+				EntityHeapEntry * entry = (EntityHeapEntry *) malloc(sizeof(EntityHeapEntry));
 				entry->entity = ent;
 				entry->sequenceNumber = tm->heap.size;
 				entry->priority = 0;

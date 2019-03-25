@@ -96,14 +96,14 @@ Coordinate map_get_pc_position(Map * map){
 }
 
 Entity * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
-	Entity * ent = malloc(sizeof(Entity));
+	Entity * ent = (Entity *) malloc(sizeof(Entity));
 	char symbol = symbols[characteristics];
 	init_entity_npc(ent,coord,symbol,characteristics);
 	map_set_entity(map, coord.x, coord.y, ent);
 	return ent;
 }
 Entity * map_new_pc(Map * map, Coordinate coord){
-	Entity * ent = malloc(sizeof(Entity));
+	Entity * ent = (Entity *) malloc(sizeof(Entity));
 	init_entity_pc(ent,coord,'@');
 	map_set_entity(map, coord.x, coord.y, ent);
 	return ent;

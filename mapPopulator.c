@@ -68,7 +68,7 @@ int populate_map(Map * map, int nummon){
 	}
 
 	//Create tighter entity list
-	Entity ** entityList_tight = malloc(sizeof(Entity *) * entityListIndex);
+	Entity ** entityList_tight = (Entity **) malloc(sizeof(Entity *) * entityListIndex);
 	for(i=0;i<entityListIndex; i++){
 		entityList_tight[i] = entityList[i];
 	}

@@ -14,7 +14,7 @@ FILE * fp;
 
 int openFile(char * mode){
 	int l = strlen(getenv("HOME")) + strlen(FILE_PATH) + 1; 
-	char * filePath = malloc(l);
+	char * filePath = (char *) malloc(l);
 	strcpy(filePath,getenv("HOME"));
 	strcat(filePath,FILE_PATH);
 	if(!(fp=fopen(filePath,mode))){
@@ -84,7 +84,7 @@ int readFile(Map * newMap){
 	// printf("Rooms:%u\n",roomCountIn);
 
 	//Room specs
-	roomSpecsIn = malloc(4*roomCountIn);
+	roomSpecsIn = (uint8_t *) malloc(4*roomCountIn);
 	// printf("Room specs:\n");
 	for(i=0; i<4*roomCountIn; ++i){
 		fread(&roomSpecsIn[i],1,1,fp);
@@ -97,7 +97,7 @@ int readFile(Map * newMap){
 	// printf("Up stairs:%d\n", upStairCountIn);
 
 	//Up stairs specs
-	upStairSpecsIn = malloc(upStairCountIn*2);
+	upStairSpecsIn = (uint8_t *) malloc(upStairCountIn*2);
 	// printf("Up stair specs:\n");
 	for(i=0;i<upStairCountIn*2;++i){
 		fread(&upStairSpecsIn[i],1,1,fp);
@@ -111,7 +111,7 @@ int readFile(Map * newMap){
 	// printf("Down stairs:%d\n", downStairCountIn);
 
 	//Down stairs specs
-	downStairSpecsIn = malloc(downStairCountIn*2);
+	downStairSpecsIn = (uint8_t *) malloc(downStairCountIn*2);
 	// printf("Down stair specs:\n");
 	for(i=0;i<downStairCountIn*2;++i){
 		fread(&downStairSpecsIn[i],1,1,fp);
@@ -234,8 +234,8 @@ int writeFile(Map * theMap){
 	}
 	uint8_t * upStairSpecsOut;
 	uint8_t  * downStairSpecsOut;
-	if(!(upStairSpecsOut = malloc(2*upStairCountOut))
-	|| !(downStairSpecsOut = malloc(2*downStairCountOut))){
+	if(!(upStairSpecsOut   = (uint8_t *) malloc(2*upStairCountOut))
+	|| !(downStairSpecsOut = (uint8_t *) malloc(2*downStairCountOut))){
 		printf("Failed to malloc.\n");
 		return -1;
 	}
@@ -265,7 +265,7 @@ int writeFile(Map * theMap){
 		}
 		roomCountOut++;
 	}
-	uint8_t * roomSpecsOut = malloc(4*roomCountOut);
+	uint8_t * roomSpecsOut = (uint8_t *) malloc(4*roomCountOut);
 
 	//Room passover 2
 	for(i=0;i<roomCountOut;++i){
