@@ -12,6 +12,18 @@
 
 /*----------------------------CURSES----------------------------*/
 
+char * deathString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+"                                 (  .      )\n"
+"                             )           (              )\n"
+"                                   .  '   .   '  .  '  .\n"
+"                          (    , )       (.   )  (   ',    )\n"
+"                           .' ) ( . )    ,  ( ,     )   ( .\n"
+"                        ). , ( .   (  ) ( , ')  .' (  ,    )\n"
+"                       (_,) . ), ) _) _,')  (, ) '. )  ,. (' )\n"
+"                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
+"                   Your hero has fought valliantly,\n"
+"				   but has succumb to Dijkstra's Curse\n\n\n\n\n\n";
+
 #ifdef CURSEMODE
 #define SPACE_ABOVE_MAP 1
 
@@ -43,6 +55,7 @@ int display_init(){
 
 int display_delete(){
 	endwin();
+	printf("%s\n", deathString);
 	return 0;
 }
 

@@ -9,9 +9,9 @@ ASSIGNMENT = 1.05
 CFLAGS = -Wall -ggdb3
 
 BIN = dijkstrasCurse
-OBJS = 			mapElements.o 	pathFinder.o	display.o 	heap.o 		mapBuilder.o 	mapIO.o 	map.o 	populationElements.o 	mapPopulator.o 		turnMaster.o 	inputCollector.o
-CSUBMISSION = 	mapElements.cpp pathFinder.cpp 	display.cpp	heap.cpp 	mapBuilder.cpp 	mapIO.cpp 	map.cpp	populationElements.cpp 	mapPopulator.cpp 	turnMaster.cpp 	inputColl.cpptor.cpp dijkstrasCurse.cpp
-HSUBMISSION = 	mapElements.h 	pathFinder.h 	display.h 	heap.h 		mapBuilder.h 	mapIO.h 	map.h 	populationElements.h 	mapPopulator.h 		turnMaster.h 	inputCollector.h
+OBJS = 			mapElements.o 	pathFinder.o	display.o 	heap.o 		mapBuilder.o 	mapIO.o 	map.o 	populationElements.o 	mapPopulator.o 		turnMaster.o 	inputCollector.o 	gameTypes.o
+CSUBMISSION = 	mapElements.cpp pathFinder.cpp 	display.cpp	heap.cpp 	mapBuilder.cpp 	mapIO.cpp 	map.cpp	populationElements.cpp 	mapPopulator.cpp 	turnMaster.cpp 	inputCollector.cpp 	gameTypes.cpp	dijkstrasCurse.cpp
+HSUBMISSION = 	mapElements.h 	pathFinder.h 	display.h 	heap.h 		mapBuilder.h 	mapIO.h 	map.h 	populationElements.h 	mapPopulator.h 		turnMaster.h 	inputCollector.h 	gameTypes.h
 TXTSUBMISSION = README CHANGELOG Makefile
 TESTS = test
 
