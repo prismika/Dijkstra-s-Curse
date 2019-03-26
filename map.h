@@ -5,7 +5,8 @@
 #include "mapElements.h"
 #include "populationElements.h"
 
-typedef struct Map{
+class Map{
+public:
 	Block block[MAPHEIGHT][MAPWIDTH];
 	Room room[MAX_ROOM_COUNT+1];//DONT FORGET extra spot for sentinel value
 	int width;
@@ -15,7 +16,7 @@ typedef struct Map{
 	int populationListSize;
 	DistanceMap distanceMapNonTunneling;
 	DistanceMap distanceMapTunneling;
-} Map;
+};
 
 void map_init(Map * map);
 int map_getBlock(Map * map, int x, int y, Block * outputBlock);

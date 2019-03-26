@@ -5,16 +5,18 @@
 #include "mapElements.h"
 #include "heap.h"
 
-typedef struct{
+class EntityHeapEntry{
+public:
 	heap_node_t * hn;
 	Entity * entity;
 	int sequenceNumber;
 	int priority;
-}EntityHeapEntry;
+};
 
-typedef struct{
+class TurnMaster{
+public:
 	heap_t heap;
-}TurnMaster;
+};
 
 
 

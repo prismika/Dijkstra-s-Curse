@@ -7,11 +7,12 @@
 #include "mapElements.h"
 #include "heap.h"
 
-typedef struct heap_pair{
+class heap_pair_t{
+public:
 	heap_node_t * hn;
 	int key;
 	Coordinate coordinate;
-}heap_pair_t;
+};
 
 int32_t compare_heap_pairs(const void *key, const void *with){
 	heap_pair_t * p1, * p2;

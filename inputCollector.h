@@ -16,11 +16,12 @@ typedef enum{
 	input_quit
 }InputType;
 
-typedef struct{
+class InputState{
+public:
 	InputType lastType;
 	bool isMovement;
 	bool isStair;
-}InputState;
+};
 
 int inputState_init(InputState * inState);
 int inputState_update(InputState * inState);

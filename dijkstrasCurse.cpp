@@ -40,7 +40,8 @@ char * deathString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 "				   but has succumb to Dijkstra's Curse\n\n\n\n\n\n";
 
 //Strategy for strategy pattern
-struct IncomingCommand{
+class IncomingCommand{
+public:
 	int (*execute)(void);
 };
 
@@ -51,9 +52,11 @@ int executeDistances(void);
 int executeDefault(void);
 int legacyFlag(void);
 
-int parseCLI(int argc, char * argv[], struct IncomingCommand * command){
-	struct
+int parseCLI(int argc, char * argv[], IncomingCommand * command){
+	class/*This would make more sense as a struct but it is
+	required to be a class for the assignment*/
 	{
+	public:
 		bool save;
 		bool load;
 		bool distances;
@@ -90,7 +93,7 @@ int parseCLI(int argc, char * argv[], struct IncomingCommand * command){
 		}else return -1;
 	}
 
-	//Unpack the flags struct and assign a strategy
+	//Unpack the temporary flags class and assign a strategy
 	if(flags.seed){
 		seed = flags.theSeed;
 	}else{
@@ -116,7 +119,7 @@ int parseCLI(int argc, char * argv[], struct IncomingCommand * command){
 }
 
 int main(int argc, char *argv[]){
-	struct IncomingCommand whatsup;
+	IncomingCommand whatsup;
 	if(parseCLI(argc,argv,&whatsup)!=0){
 		printf("Incorrect usage\n");
 		return -1;

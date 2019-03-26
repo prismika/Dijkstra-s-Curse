@@ -25,34 +25,39 @@ typedef enum BlockType{
 	downstairs
 } BlockType;
 
-typedef struct Block{
+class Block{
+public:
 	BlockType type;
 	uint8_t hardness;
-} Block;
+};
 
-typedef struct Coordinate{
+class Coordinate{
+public:
 	int y;
 	int x;
-} Coordinate;
+};
 
-typedef struct Room{
+class Room{
+public:
 	Coordinate position;
 	int height;
 	int width;
-} Room;
+};
 
 /*It is assumed that the corridor goes horizontally from start
 and vertically to end*/
-typedef struct Corridor{
+class Corridor{
+public:
 	Coordinate start;
 	Coordinate midpoint;
 	Coordinate end;
-} Corridor;
+};
 
 
-typedef struct{
+class DistanceMap{
+public:
 	int dist[MAPHEIGHT][MAPWIDTH];
-}DistanceMap;
+};
 
 Block block_create(BlockType blockType, uint8_t hardness);
 void distance_map_init(DistanceMap * dist);
