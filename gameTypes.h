@@ -10,15 +10,9 @@
 #include "turnMaster.h"
 #include "inputCollector.h"
 
-class GameType{
-public:
-	virtual int runGame() = 0;
-	// virtual int initGame(int seed) = 0;
-};
 
-class Mode;
 
-class OriginalGameType : public GameType{
+class OriginalGameType{
 public:
 	OriginalGameType(int seed, int nummon);
 	int runGame();
