@@ -157,12 +157,10 @@ static void quit_game(){
 /*Returns -1 if we are quitting the game*/
 static int interpret_pc_input(Entity * pc, InputState * inState){
 	InputType inputType = inputState_get_last(inState);
-	//Mode-independent things
+	//Mode-independent checks
 	if(inputType == input_quit){
 		quit_game();
 		return -1;
-	}else if(inputType == input_null){
-		return -2;
 	}
 
 
@@ -251,7 +249,7 @@ static int interpret_pc_input(Entity * pc, InputState * inState){
 static void handle_death(void){
 	display_map(&theMap);
 	display_message((char *)"Press any key to continue");
-	getch();
+	getch();//This should be a call to inputCollector
 }
 
 int executeDefault(){
@@ -307,13 +305,10 @@ int executeDefault(){
 		//Special things happen if current entity is the PC
 		if(nextTurnEnt->isPC){
 			display_message((char *)"");
-			//Interpret and execute input with helper function 
-			int interpretStatus;
-			do{
-				//Get user input [Blocking call]
-				inputState_update(&inputState);
-				interpretStatus = interpret_pc_input(nextTurnEnt, &inputState);
-			}while(interpretStatus == -2);
+			//Get user input [Blocking call]
+			inputState_update(&inputState);
+			//Interpret and execute input with helper function
+			int interpretStatus = interpret_pc_input(nextTurnEnt, &inputState);
 			if(interpretStatus == -1) return 0;
 		}
 	}

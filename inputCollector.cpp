@@ -13,116 +13,117 @@ int inputState_init(InputState * inState){
 }
 
 int inputState_update(InputState * inState){
-	int in = getch();
-	//Is it a movement?
 	InputType newType = input_null;
-	switch(in){
-		case '7':
-		case 'y':
-		newType = input_upleft;
-		break;
+	while(newType == input_null){
+		int in = getch();
+		//Is it a movement?
+		switch(in){
+			case '7':
+			case 'y':
+			newType = input_upleft;
+			break;
 
-		case '8':
-		case 'k':
-		newType = input_up;
-		break;
+			case '8':
+			case 'k':
+			newType = input_up;
+			break;
 
-		case '9':
-		case 'u':
-		newType = input_upright;
-		break;
+			case '9':
+			case 'u':
+			newType = input_upright;
+			break;
 
-		case '6':
-		case 'l':
-		newType = input_right;
-		break;
+			case '6':
+			case 'l':
+			newType = input_right;
+			break;
 
-		case '3':
-		case 'n':
-		newType = input_downright;
-		break;
+			case '3':
+			case 'n':
+			newType = input_downright;
+			break;
 
-		case '2':
-		case 'j':
-		newType = input_down;
-		break;
+			case '2':
+			case 'j':
+			newType = input_down;
+			break;
 
-		case '1':
-		case 'b':
-		newType = input_downleft;
-		break;
+			case '1':
+			case 'b':
+			newType = input_downleft;
+			break;
 
-		case '4':
-		case 'h':
-		newType = input_left;
-		break;
+			case '4':
+			case 'h':
+			newType = input_left;
+			break;
 
-		case '5':
-		case ' ':
-		case '.':
-		newType = input_rest;
-		break;
+			case '5':
+			case ' ':
+			case '.':
+			newType = input_rest;
+			break;
 
-		default:break;
+			default:break;
+		}
+		//Did we find a movement?
+		if(newType != input_null){
+			inState->isMovement = true;
+			inState->isStair = false;
+			inState->lastType = newType;
+			return 0;
+		}
 
-		
-	}
-	//Did we find a movement?
-	if(newType != input_null){
-		inState->isMovement = true;
+		//Check for stair commands
+		switch(in){
+			case '>':
+			newType = input_downstairs;
+			break;
+
+			case '<':
+			newType = input_upstairs;
+			break;
+
+			default: break;
+		}
+		//Did we find a stair command?
+		if(newType != input_null){
+			inState->isStair = true;
+			inState->isMovement = false;
+			inState->lastType = newType;
+			return 0;
+		}
+
+		//Check for other command types
+		switch(in){
+			case 'Q':
+			newType = input_quit;
+			break;
+
+			case 'm':
+			newType = input_mlist;
+			break;
+
+			case KEY_UP:
+			newType = input_mlist_up;
+			break;
+
+			case KEY_DOWN:
+			newType = input_mlist_down;
+			break;
+
+			case 27:
+			newType = input_escape;
+			break;
+
+			default://If we reach this point, the input wasn't recognized
+			newType = input_null;
+			break;
+		}
 		inState->isStair = false;
-		inState->lastType = newType;
-		return 0;
-	}
-	//Check for stair commands
-	switch(in){
-		case '>':
-		newType = input_downstairs;
-		break;
-
-		case '<':
-		newType = input_upstairs;
-		break;
-
-		default: break;
-	}
-	//Did we find a stair command?
-	if(newType != input_null){
-		inState->isStair = true;
 		inState->isMovement = false;
 		inState->lastType = newType;
-		return 0;
 	}
-	//Check for other command types
-	switch(in){
-		case 'Q':
-		newType = input_quit;
-		break;
-
-		case 'm':
-		newType = input_mlist;
-		break;
-
-		case KEY_UP:
-		newType = input_mlist_up;
-		break;
-
-		case KEY_DOWN:
-		newType = input_mlist_down;
-		break;
-
-		case 27:
-		newType = input_escape;
-		break;
-
-		default:
-		newType = input_null;
-		break;
-	}
-	inState->isStair = false;
-	inState->isMovement = false;
-	inState->lastType = newType;
-	
 	return 0;
 }
 
