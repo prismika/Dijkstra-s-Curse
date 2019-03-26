@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdio.h>
+#include <iostream>
 #include "map.h"
 #include "mapIO.h"
 #include "mapElements.h"
@@ -57,7 +58,6 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 				i++;
 				flags.seed = true;
 				flags.theSeed = strtol(argv[i],NULL,10);
-				printf("Seed should be %ld\n", flags.theSeed);
 			}else return -1;
 		}else if(!strcmp(argv[i],"--nummon")){
 			if(i<argc-1){
@@ -96,7 +96,7 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 int main(int argc, char *argv[]){
 	IncomingCommand whatsup;
 	if(parseCLI(argc,argv,&whatsup)!=0){
-		printf("Incorrect usage\n");
+		std::cout << "Incorrect usage\n";
 		return -1;
 	}
 	//Execute the function that parseCLI chose
@@ -115,8 +115,8 @@ int executeDefault(void){
 
 /*--------------------Other modes no one cares about---------*/
 int legacyFlag(){
-	printf("You used a legacy flag. ");
-	printf("That functionality is no longer supported :(\n");
+	std::cout << "You used a legacy flag. "
+	<< "That functionality is no longer supported :(\n";
 	return 0;
 }
 
@@ -130,7 +130,7 @@ int executeLoad(){
 
 int executeSave(){
 	Map theMap;
-	printf("Seed:%ld\n", seed);
+	std::cout << "Seed:" << seed << std::endl;
 	map_init(&theMap);
 	generate_map(&theMap,seed);
 	display_map(&theMap);
@@ -149,7 +149,7 @@ int executeLoadSave(){
 
 int executeDistances(){
 	Map theMap;
-	printf("Seed:%ld\n", seed);
+	std::cout << "Seed:" << seed << std::endl;
 	map_init(&theMap);
 	generate_map(&theMap,seed);
 	display_map(&theMap);

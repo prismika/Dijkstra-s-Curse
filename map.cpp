@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <stdio.h>
+#include <iostream>
 #include <stdbool.h>
 #include "map.h"
 #include "mapElements.h"
@@ -50,7 +50,7 @@ void map_init(Map * map){
 
 int map_getBlock(Map * map, int x, int y, Block * outputBlock){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
-		fprintf(stderr, "!!!Tried to get block from map at (%d,%d)!!!\n",x,y);
+		std::cerr << "!!!Tried to set block in map at ("<< x << "," << y << ")!!!\n";
 		return -1;
 	}
 	*outputBlock = map->block[y][x];
@@ -58,7 +58,7 @@ int map_getBlock(Map * map, int x, int y, Block * outputBlock){
 }
 int map_setBlock(Map * map, int x, int y, Block * inputBlock){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
-		fprintf(stderr, "!!!Tried to set block in map at (%d,%d)!!!\n",x,y);
+		std::cerr << "!!!Tried to set block in map at ("<< x << "," << y << ")!!!\n";
 		return -1;
 	}
 	map->block[y][x] = *inputBlock;

@@ -4,8 +4,6 @@
 #include "mapPopulator.h"
 #include "pathFinder.h"
 
-//TODO Remove
-#include <stdio.h>
 
 #define PC_BUBBLE_SIZE 8
 

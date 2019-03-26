@@ -1,6 +1,6 @@
 #include "mapElements.h"
 #include <stdlib.h>
-#include <stdio.h>
+#include <iostream>
 #include <stdbool.h>
 
 Block block_create(enum BlockType blockType, uint8_t hardness){
@@ -22,7 +22,7 @@ void distance_map_init(DistanceMap * dist){
 
 int get_distance(DistanceMap * dist, int x, int y){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
-		fprintf(stderr, "!!!Tried to get distance from (%d,%d)!!!\n",x,y);
+		std::cout << "!!!Tried to get distance from (%" << x << "," << x << ")!!!\n";
 		return -1;
 	}
 	return dist->dist[y][x];
@@ -30,7 +30,7 @@ int get_distance(DistanceMap * dist, int x, int y){
 
 void set_distance(DistanceMap * dist, int x,int y,int d){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
-		fprintf(stderr, "!!!Tried to set distance from (%d,%d)!!!\n",x,y);
+		std::cout << "!!!Tried to set distance from (%" << x << "," << x << ")!!!\n";
 	}
 	dist->dist[y][x] = d;
 }

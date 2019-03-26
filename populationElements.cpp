@@ -1,6 +1,5 @@
 #include <limits.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include "populationElements.h"
 #include "mapElements.h"
 

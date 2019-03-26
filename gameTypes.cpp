@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <ncurses.h>
-#include <stdio.h>
+#include <iostream>
 #include "map.h"
 #include "mapIO.h"
 #include "mapElements.h"
@@ -22,7 +22,7 @@ OriginalGameType::OriginalGameType(int seed, int nummon){
 
 int OriginalGameType::runGame(){
 	//Display seed for posterity
-	printf("Seed:%ld\n", seed);
+	std::cout << "Seed:" << seed;
 	//Init things
 	mode = mode_map;
 	display_init();
@@ -99,11 +99,10 @@ void OriginalGameType::init_level(){
 void OriginalGameType::delete_level(){
 	//delete map will go here
 }
-/*deinits everything and prints the death message.*/
+/*deinits everything and outputs the death message to the console.*/
 void OriginalGameType::quit_game(){
 	delete_level();
 	display_delete();
-	// printf(deathString);
 }
 /*Returns -1 if we are quitting the game*/
 int OriginalGameType::interpret_pc_input(Entity * pc, InputState * inState){

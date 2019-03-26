@@ -18,12 +18,6 @@ int32_t compare_heap_pairs(const void *key, const void *with){
 	heap_pair_t * p1, * p2;
 	p1 = (heap_pair_t *) key;
 	p2 = (heap_pair_t *) with;
-	// printf("Comparing points (%d,%d) and (%d,%d)\n",
-		// p1->coordinate.x, p1->coordinate.y,
-		// p2->coordinate.x, p2->coordinate.y);
-	// if(p1->key != p2->key){
-	// 	printf("!!!!! Returning nonzero: distances %d and %d\n", p1->key,p2->key);
-	// }
 	return p1->key - p2->key;
 }
 
@@ -51,22 +45,6 @@ int get_neighborhood(int curX, int curY, Coordinate neighbors[9]){
 	}
 	return 0;
 }
-
-int displayDistanceMap(DistanceMap * dist){
-	int i, j;
-	for(i=0; i<MAPHEIGHT; ++i){
-		for(j=0; j<MAPWIDTH; ++j){
-			int d = get_distance(dist,j,i);
-			if(d==-1) printf(" ");
-			else{
-				printf("%d",d % 10);
-			}
-		}
-		printf("\n");
-	}
-	return 0;
-}
-
 
 
 //Dijkstra's algorithm
@@ -111,8 +89,6 @@ int get_distance_map_hidden(Map * map, Coordinate source, DistanceMap * dist, in
 		int curDist = get_distance(dist,curX,curY);
 		Block curBlock;
 		map_getBlock(map, curX, curY, &curBlock);
-		// printf("Removed from heap: --\tX|%d, Y|%d, D|%d, Size|%d --\n",
-		// 	curX,curY,curDist,heap.size);
 		//Mark cur as processed
 		processed[curY][curX] = true;
 		//For each neighboring point nbr,
@@ -145,8 +121,6 @@ int get_distance_map_hidden(Map * map, Coordinate source, DistanceMap * dist, in
 				//Update nbr distance in the heap
 				pairs[nbr.y][nbr.x].key = nbrDist;
 				heap_decrease_key_no_replace(&heap,pairs[nbr.y][nbr.x].hn);
-				// printf("Inserted into heap: ++\tX|%d, Y|%d, D|%d, Size|%d ++\n",
-				// 	nbr.x,nbr.y,nbrDist, heap.size);
 			}
 		}
 	}

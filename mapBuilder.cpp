@@ -46,8 +46,6 @@ void populateWithRooms(Map *map){
 			failures++;
 		}
 		if(failures > FAILED_ROOM_ATTEMPTS_LIMIT){
-			// printf("Too many failed placements. Here is the map.\n");
-			// display_map(*map);
 			failures = 0;
 			roomCount = 0;
 			map_init(map);
@@ -69,7 +67,6 @@ Room generateNewRoom(Map *map){
 */
 int isLegalRoom(Room *room, Map *map){
 	Room newRoom = *room;
-	// printf("Attempting room: %d,%d,%d,%d\n",newRoom.position.x,newRoom.position.y,newRoom.width,newRoom.height);
 	
 	int i, j;
 	//Check for bedrock inside the room
@@ -105,7 +102,6 @@ void placeNewRoom(Map *map, Room *room){
 	int width = room->width;
 	int height = room->height;
 	int i,j;
-	// printf("Placing room: %d,%d,%d,%d\n",room.position.x,room.position.y,room.width,room.height);
 	for(i = yPos; i < yPos + height; ++i){
 		for(j = xPos; j < xPos + width; ++j){
 			Block newBlock = block_create(floor,0);
@@ -134,7 +130,6 @@ void populateWithCorridors(Map *map){
 				secondClosestRoom = otherRoom;
 			}
 		}
-		// printf("Calculating corridors from room %d\n",i);
 		Corridor newCorridor= *generateNewCorridor(
 			curRoom.position, closestRoom.position);
 		placeNewCorridor(newCorridor,map);
@@ -161,15 +156,9 @@ Corridor * generateNewCorridor(Coordinate c1, Coordinate c2){
 	cor.end.x = c2.x;
 	cor.end.y = c2.y;
 
-	// printf("From (%d,%d) through (%d,%d) to (%d,%d)\n",
-	// 	cor.start.x,cor.start.y,
-	// 	cor.midpoint.x,cor.midpoint.y,
-	// 	cor.end.x,cor.end.y);
-
 	return &cor;
 }
 void placeNewCorridor(Corridor cor, Map *map){
-	// printf("Placing corridor\n");
 
 	int xDistance = cor.start.x - cor.midpoint.x;
 	int yDistance = cor.end.y - cor.midpoint.y;
