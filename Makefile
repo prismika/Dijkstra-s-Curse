@@ -9,9 +9,9 @@ ASSIGNMENT = 1.05
 CFLAGS = -Wall -ggdb3
 
 BIN = dijkstrasCurse
-OBJS = 			mapElements.o pathFinder.o display.o heap.o mapBuilder.o mapIO.o map.o populationElements.o mapPopulator.o turnMaster.o inputCollector.o
-CSUBMISSION = 	mapElements.c pathFinder.c display.c heap.c mapBuilder.c mapIO.c map.c populationElements.c mapPopulator.c turnMaster.c inputCollector.c dijkstrasCurse.c
-HSUBMISSION = 	mapElements.h pathFinder.h display.h heap.h mapBuilder.h mapIO.h map.h populationElements.h mapPopulator.h turnMaster.h inputCollector.h
+OBJS = 			mapElements.o 	pathFinder.o	display.o 	heap.o 		mapBuilder.o 	mapIO.o 	map.o 	populationElements.o 	mapPopulator.o 		turnMaster.o 	inputCollector.o
+CSUBMISSION = 	mapElements.cpp pathFinder.cpp 	display.cpp	heap.cpp 	mapBuilder.cpp 	mapIO.cpp 	map.cpp	populationElements.cpp 	mapPopulator.cpp 	turnMaster.cpp 	inputColl.cpptor.cpp dijkstrasCurse.cpp
+HSUBMISSION = 	mapElements.h 	pathFinder.h 	display.h 	heap.h 		mapBuilder.h 	mapIO.h 	map.h 	populationElements.h 	mapPopulator.h 		turnMaster.h 	inputCollector.h
 TXTSUBMISSION = README CHANGELOG Makefile
 TESTS = test
 
@@ -21,13 +21,13 @@ all: $(BIN)
 # 	gcc -Wall -ggdb3 dijkstrasCurse.c mapElements.o display.o pathFinder.o heap.o -o dijkstrasCurse -lm
 $(BIN): $(OBJS) dijkstrasCurse.o
 	@$(ECHO) Linking $@
-	@$(CC) $^ -o $@ -lncurses
+	@$(CXX) $^ -o $@ -lncurses
 
 -include $(OBJS:.o=.d)
 
-%.o: %.c
+%.o: %.cpp
 	@$(ECHO) Compiling $<
-	@$(CC) $(CFLAGS) -MMD -MF $*.d -c $<
+	@$(CXX) $(CFLAGS) -MMD -MF $*.d -c $<
 
 #Test things
 test: test.o $(OBJS)

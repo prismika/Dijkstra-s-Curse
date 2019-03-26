@@ -8,15 +8,15 @@
 
 
 static int32_t compare_entity_heap_entries(const void * v1, const void * v2){
-	const EntityHeapEntry * e1 = v1;
-	const EntityHeapEntry * e2 = v2;
+	const EntityHeapEntry * e1 = (EntityHeapEntry *) v1;
+	const EntityHeapEntry * e2 = (EntityHeapEntry *) v2;
 	return (e1->priority == e2->priority) ?
 		(e1->sequenceNumber - e2->sequenceNumber) :
 		(e1->priority - e2->priority);
 }
 
 static void delete_entity_heap_entry(void * v){
-	EntityHeapEntry * e = v;
+	EntityHeapEntry * e = (EntityHeapEntry *) v;
 	free(e);
 }
 
@@ -45,7 +45,7 @@ void turnmaster_fill_from_matrix(TurnMaster * tm, Entity ** matrix){
 }
 
 Entity * turnmaster_get_next_turn(TurnMaster * tm){
-	EntityHeapEntry * nextEntry = heap_peek_min(&(tm->heap));
+	EntityHeapEntry * nextEntry = (EntityHeapEntry *) heap_peek_min(&(tm->heap));
 	if(nextEntry == NULL){
 		printf("Turnmaster is empty! No more turns!\n");
 		return NULL;

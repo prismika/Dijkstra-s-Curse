@@ -104,7 +104,7 @@ int get_distance_map_hidden(Map * map, Coordinate source, DistanceMap * dist, in
 
 	//While heap is nonempty, remove point from heap, cur
 	heap_pair_t * cur;
-	while((cur = heap_remove_min(&heap))){
+	while((cur = (heap_pair_t *)heap_remove_min(&heap))){
 		int curX = cur->coordinate.x;
 		int curY = cur->coordinate.y;
 		int curDist = get_distance(dist,curX,curY);

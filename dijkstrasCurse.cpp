@@ -27,7 +27,7 @@ enum {
 }mode;
 int scrollOffset;
 
-char * deathString = "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+char * deathString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 "                                 (  .      )\n"
 "                             )           (              )\n"
 "                                   .  '   .   '  .  '  .\n"
@@ -212,7 +212,7 @@ static int interpret_pc_input(Entity * pc, InputState * inState){
 			Block pcBlock;
 			map_getBlock(&theMap,pc->position.x,pc->position.y,&pcBlock);
 			if(!(pcBlock.type == upstairs || pcBlock.type == downstairs)){
-				display_message("Your hero stumbles as he tries to take stairs that do not exist");
+				display_message((char*)"Your hero stumbles as he tries to take stairs that do not exist");
 				return 0;
 			}
 			// TODO delete_level
@@ -247,7 +247,7 @@ static int interpret_pc_input(Entity * pc, InputState * inState){
 
 static void handle_death(void){
 	display_map(&theMap);
-	display_message("Press any key to continue");
+	display_message((char *)"Press any key to continue");
 	getch();
 }
 
@@ -296,14 +296,14 @@ int executeDefault(){
 
 			//This is the mode in which the user can see the list of monsters
 			case mode_monster_list:{
-				display_message("We are in monster list mode");
+				display_message((char *)"We are in monster list mode");
 				display_population_list_offset(&theMap, scrollOffset+1);
 			}break;
 		}
 		
 		//Special things happen if current entity is the PC
 		if(nextTurnEnt->isPC){
-			display_message("");
+			display_message((char *)"");
 			//Interpret and execute input with helper function 
 			int interpretStatus;
 			do{

@@ -50,7 +50,7 @@ int readFile(Map * newMap){
 	uint8_t * downStairSpecsIn;//And this one!
 
 
-	openFile("rb");
+	openFile((char *)"rb");
 	//Header things
 	fread(&uselessInfoIn,1,16,fp);
 	for(int i=0; i<16; ++i){
@@ -194,7 +194,7 @@ int readFile(Map * newMap){
 	return 0;
 }
 int writeFile(Map * theMap){
-	openFile("wb");
+	openFile((char *) "wb");
 
 	//Things to write
 	char uselessInfoOut[17] = "RLG327-S2019\0\0\0\0";

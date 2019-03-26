@@ -134,7 +134,7 @@ heap_node_t *heap_insert(heap_t *h, void *v)
 {
   heap_node_t *n;
 
-  assert(n = calloc(1, sizeof (*n)));
+  assert(n = (heap_node_t *) calloc(1, sizeof (*n)));
   n->datum = v;
 
   if (h->min) {
@@ -369,13 +369,13 @@ int main(int argc, char *argv[])
     n = 20;
   }
 
-  assert(keys = calloc(n, sizeof (*keys)));
-  assert(a = calloc(n, sizeof (*a)));
+  assert(keys = (int **) calloc(n, sizeof (*keys)));
+  assert(a = (heap_node_t *) calloc(n, sizeof (*a)));
 
   heap_init(&h, compare, free);
 
   for (i = 0; i < n; i++) {
-    assert(keys[i] = malloc(sizeof (*keys[i])));
+    assert(keys[i] = (int *)malloc(sizeof (*keys[i])));
     *keys[i] = i;
     a[i] = heap_insert(&h, keys[i]);
   }
@@ -384,7 +384,7 @@ int main(int argc, char *argv[])
   printf("------------------------------------\n");
   
   heap_remove_min(&h);
-  assert(keys[0] = malloc(sizeof (*keys[0])));
+  assert(keys[0] = (int *) malloc(sizeof (*keys[0])));
   *keys[0] = 0;
   a[0] = heap_insert(&h, keys[0]);
   for (i = 0; i < 100 * n; i++) {
