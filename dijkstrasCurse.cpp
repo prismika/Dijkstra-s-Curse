@@ -2,17 +2,11 @@
 #include <stdbool.h>
 #include <string.h>
 #include <time.h>
-#include <ncurses.h>
 #include <stdio.h>
 #include "map.h"
 #include "mapIO.h"
 #include "mapElements.h"
-#include "mapBuilder.h"
-#include "pathFinder.h"
 #include "display.h"
-#include "mapPopulator.h"
-#include "turnMaster.h"
-#include "inputCollector.h"
 #include "gameTypes.h"
 
 long seed;

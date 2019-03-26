@@ -16,6 +16,7 @@ public:
 	// virtual int initGame(int seed) = 0;
 };
 
+class Mode;
 
 class OriginalGameType : public GameType{
 public:

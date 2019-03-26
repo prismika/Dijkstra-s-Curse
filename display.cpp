@@ -6,11 +6,7 @@
 #include "mapElements.h"
 #include "map.h"
 
-#define CURSEMODE
-
-
-
-/*----------------------------CURSES----------------------------*/
+#define SPACE_ABOVE_MAP 1
 
 char * deathString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 "                                 (  .      )\n"
@@ -23,9 +19,6 @@ char * deathString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 "                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
 "                   Your hero has fought valliantly,\n"
 "				   but has succumb to Dijkstra's Curse\n\n\n\n\n\n";
-
-#ifdef CURSEMODE
-#define SPACE_ABOVE_MAP 1
 
 static char getBlockVisual(BlockType type){
 	switch(type){
@@ -125,16 +118,9 @@ int display_population_list_offset(Map * map, int offset){
 	return 0;
 }
 
-#endif
-
-
-
-
 
 //---------------------------NOT CURSES-------------------------
-
-#ifndef CURSEMODE
-
+/*
 static char getBlockVisual(BlockType type){
 	switch(type){
 		case rock:		return ' ';
@@ -270,5 +256,4 @@ int display_entity(Entity * ent){
 	}
 	return 0;
 }
-
-#endif
+*/
