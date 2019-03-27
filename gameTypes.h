@@ -20,13 +20,26 @@ public:
 	//Choose what to display
 };
 
-//This is the default mode. Time advances and monsters move and stuff.
+
+
+/*This is the default mode. Time advances and monsters move and stuff*/
 class MovementGameMode : public GameMode{
 public:
 	int execute_mode_actions(OriginalGameType * game);
 private:
 	Entity * nextTurnEnt;
 	int interpret_pc_input(Entity * pc, InputState * inState, OriginalGameType * game);
+};
+
+
+/*This is the mode in which the monster list is displayed*/
+class ListGameMode : public GameMode{
+public:
+	ListGameMode();
+	int execute_mode_actions(OriginalGameType * game);
+private:
+	int scrollOffset;
+	int interpret_pc_input(InputState * inState, OriginalGameType * game);
 };
 
 
@@ -47,7 +60,6 @@ private:
 		mode_monster_list
 	}mode;
 	GameMode * gameMode;
-	int scrollOffset;
 	void init_level();
 	void delete_level();
 	void quit_game();
@@ -55,6 +67,7 @@ private:
 	void handle_death(void);
 
 	friend class MovementGameMode;
+	friend class ListGameMode;
 };
 
 
