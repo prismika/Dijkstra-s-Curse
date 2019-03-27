@@ -10,6 +10,26 @@
 #include "turnMaster.h"
 #include "inputCollector.h"
 
+class OriginalGameType;
+
+/*Used for stratey pattern, representing mode of the game*/
+class GameMode{
+public:
+	virtual int execute_mode_actions(OriginalGameType * game) = 0;
+	//interpret input
+	//Choose what to display
+};
+
+//This is the default mode. Time advances and monsters move and stuff.
+class MovementGameMode : public GameMode{
+public:
+	int execute_mode_actions(OriginalGameType * game);
+private:
+	Entity * nextTurnEnt;
+	int interpret_pc_input(Entity * pc, InputState * inState, OriginalGameType * game);
+};
+
+
 
 
 class OriginalGameType{
@@ -26,12 +46,15 @@ private:
 		mode_map,
 		mode_monster_list
 	}mode;
+	GameMode * gameMode;
 	int scrollOffset;
 	void init_level();
 	void delete_level();
 	void quit_game();
 	int interpret_pc_input(Entity * pc, InputState * inState);
 	void handle_death(void);
+
+	friend class MovementGameMode;
 };
 
 
