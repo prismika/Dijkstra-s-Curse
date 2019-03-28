@@ -1,6 +1,23 @@
-This is Dijkstra's Curse, an ASCII-based rogue-like game. This iteration has multiple files, with an architecture consisting of four rough layers:
+This is Dijkstra's Curse, an ASCII-based rogue-like game (now in C++!).
+
+Usage:
+./dijkstrasCurse
+	Generates random dungeon and populates with monsters
+Flags:
+--seed x
+	Seeds the random number generator with seed x
+
+Controls:
+	Use the keypad to move your character (make sure to turn on numlock). While on stairs, press '<' or '>' to access the next level. Pressing 'm' opens the monster list, which can be scrolled by using the up and down arrow keys. Pressing escape returns you to the map.
+
+	(New!) Press t to switch to teleport mode. Move the cursor and press t again to teleport. Press r in teleport mode to teleport to a random open spot.
+
+
+Architecture:
+This iteration has multiple files, with an architecture consisting of four rough layers:
 
 Layer 1: 	+dijkstrasCurse (parses CLI)
+			+gameTypes (defines controller classes)
 
 Layer 2: 	+mapBuilder (generates map)
 			+mapPopulator (populates map with NPC's)
@@ -15,16 +32,3 @@ Lower Level:+heap (Dr. Sheaffer's heap)
 			+mapElements (stores map specs and defines types such as Block, BlockType, DistanceMap, etc.)
 			+pathFinder (implements Dijkstra's algorithm and generates distance maps)
 			+populationElements (defines types for characters such as Entity, etc.)
-
-Usage:
-./dijkstrasCurse
-	Generates random dungeon and populates with monsters
-Flags:
---nummon x
-	Populates each level with x monsters
---seed x
-	Seeds the random number generator with seed x
-
-Controls:
-	Use the keypad to move your character. While on stairs, press '<' or '>' to access the next level. Pressing 'm' opens the monster list, which can be scrolled by using the up and down arrow keys. Pressing escape returns you to the map.
-

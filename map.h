@@ -40,5 +40,8 @@ void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChoose
 bool map_pc_is_dead(Map * map);
 DistanceMap * map_get_distance_map_non_tunneling(Map * map);
 DistanceMap * map_get_distance_map_tunneling(Map * map);
+//map_block_is_visible
+//map_get_block_remembered
+
 
 #endif

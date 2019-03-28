@@ -75,3 +75,13 @@
 		-PC restricted from tunneling
 		-Monster list shows relative position, excludes dead monsters
 		-Update README and CHANGELOG
+3/25/19 -Give gitignore a tuneup
+		-Port everything to C++
+		-Change all structs to classes, except in Shaeffer's heap
+3/26/19 -Major refactoring, moving controller responsibility for gameplay into class in gameTypes
+		-Change all prints to couts
+		-More refactoring. Introduce state pattern into gameplay controller to handle mode specific functionality like monster list and such.
+3/27/19 -Introduce teleportation mode and implement cursor
+		-Add full functionality and randomness to teleportation mode
+		-Update README and CHANGELOG
+
