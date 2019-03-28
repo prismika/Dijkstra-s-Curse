@@ -89,7 +89,7 @@ int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 	if(nextTurnEnt == NULL) return -2; //Turnmaster should never be empty
 	//If the next turn belongs to an NPC, they gotta do what the gotta do
 	if(nextTurnEnt->isPC){
-		display_map(&game->theMap);
+		display_map_foggy(&game->theMap);
 		//Get user input [Blocking call]
 		inputState_update(&game->inputState);//TODO make mode-dependent
 		//Interpret and execute input with helper function

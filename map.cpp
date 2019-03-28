@@ -6,6 +6,8 @@
 #include "populationElements.h"
 #include "display.h"
 
+#define PC_VISIBILITY 4;
+
 char symbols[] = "0123456789abcdef";
 bool pcDead = false;
 
@@ -207,3 +209,11 @@ DistanceMap * map_get_distance_map_non_tunneling(Map * map){
 DistanceMap * map_get_distance_map_tunneling(Map * map){
 	return &(map->distanceMapTunneling);
 }
+
+bool map_block_is_visible(Map * map, Coordinate coord){
+	Coordinate pcPos = map_get_pc_position(map);
+	return distLInf(coord, pcPos) < PC_VISIBILITY;
+}
+
+
+
