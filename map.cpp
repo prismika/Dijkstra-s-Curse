@@ -167,9 +167,11 @@ Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
 int map_teleport_entity(Map * map, Entity * ent, Coordinate target){
 	Block targetBlock;
 	map_getBlock(map, target.x, target.y, &targetBlock);
-	targetBlock.hardness = 0;
-	targetBlock.type = floor;
-	map_setBlock(map, target.x, target.y, &targetBlock);
+	if(targetBlock.hardness > 0){
+		targetBlock.hardness = 0;
+		targetBlock.type = floor;
+		map_setBlock(map, target.x, target.y, &targetBlock);
+	}
 	//Move entity
 	Coordinate start = ent->position;
 	map_remove_entity(map, start.x, start.y);
