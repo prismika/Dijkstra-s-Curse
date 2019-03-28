@@ -120,6 +120,14 @@ int inputState_update(InputState * inState){
 			newType = input_teleport;
 			break;
 
+			case 'r':
+			newType = input_random;
+			break;
+
+			case 'f':
+			newType = input_fog;
+			break;
+
 			default://If we reach this point, the input wasn't recognized
 			newType = input_null;
 			break;

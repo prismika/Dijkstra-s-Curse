@@ -275,8 +275,18 @@ int TeleportGameMode::interpret_pc_input(InputState * inState, OriginalGameType 
 		break;
 
 		case input_teleport:
-		map_move_entity(&game->theMap, map_get_pc(&game->theMap), cursorPos);
+		map_teleport_entity(&game->theMap, map_get_pc(&game->theMap), cursorPos);
 		game->gameMode = new MovementGameMode;
+		break;
+
+		case input_random:{
+			BlockType canChoose[] 	= {floor, corridor};
+			int canChooseSize 		= 2;
+			Coordinate teleportTo;
+			map_choose_random_block(&game->theMap, canChoose, canChooseSize, &teleportTo);
+			map_teleport_entity(&game->theMap, map_get_pc(&game->theMap), teleportTo);
+			game->gameMode = new MovementGameMode;
+		}
 		break;
 
 		default:

@@ -25,7 +25,10 @@ void map_change_block_type(Map * map, int x, int y, BlockType type);
 Entity * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics);
 Entity * map_new_pc(Map * map, Coordinate coord);
 void map_set_entity(Map * map, int x, int y, Entity * ent);
+//Performs all necessary checks and changes to attempt the specified move
 Coordinate map_move_entity(Map * map, Entity * ent, Coordinate coord);
+//Unconditionally clears a space and teleports the entity
+int map_teleport_entity(Map * map, Entity * ent, Coordinate target);
 Entity ** map_get_population_matrix(Map * map);
 Entity ** map_get_population_list(Map * map);
 int map_get_population_size(Map * map);
