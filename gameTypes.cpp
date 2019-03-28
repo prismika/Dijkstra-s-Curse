@@ -274,10 +274,16 @@ int TeleportGameMode::interpret_pc_input(InputState * inState, OriginalGameType 
 		cursorPos.y++;
 		break;
 
-		default:break;
+		case input_teleport:
+		map_move_entity(&game->theMap, map_get_pc(&game->theMap), cursorPos);
+		game->gameMode = new MovementGameMode;
+		break;
+
+		default:
+		break;
 	}
 	cursorPos.x = std::max(std::min(cursorPos.x,MAPWIDTH-2),1);
 	cursorPos.y = std::max(std::min(cursorPos.y,MAPHEIGHT-2),1);
-	return 0;//TODO You're in the middle of doing this
+	return 0;
 }
 

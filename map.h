@@ -30,6 +30,7 @@ Entity ** map_get_population_matrix(Map * map);
 Entity ** map_get_population_list(Map * map);
 int map_get_population_size(Map * map);
 Coordinate map_get_pc_position(Map * map);
+Entity * map_get_pc(Map * map);
 bool map_has_entity_at(Map * map, int x, int y);
 void map_get_entity(Map * map, int x, int y, Entity * ent);
 void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChooseSize, Coordinate *returnCoord);

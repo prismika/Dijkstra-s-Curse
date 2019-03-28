@@ -95,6 +95,10 @@ Coordinate map_get_pc_position(Map * map){
 	return map->populationList[0]->position;
 }
 
+Entity * map_get_pc(Map * map){
+	return map->populationList[0];
+}
+
 Entity * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	Entity * ent = (Entity *) malloc(sizeof(Entity));
 	char symbol = symbols[characteristics];
