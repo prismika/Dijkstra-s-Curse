@@ -42,6 +42,15 @@ private:
 	int interpret_pc_input(InputState * inState, OriginalGameType * game);
 };
 
+class TeleportGameMode : public GameMode{
+public:
+	TeleportGameMode();
+	int execute_mode_actions(OriginalGameType * game);
+private:
+	Coordinate cursorPos;
+	int interpret_pc_input(InputState * inState, OriginalGameType * game);
+};
+
 
 
 
@@ -68,6 +77,7 @@ private:
 
 	friend class MovementGameMode;
 	friend class ListGameMode;
+	friend class TeleportGameMode;
 };
 
 

@@ -116,6 +116,10 @@ int inputState_update(InputState * inState){
 			newType = input_escape;
 			break;
 
+			case 't':
+			newType = input_teleport;
+			break;
+
 			default://If we reach this point, the input wasn't recognized
 			newType = input_null;
 			break;

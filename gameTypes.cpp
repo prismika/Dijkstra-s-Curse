@@ -42,43 +42,9 @@ int OriginalGameType::runGame(){
 			quit_game();
 			return 0;
 		}
-		// switch(mode){
-		// 	case mode_map:{
-		// 		//Get next turn from turnMaster
-		// 		nextTurnEnt = turnmaster_get_next_turn(&turnMaster);
-		// 		if(nextTurnEnt == NULL) return -1;
-		// 		//If the next turn belongs to an NPC, they gotta do what the gotta do
-		// 		if(nextTurnEnt->isPC){
-		// 			display_map(&theMap);
-		// 		}else{
-		// 			//Calculate attempted move of entity with current turn
-		// 			Coordinate moveCoord;
-		// 			DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&theMap);
-		// 			DistanceMap * distTunnel = map_get_distance_map_tunneling(&theMap);
-		// 			entity_get_move(nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
-		// 			//Tell the map our intended move
-		// 			map_move_entity(&theMap, nextTurnEnt, moveCoord);
-		// 		}
-		// 		//Did the PC die???
-		// 		if(map_pc_is_dead(&theMap)){
-		// 			//Press f to pay respects
-		// 			handle_death();
-		// 			quit_game();
-		// 			return 0;
-		// 		}
-
-		// 	}break;
-
-		// 	//This is the mode in which the user can see the list of monsters
-		// 	case mode_monster_list:{
-		// 		display_message((char *)"We are in monster list mode");
-		// 		display_population_list_offset(&theMap, scrollOffset+1);
-		// 	}break;
-		// }
 	}
 	return 0;
 }
-
 
 void OriginalGameType::init_level(){
 	map_init(&theMap);
@@ -100,97 +66,6 @@ void OriginalGameType::quit_game(){
 	delete_level();
 	display_delete();
 }
-/*Returns -1 if we are quitting the game*/
-// int OriginalGameType::interpret_pc_input(Entity * pc, InputState * inState){
-// 	InputType inputType = inputState_get_last(inState);
-// 	//Mode-independent checks
-// 	if(inputType == input_quit){
-// 		quit_game();
-// 		return -1;
-// 	}
-
-
-// 	//Mode-dependent things
-// 	switch(mode){
-// 		case mode_map:
-// 		if(inputState_is_movement(inState)){
-// 			Coordinate moveCoord = pc->position;
-// 			switch(inputType){
-// 				case input_upleft:
-// 					moveCoord.y--;
-// 					moveCoord.x--;
-// 					break;
-// 				case input_up:
-// 					moveCoord.y--;
-// 					break;
-// 				case input_upright:
-// 					moveCoord.x++;
-// 					moveCoord.y--;
-// 					break;
-// 				case input_right:
-// 					moveCoord.x++;
-// 					break;
-// 				case input_downright:
-// 					moveCoord.y++;
-// 					moveCoord.x++;
-// 					break;
-// 				case input_down:
-// 					moveCoord.y++;
-// 					break;
-// 				case input_downleft:
-// 					moveCoord.y++;
-// 					moveCoord.x--;
-// 					break;
-// 				case input_left:
-// 					moveCoord.x--;
-// 					break;
-// 				default:break;
-// 			}
-// 			//Move the PC accordingly
-// 			Coordinate newCoord = map_move_entity(&theMap, pc, moveCoord);
-// 			//Update distance maps
-// 			DistanceMap * dist = map_get_distance_map_non_tunneling(&theMap);
-// 			get_distance_map(&theMap,newCoord,dist);
-// 			dist = map_get_distance_map_tunneling(&theMap);
-// 			get_distance_map_tunneling(&theMap,newCoord,dist);
-// 			return 0;
-// 		}//Check if the input was a stair movement
-// 		else if(inputState_is_stair(inState)){
-// 			Block pcBlock;
-// 			map_getBlock(&theMap,pc->position.x,pc->position.y,&pcBlock);
-// 			if(!(pcBlock.type == upstairs || pcBlock.type == downstairs)){
-// 				display_message((char*)"Your hero stumbles as he tries to take stairs that do not exist");
-// 				return 0;
-// 			}
-// 			delete_level();
-// 			init_level();
-// 		}else if(inputType == input_mlist){
-// 			mode = mode_monster_list;
-// 		}
-// 		break;
-
-
-// 		case mode_monster_list:
-// 		switch(inputType){
-// 			case input_escape:
-// 				mode = mode_map;
-// 				break;
-// 			case input_mlist_down:
-// 				scrollOffset = scrollOffset < map_get_population_size(&theMap)-2?
-// 					scrollOffset + 1 :
-// 					map_get_population_size(&theMap) - 2;
-// 				break;
-// 			case input_mlist_up:
-// 				scrollOffset = scrollOffset > 0 ?
-// 					scrollOffset - 1 :
-// 					0;
-// 				break;
-
-// 			default:break;
-// 		}
-// 	}
-// 	return 0;
-// }
 
 void OriginalGameType::handle_death(void){
 	display_map(&theMap);
@@ -237,7 +112,7 @@ int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 int MovementGameMode::interpret_pc_input(Entity * pc, InputState * inState, OriginalGameType * game){
 	InputType inputType = inputState_get_last(inState);
 	if(inputType == input_quit){
-		return -1;
+			return -1;
 	}
 	if(inputState_is_movement(inState)){
 		Coordinate moveCoord = pc->position;
@@ -292,6 +167,8 @@ int MovementGameMode::interpret_pc_input(Entity * pc, InputState * inState, Orig
 		game->init_level();
 	}else if(inputType == input_mlist){
 		game->gameMode = new ListGameMode;
+	}else if(inputType == input_teleport){
+		game->gameMode = new TeleportGameMode;
 	}
 	return 0;
 }
@@ -341,3 +218,66 @@ int ListGameMode::interpret_pc_input(InputState * inState, OriginalGameType * ga
 	}
 	return 0;
 }
+
+
+
+
+TeleportGameMode::TeleportGameMode(){
+	cursorPos = {1,1};
+}
+
+int TeleportGameMode::execute_mode_actions(OriginalGameType * game){
+	display_map(&game->theMap);
+	display_add_cursor(cursorPos);
+	inputState_update(&game->inputState);
+	int interpretStatus = interpret_pc_input(&game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	return 0;
+}
+
+int TeleportGameMode::interpret_pc_input(InputState * inState, OriginalGameType * game){
+	InputType inputType = inputState_get_last(inState);
+	//Mode-independent check
+	if(inputType == input_quit){
+		game->quit_game();
+		return -1;
+	}
+	switch(inputType){
+		case input_right:
+		cursorPos.x++;
+		break;
+		case input_upright:
+		cursorPos.x++;
+		cursorPos.y--;
+		break;
+		case input_up:
+		cursorPos.y--;
+		break;
+		case input_upleft:
+		cursorPos.x--;
+		cursorPos.y--;
+		break;
+		case input_left:
+		cursorPos.x--;
+		break;
+		case input_downleft:
+		cursorPos.x--;
+		cursorPos.y++;
+		break;
+		case input_down:
+		cursorPos.y++;
+		break;
+		case input_downright:
+		cursorPos.x++;
+		cursorPos.y++;
+		break;
+
+		default:break;
+	}
+	cursorPos.x = std::max(std::min(cursorPos.x,MAPWIDTH-2),1);
+	cursorPos.y = std::max(std::min(cursorPos.y,MAPHEIGHT-2),1);
+	return 0;//TODO You're in the middle of doing this
+}
+

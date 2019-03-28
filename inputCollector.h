@@ -13,7 +13,8 @@ typedef enum{
 	input_mlist_up,
 	input_mlist_down,
 	input_escape,
-	input_quit
+	input_quit,
+	input_teleport
 }InputType;
 
 class InputState{

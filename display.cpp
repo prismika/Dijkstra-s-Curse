@@ -117,3 +117,8 @@ int display_population_list_offset(Map * map, int offset){
 	display_population_list(list + offset, listSize - offset,pcPos);
 	return 0;
 }
+
+int display_add_cursor(Coordinate cursorPos){
+	mvprintw(cursorPos.y+1, cursorPos.x,"*");
+	return 0;
+}

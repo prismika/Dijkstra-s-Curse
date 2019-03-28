@@ -1,8 +1,8 @@
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-#include <time.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdbool>
+#include <cstring>
+#include <ctime>
+#include <cstdio>
 #include <iostream>
 #include "map.h"
 #include "mapIO.h"
