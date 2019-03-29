@@ -25,9 +25,11 @@ public:
 /*This is the default mode. Time advances and monsters move and stuff*/
 class MovementGameMode : public GameMode{
 public:
+	MovementGameMode();
 	int execute_mode_actions(OriginalGameType * game);
 private:
 	Entity * nextTurnEnt;
+	bool fog;
 	int interpret_pc_input(Entity * pc, InputState * inState, OriginalGameType * game);
 };
 

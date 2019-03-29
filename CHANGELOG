@@ -83,5 +83,6 @@
 		-More refactoring. Introduce state pattern into gameplay controller to handle mode specific functionality like monster list and such.
 3/27/19 -Introduce teleportation mode and implement cursor
 		-Add full functionality and randomness to teleportation mode
+3/28/19 -Limit visibility
 		-Update README and CHANGELOG
 

@@ -83,13 +83,20 @@ void OriginalGameType::handle_death(void){
 
 
 //------------------------MODES---------------------------
+MovementGameMode::MovementGameMode(){
+	fog = true;
+	nextTurnEnt = NULL;
+}
+
 int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 	//Get next turn from turnMaster
 	nextTurnEnt = turnmaster_get_next_turn(&game->turnMaster);
 	if(nextTurnEnt == NULL) return -2; //Turnmaster should never be empty
 	//If the next turn belongs to an NPC, they gotta do what the gotta do
 	if(nextTurnEnt->isPC){
-		display_map_foggy(&game->theMap);
+		fog ?
+			display_map_foggy(&game->theMap) :
+			display_map(&game->theMap);
 		//Get user input [Blocking call]
 		inputState_update(&game->inputState);//TODO make mode-dependent
 		//Interpret and execute input with helper function
@@ -169,6 +176,8 @@ int MovementGameMode::interpret_pc_input(Entity * pc, InputState * inState, Orig
 		game->gameMode = new ListGameMode;
 	}else if(inputType == input_teleport){
 		game->gameMode = new TeleportGameMode;
+	}else if(inputType == input_fog){
+		fog = !fog;
 	}
 	return 0;
 }
