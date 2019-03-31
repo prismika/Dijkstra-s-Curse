@@ -13,6 +13,7 @@ bool pcDead = false;
 
 void map_init(Map * map){
 	Map retMap;
+	Block default_remembered_block = block_create(rock,100);
 	int i,j;
 	for(i = 0; i < MAPHEIGHT; ++i){
 		for(j = 0; j < MAPWIDTH; ++j){
@@ -23,6 +24,7 @@ void map_init(Map * map){
 				block = block_create(rock,100);
 			}
 			map_setBlock(&retMap, j, i, &block);
+			map_set_block_remembered(&retMap, j, i, &default_remembered_block);
 		}
 	}
 
@@ -52,7 +54,7 @@ void map_init(Map * map){
 
 int map_getBlock(Map * map, int x, int y, Block * outputBlock){
 	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
-		std::cerr << "!!!Tried to set block in map at ("<< x << "," << y << ")!!!\n";
+		std::cerr << "!!!Tried to get block in map at ("<< x << "," << y << ")!!!\n";
 		return -1;
 	}
 	*outputBlock = map->block[y][x];
@@ -164,6 +166,7 @@ Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
 	}
 	return position;
 }
+//Unconditional teleport
 int map_teleport_entity(Map * map, Entity * ent, Coordinate target){
 	Block targetBlock;
 	map_getBlock(map, target.x, target.y, &targetBlock);
@@ -218,4 +221,21 @@ bool map_block_is_visible(Map * map, Coordinate coord){
 }
 
 
+int map_get_block_remembered(Map * map, int x, int y, Block * outputBlock){
+	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
+		std::cerr << "!!!Tried to get remembered block in map at ("<< x << "," << y << ")!!!\n";
+		return -1;
+	}
+	*outputBlock = map->block_remembered[y][x];
+	return 0;
+}
+
+int map_set_block_remembered(Map * map, int x, int y, Block * inputBlock){
+	if(x<0||x>=MAPWIDTH||y<0||y>=MAPHEIGHT){
+		std::cerr << "!!!Tried to set remembered block in map at ("<< x << "," << y << ")!!!\n";
+		return -1;
+	}
+	map->block_remembered[y][x] = *inputBlock;
+	return 0;
+}
 

@@ -9,6 +9,7 @@
 class Map{
 public:
 	Block block[MAPHEIGHT][MAPWIDTH];
+	Block block_remembered[MAPHEIGHT][MAPWIDTH];
 	Room room[MAX_ROOM_COUNT+1];//DONT FORGET extra spot for sentinel value
 	int width;
 	int height;
@@ -42,7 +43,8 @@ bool map_pc_is_dead(Map * map);
 DistanceMap * map_get_distance_map_non_tunneling(Map * map);
 DistanceMap * map_get_distance_map_tunneling(Map * map);
 bool map_block_is_visible(Map * map, Coordinate coord);
-//map_get_block_remembered
+int map_get_block_remembered(Map * map, int x, int y, Block * outputBlock);
+int map_set_block_remembered(Map * map, int x, int y, Block * inputBlock);
 
 
 #endif
