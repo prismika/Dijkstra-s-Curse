@@ -50,10 +50,10 @@ void OriginalGameType::init_level(){
 	map_init(&theMap);
 	generate_map(&theMap,++seed);
 	populate_map(&theMap,nummon);
+	map_update_remembered(&theMap);
 	turnmaster_init(&turnMaster);
-	//Get population matrix from map
+	//Get population matrix from map to fill turnmaster
 	Entity **populationMatrix = map_get_population_matrix(&theMap);
-	//Give population to turnmaster
 	turnmaster_fill_from_matrix(&turnMaster, populationMatrix);
 }
 
@@ -161,6 +161,8 @@ int MovementGameMode::interpret_pc_input(Entity * pc, InputState * inState, Orig
 		get_distance_map(&game->theMap,newCoord,dist);
 		dist = map_get_distance_map_tunneling(&game->theMap);
 		get_distance_map_tunneling(&game->theMap,newCoord,dist);
+		//Update remembered map
+		map_update_remembered(&game->theMap);
 		return 0;
 	}//Check if the input was a stair movement
 	else if(inputState_is_stair(inState)){

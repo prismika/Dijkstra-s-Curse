@@ -239,3 +239,19 @@ int map_set_block_remembered(Map * map, int x, int y, Block * inputBlock){
 	return 0;
 }
 
+int map_update_remembered(Map * map){
+	int x,y;
+	for(y = 0; y < MAPHEIGHT; y++){
+		for(x = 0; x < MAPWIDTH; x++){
+			Coordinate curCoord;
+			curCoord.x = x;
+			curCoord.y = y;
+			if(map_block_is_visible(map, curCoord)){
+				Block realBlock;
+				map_getBlock(map, x, y, &realBlock);
+				map_set_block_remembered(map, x, y, &realBlock);
+			}
+		}
+	}
+	return 0;
+}

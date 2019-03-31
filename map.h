@@ -45,6 +45,6 @@ DistanceMap * map_get_distance_map_tunneling(Map * map);
 bool map_block_is_visible(Map * map, Coordinate coord);
 int map_get_block_remembered(Map * map, int x, int y, Block * outputBlock);
 int map_set_block_remembered(Map * map, int x, int y, Block * inputBlock);
-
+int map_update_remembered(Map * map);
 
 #endif
