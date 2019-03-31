@@ -296,6 +296,7 @@ int TeleportGameMode::interpret_pc_input(InputState * inState, OriginalGameType 
 			Coordinate teleportTo;
 			map_choose_random_block(&game->theMap, canChoose, canChooseSize, &teleportTo);
 			map_teleport_entity(&game->theMap, map_get_pc(&game->theMap), teleportTo);
+			map_update_remembered(&game->theMap);
 			game->gameMode = new MovementGameMode;
 		}
 		break;

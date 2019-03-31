@@ -79,7 +79,10 @@ int display_map_foggy(Map * map){
 	int x,y;
 	for(y=0;y<MAPHEIGHT;++y){
 		for(x=0; x<MAPWIDTH; ++x){
-			if(map_has_entity_at(map, x, y)){
+			Coordinate curCoord;
+			curCoord.x = x;
+			curCoord.y = y;
+			if(map_block_is_visible(map,curCoord) && map_has_entity_at(map, x, y)){
 				Entity curEnt;
 				map_get_entity(map,x,y,&curEnt);
 				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
