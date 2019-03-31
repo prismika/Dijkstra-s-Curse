@@ -47,7 +47,6 @@ int display_init(){
 	keypad(stdscr, TRUE);
 	mvprintw(1, 1, "Loading...");
 	init_pair(COLOR_DEFAULT, COLOR_WHITE, COLOR_BLACK);
-	init_color(COLOR_YELLOW,400,400,400);
 	init_pair(COLOR_MEMORY, COLOR_YELLOW, COLOR_BLACK);
 
 	return 0;
@@ -87,16 +86,21 @@ int display_map_foggy(Map * map){
 			Coordinate curCoord;
 			curCoord.x = x;
 			curCoord.y = y;
-			if(map_block_is_visible(map,curCoord) && map_has_entity_at(map, x, y)){
+			bool isVisible = map_block_is_visible(map,curCoord);
+			if(isVisible && map_has_entity_at(map, x, y)){
 				Entity curEnt;
 				map_get_entity(map,x,y,&curEnt);
 				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
 			}else{
 				Block curBlock;
 				map_get_block_remembered(map,x,y,&curBlock);
-				attron(COLOR_PAIR(COLOR_MEMORY));
-				mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
-				attroff(COLOR_PAIR(COLOR_MEMORY));
+				if(isVisible){
+					mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
+				}else{
+					attron(COLOR_PAIR(COLOR_MEMORY));
+					mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
+					attroff(COLOR_PAIR(COLOR_MEMORY));
+				}
 			}
 		}
 	}
