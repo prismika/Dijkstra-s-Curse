@@ -7,6 +7,9 @@
 #include "map.h"
 
 #define SPACE_ABOVE_MAP 1
+#define COLOR_DEFAULT 0
+#define COLOR_MEMORY 1
+#define COLOR_PC 2
 
 char * deathString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 "                                 (  .      )\n"
@@ -37,11 +40,15 @@ int display_init(){
 	// curs_set(0);
 
 	initscr();
+	start_color();
 	raw();
 	noecho();
 	curs_set(0);
 	keypad(stdscr, TRUE);
 	mvprintw(1, 1, "Loading...");
+	init_pair(COLOR_DEFAULT, COLOR_WHITE, COLOR_BLACK);
+	init_color(COLOR_YELLOW,400,400,400);
+	init_pair(COLOR_MEMORY, COLOR_YELLOW, COLOR_BLACK);
 
 	return 0;
 }
@@ -51,8 +58,6 @@ int display_delete(){
 	std::cout << deathString;
 	return 0;
 }
-
-char getBlockVisual(BlockType type);
 
 int display_map(Map * map){
 	erase();
@@ -89,7 +94,9 @@ int display_map_foggy(Map * map){
 			}else{
 				Block curBlock;
 				map_get_block_remembered(map,x,y,&curBlock);
+				attron(COLOR_PAIR(COLOR_MEMORY));
 				mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
+				attroff(COLOR_PAIR(COLOR_MEMORY));
 			}
 		}
 	}
