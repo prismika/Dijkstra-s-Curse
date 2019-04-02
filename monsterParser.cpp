@@ -1,32 +1,87 @@
 #include "monsterParser.h"
 #include <cstdlib>
+#include <cstring>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
 
 
+std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 
-MonsterBlueprint * parser_load_monster_list(int * listSize){
-	MonsterBlueprint * blueprintList = (MonsterBlueprint*) malloc(sizeof(MonsterBlueprint*));
-	*listSize = 1;
+	ifstream file;
+	std::vector <MonsterBlueprint> blueprintList;
+	int l = strlen(getenv("HOME")) + strlen("/.rlg327/monster_desc.txt") + 1; 
+	char * filePath = (char *) malloc(l);
+	strcpy(filePath,getenv("HOME"));
+	strcat(filePath,"/.rlg327/monster_desc.txt");
+	file.open(filePath);
+
+	string curLine;
 	Dice d1,d2,d3;
-	MonsterBlueprint blueprint((char*)"Gregory",(char*)"He's a fast one",d1,d2,d3,
-		'G',MONSTER_RED,10);
-	blueprintList[0] = blueprint;
+	char *name, *desc, *abilities;
+	char symbol = '0';
+	MonsterColor color = MONSTER_RED;
+	int rarity = 10;
+	while(getline(file, curLine)&&curLine.compare("BEGIN MONSTER")){
+	}
+	//Inside a monster definition
+	while(getline(file, curLine) && curLine.compare("END")){
+		cout << "Parsing: '" << curLine << "'" << endl;
+		string keyword = curLine.substr(0, curLine.find(" "));
+		curLine.erase(0,curLine.find(" ")+1);
+		cout << "Keyword is '" << keyword << "'" << endl;
+		cout << "What's left is '" << curLine << "'" <<endl;
+		if(!keyword.compare("NAME")){
+			name = strdup(curLine.c_str());
+		}
+	}
+	//Reached the end
+
+	MonsterBlueprint *blueprint = new MonsterBlueprint(
+		name,desc,abilities,
+		d1,d2,d3,
+		symbol,color,rarity);
+	blueprintList.push_back(*blueprint);
+
+	*listSize = blueprintList.size();
 	return blueprintList;
 }
 
-MonsterBlueprint::MonsterBlueprint(char * name, char * description,
+MonsterBlueprint::MonsterBlueprint(char * name, char * description, char* abilities,
 	Dice speed, Dice hitpoints, Dice attackDamage,
 	char symbol, MonsterColor color, int rarity){
 	this->name = name;
 	this->description = description;
+	this->abilities = abilities;
 	this->speed = speed;
 	this->hitpoints = hitpoints;
 	this->attackDamage = attackDamage;
 	this->symbol = symbol;
 	this->color = color;
 	this->rarity = rarity;
+}
 
-	this->abilities = (char * *) malloc(0);
-	this->abilitiesSize = 0;
+// int MonsterBlueprint::addAbility(char * newAbility){
+// 	char * newAbilityCopy = strdup(newAbility);
+// 	abilities.push_back(newAbilityCopy);
+// 	return 0;
+// }
+
+MonsterBlueprint & MonsterBlueprint::operator=(const MonsterBlueprint & r){
+	this->name = r.name;
+	this->symbol = r.symbol;
+	this->speed = r.speed;
+	this->color = r.color;
+	this->hitpoints = r.hitpoints;
+	this->attackDamage = r.attackDamage;
+	this->symbol = r.symbol;
+	this->color = r.color;
+	this->rarity = r.rarity;
+	this->description = r.description;
+	this->abilities = r.abilities;
+
+	return *this;
 }
 
 std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r){
@@ -62,15 +117,9 @@ std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r){
 	out << "Color: " << colorName << std::endl;
 	out << "Rarity: " << r.rarity << std::endl;
 	out << "Speed: " << r.speed << std::endl;
-	out << "Hitpoints: " <<r.hitpoints << std::endl;
-	out << "Attack: " <<r.attackDamage << std::endl;
-	out << "Abilities: ";
-	int i;
-	for(i=0; i<r.abilitiesSize; i++){
-		out << r.abilities[i] << " ";
-	}
-	out<<std::endl;
-
+	out << "Hitpoints: " << r.hitpoints << std::endl;
+	out << "Attack: " << r.attackDamage << std::endl;
+	out << "Abilities: " <<r.abilities <<std::endl;
 	out << r.description << std::endl;
 
 	return out;
@@ -88,11 +137,6 @@ Dice::Dice(int base, int count, int sides){
 	this->sides = sides;
 }
 
-Dice::Dice(std::string){
-	this->base = 2;
-	this->count = 2;
-	this->sides = 3;
-}
 
 int Dice::roll(){
 	int sum = base;

@@ -3,6 +3,7 @@
 
 #include <string>
 #include <ostream>
+#include <vector>
 
 typedef enum{
 	MONSTER_RED,
@@ -23,7 +24,6 @@ private:
 public:
 	Dice(void);
 	Dice(int base, int count, int sides);
-	Dice(std::string);
 	int roll();
 	friend std::ostream & operator<<(std::ostream &out, const Dice &d);
 };
@@ -38,21 +38,21 @@ private:
 	char symbol;
 	MonsterColor color;
 	int rarity;
-	char * *abilities;
-	int abilitiesSize;
+	char *abilities;
 public:
-	MonsterBlueprint(char * name, char * description,
+	MonsterBlueprint(char * name, char * description, char* abilities,
 		Dice speed, Dice hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity);
-	//Add ability
+	int addAbility(char * newAblility);
 	friend std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r);
 	~MonsterBlueprint(){
 		//TODO free stuff here
 	}
+	MonsterBlueprint & operator=(const MonsterBlueprint &r);
 };
 
 /*Beware! Malloc's the returned list and every item in it!
 They must all be freed!*/
-MonsterBlueprint * parser_load_monster_list(int * listSize);
+std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize);
 
 #endif

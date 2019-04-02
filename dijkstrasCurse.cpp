@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cstdio>
 #include <iostream>
+#include <vector>
 #include "map.h"
 #include "mapIO.h"
 #include "mapElements.h"
@@ -171,7 +172,7 @@ int executeDistances(){
 }
 
 int executeMonsters(){
-	MonsterBlueprint * blueprintList;
+	std::vector<MonsterBlueprint> blueprintList;
 	int blueprintListSize;
 	blueprintList = parser_load_monster_list(&blueprintListSize);
 	
