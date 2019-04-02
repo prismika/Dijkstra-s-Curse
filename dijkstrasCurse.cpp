@@ -26,6 +26,7 @@ int executeLoad(void);
 int executeLoadSave(void);
 int executeDistances(void);
 int executeDefault(void);
+int executeMonsters(void);
 int legacyFlag(void);
 
 int parseCLI(int argc, char * argv[], IncomingCommand * command){
@@ -39,10 +40,11 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 		bool seed;
 		long theSeed;
 		bool nummon;
-		int monsters;
+		int monsterCount;
+		bool monsters;
 	}flags;
-	flags.save=flags.load=flags.distances=flags.seed=flags.nummon=false;
-	flags.theSeed = flags.monsters = 0;
+	flags.save=flags.load=flags.distances=flags.seed=flags.nummon=flags.monsters=false;
+	flags.theSeed = flags.monsterCount = 0;
 
 	//Iterate through the command line input
 	int i;
@@ -63,8 +65,10 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 			if(i<argc-1){
 				i++;
 				flags.nummon = true;
-				flags.monsters = atoi(argv[i]);
+				flags.monsterCount = atoi(argv[i]);
 			}else return -1;
+		}else if(!strcmp(argv[i],"--monsters")){
+			flags.monsters = true;
 		}else return -1;
 	}
 
@@ -75,7 +79,7 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 		seed = time(0);
 	}
 	if(flags.nummon){
-		nummon = flags.monsters;
+		nummon = flags.monsterCount;
 	}else{
 		nummon = 5;
 	}
@@ -87,6 +91,8 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 		command->execute = executeLoadSave;
 	}else if(flags.distances){
 		command->execute = legacyFlag;//executeDistances;
+	}else if(flags.monsters){
+		command->execute = executeMonsters;
 	}else{
 		command->execute = executeDefault;
 	}
@@ -160,5 +166,18 @@ int executeDistances(){
 	// get_distance_map_tunneling(&theMap,theMap.pcPos,&distWithTunneling);
 	display_distance_map(&dist);
 	display_distance_map(&distWithTunneling);
+	return 0;
+}
+
+int executeMonsters(){
+	//MonsterBlueprint * blueprintList;
+	//int blueprintListSize;
+	//blueprintList = parser_load_list(&blueprintListSize);
+	/*
+	int i;
+	for(i=0;i<blueprintListSize; i++){
+		cout << blueprintList[i];
+	}
+	*/
 	return 0;
 }
