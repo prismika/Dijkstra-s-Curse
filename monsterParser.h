@@ -5,7 +5,14 @@
 #include <ostream>
 
 typedef enum{
-	MONSTER_RED, MONSTER_GREEN, MONSTER_BLUE, MONSTER_CYAN, MONSTER_YELLOW, MONSTER_MAGENTA, MONSTER_WHITE, MONSTER_BLACK
+	MONSTER_RED,
+	MONSTER_GREEN,
+	MONSTER_BLUE,
+	MONSTER_CYAN,
+	MONSTER_YELLOW,
+	MONSTER_MAGENTA,
+	MONSTER_WHITE,
+	MONSTER_BLACK
 }MonsterColor;
 
 class Dice{
@@ -14,10 +21,11 @@ private:
 	int count;
 	int sides;
 public:
-	Dice(void){}
+	Dice(void);
 	Dice(int base, int count, int sides);
 	Dice(std::string);
 	int roll();
+	friend std::ostream & operator<<(std::ostream &out, const Dice &d);
 };
 
 class MonsterBlueprint{

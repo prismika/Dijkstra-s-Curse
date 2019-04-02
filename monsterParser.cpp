@@ -61,9 +61,9 @@ std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r){
 	out << "Symbol: " << r.symbol << std::endl;
 	out << "Color: " << colorName << std::endl;
 	out << "Rarity: " << r.rarity << std::endl;
-	//out << "Speed: " << r.speed << std::endl;
-	//out << "Hitpoints: " <<r.hitpoints << std::endl;
-	//out << "Attack: " <<r.attackDamage << std::endl;
+	out << "Speed: " << r.speed << std::endl;
+	out << "Hitpoints: " <<r.hitpoints << std::endl;
+	out << "Attack: " <<r.attackDamage << std::endl;
 	out << "Abilities: ";
 	int i;
 	for(i=0; i<r.abilitiesSize; i++){
@@ -74,6 +74,12 @@ std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r){
 	out << r.description << std::endl;
 
 	return out;
+}
+
+Dice::Dice(void){
+	this->base = 1;
+	this->count = 2;
+	this->sides = 3;
 }
 
 Dice::Dice(int base, int count, int sides){
@@ -94,4 +100,8 @@ int Dice::roll(){
 		sum += rand()%sides + 1;
 	}
 	return sum;
+}
+
+std::ostream & operator<<(std::ostream &out, const Dice &d){
+	return out << d.base << " + " << d.count << "d" << d.sides;
 }
