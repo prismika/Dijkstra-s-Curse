@@ -5,27 +5,46 @@
 #include <ostream>
 
 typedef enum{
-	RED, GREEN, BLUE, CYAN, YELLOW, MAGENTA, WHITE, BLACK
+	MONSTER_RED, MONSTER_GREEN, MONSTER_BLUE, MONSTER_CYAN, MONSTER_YELLOW, MONSTER_MAGENTA, MONSTER_WHITE, MONSTER_BLACK
 }MonsterColor;
+
+class Dice{
+private:
+	int base;
+	int count;
+	int sides;
+public:
+	Dice(void){}
+	Dice(int base, int count, int sides);
+	Dice(std::string);
+	int roll();
+};
 
 class MonsterBlueprint{
 private:
-	std::string name;
-	std::string description;
-	MonsterColor color;
-	int speed;
-	std::string * abilities;
-	int abilitiesSize;
-	int hitpoints;
-	int attackDamage;
+	char *name;
+	char *description;
+	Dice speed;
+	Dice hitpoints;
+	Dice attackDamage;
 	char symbol;
+	MonsterColor color;
 	int rarity;
+	char * *abilities;
+	int abilitiesSize;
 public:
-	friend std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r){
-		return out << "This is a monster. What did you expect?" << std::endl;
+	MonsterBlueprint(char * name, char * description,
+		Dice speed, Dice hitpoints, Dice attackDamage,
+		char symbol, MonsterColor color, int rarity);
+	//Add ability
+	friend std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r);
+	~MonsterBlueprint(){
+		//TODO free stuff here
 	}
 };
 
+/*Beware! Malloc's the returned list and every item in it!
+They must all be freed!*/
 MonsterBlueprint * parser_load_monster_list(int * listSize);
 
 #endif

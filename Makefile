@@ -25,7 +25,7 @@ $(BIN): $(OBJS) dijkstrasCurse.o
 
 -include $(OBJS:.o=.d)
 
-%.o: %.cpp
+%.o: %.cpp %.h
 	@$(ECHO) Compiling $<
 	@$(CXX) $(CFLAGS) -MMD -MF $*.d -c $<
 
