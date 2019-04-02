@@ -9,6 +9,7 @@
 #include "mapElements.h"
 #include "display.h"
 #include "gameTypes.h"
+#include "monsterParser.h"
 
 long seed;
 int nummon;
@@ -170,14 +171,14 @@ int executeDistances(){
 }
 
 int executeMonsters(){
-	//MonsterBlueprint * blueprintList;
-	//int blueprintListSize;
-	//blueprintList = parser_load_list(&blueprintListSize);
-	/*
+	MonsterBlueprint * blueprintList;
+	int blueprintListSize;
+	blueprintList = parser_load_monster_list(&blueprintListSize);
+	
 	int i;
 	for(i=0;i<blueprintListSize; i++){
-		cout << blueprintList[i];
+		std::cout << blueprintList[i];
 	}
-	*/
+	
 	return 0;
 }
