@@ -7,10 +7,10 @@
 using namespace std;
 
 
-std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
+vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 
 	ifstream file;
-	std::vector <MonsterBlueprint> blueprintList;
+	vector <MonsterBlueprint> blueprintList;
 	int l = strlen(getenv("HOME")) + strlen("/.rlg327/monster_desc.txt") + 1; 
 	char * filePath = (char *) malloc(l);
 	strcpy(filePath,getenv("HOME"));
@@ -18,7 +18,7 @@ std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 	file.open(filePath);
 
 	string curLine;
-	Dice d1,d2,d3;
+	Dice HPd,ATTd,SPd;
 	string name, desc, abilities;
 	char symbol = '0';
 	MonsterColor color = MONSTER_RED;
@@ -46,6 +46,7 @@ std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 		}else if(!keyword.compare("RRTY")){
 			rarity = atoi(curLine.c_str());
 		}else if(!keyword.compare("COLOR")){
+			curLine = curLine.substr(0, curLine.find(" "));
 			if(!curLine.compare("RED")){
 				color = MONSTER_RED;
 			}else if(!curLine.compare("GREEN")){
@@ -63,6 +64,15 @@ std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 			}else if(!curLine.compare("BLACK")){
 				color = MONSTER_BLACK;
 			}
+		}else if(!keyword.compare("HP")){
+			Dice newDice(curLine);
+			HPd = newDice;
+		}else if(!keyword.compare("DAM")){
+			Dice newDice(curLine);
+			ATTd = newDice;
+		}else if(!keyword.compare("SPEED")){
+			Dice newDice(curLine);
+			SPd = newDice;
 		}
 	}
 	cout << endl << endl;
@@ -70,7 +80,7 @@ std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 
 	MonsterBlueprint *blueprint = new MonsterBlueprint(
 		name,desc,abilities,
-		d1,d2,d3,
+		SPd,HPd,ATTd,
 		symbol,color,rarity);
 	blueprintList.push_back(*blueprint);
 
@@ -114,7 +124,7 @@ MonsterBlueprint & MonsterBlueprint::operator=(const MonsterBlueprint & r){
 	return *this;
 }
 
-std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r){
+ostream & operator<<(ostream &out, const MonsterBlueprint &r){
 	char * colorName;
 	switch(r.color){
 		case MONSTER_RED:
@@ -142,15 +152,16 @@ std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r){
 		colorName = (char*) "Black";
 		break;
 	}
-	out << "Name: " << r.name << std::endl;
-	out << "Symbol: " << r.symbol << std::endl;
-	out << "Color: " << colorName << std::endl;
-	out << "Rarity: " << r.rarity << std::endl;
-	out << "Speed: " << r.speed << std::endl;
-	out << "Hitpoints: " << r.hitpoints << std::endl;
-	out << "Attack: " << r.attackDamage << std::endl;
-	out << "Abilities: " <<r.abilities <<std::endl;
-	out << r.description << std::endl;
+	out << "Name: " << r.name << endl;
+	out << endl << "Description: " << r.description << endl;
+	out << endl << "Color: " << colorName << endl;
+	out << endl << "Speed: " << r.speed << endl;
+	out << endl << "Abilities: " <<r.abilities <<endl;
+	out << endl << "Hitpoints: " << r.hitpoints << endl;
+	out << endl << "Attack: " << r.attackDamage << endl;
+	out << endl << "Symbol: " << r.symbol << endl;
+	out << endl << "Rarity: " << r.rarity << endl;
+	out << endl;
 
 	return out;
 }
@@ -167,6 +178,14 @@ Dice::Dice(int base, int count, int sides){
 	this->sides = sides;
 }
 
+Dice::Dice(string s){
+	base = stoi(s.substr(0, s.find("+")));
+	s.erase(0,s.find("+")+1);
+	count = stoi(s.substr(0, s.find("d")));
+	s.erase(0,s.find("d")+1);
+	sides = stoi(s);
+	cout<<"Created dice: " << *this <<endl;
+}
 
 int Dice::roll(){
 	int sum = base;
@@ -176,6 +195,6 @@ int Dice::roll(){
 	return sum;
 }
 
-std::ostream & operator<<(std::ostream &out, const Dice &d){
+ostream & operator<<(ostream &out, const Dice &d){
 	return out << d.base << " + " << d.count << "d" << d.sides;
 }

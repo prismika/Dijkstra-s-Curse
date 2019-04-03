@@ -26,6 +26,7 @@ private:
 public:
 	Dice(void);
 	Dice(int base, int count, int sides);
+	Dice(string s);
 	int roll();
 	friend std::ostream & operator<<(std::ostream &out, const Dice &d);
 };
