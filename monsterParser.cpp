@@ -5,6 +5,8 @@
 #include <fstream>
 
 using namespace std;
+#define VERSION_NAME "RLG327 MONSTER DESCRIPTION 1"
+
 
 
 vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
@@ -18,72 +20,81 @@ vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 	file.open(filePath);
 
 	string curLine;
-	Dice HPd,ATTd,SPd;
-	string name, desc, abilities;
-	char symbol = '0';
-	MonsterColor color = MONSTER_RED;
-	int rarity = 10;
-	while(getline(file, curLine)&&curLine.compare("BEGIN MONSTER")){
+	if(!getline(file, curLine)||curLine.compare(VERSION_NAME)){
+		cerr << "Ope. The file did not begin with the correct version information." <<endl;
+		exit(1);
 	}
-	//Inside a monster definition
-	while(getline(file, curLine) && curLine.compare("END")){
-		cout << "Parsing: '" << curLine << "'" << endl;
-		string keyword = curLine.substr(0, curLine.find(" "));
-		curLine.erase(0,curLine.find(" ")+1);
-		cout << "Keyword is '" << keyword << "'" << endl;
-		cout << "What's left is '" << curLine << "'" <<endl;
-		if(!keyword.compare("NAME")){
-			name = curLine;
-		}else if(!keyword.compare("DESC")){
-			while(getline(file,curLine) && curLine.compare(".")){
-				desc.append(curLine);
-				desc.append("\n");
-			}
-		}else if(!keyword.compare("ABIL")){
-			abilities = curLine;
-		}else if(!keyword.compare("SYMB")){
-			symbol = curLine[0];
-		}else if(!keyword.compare("RRTY")){
-			rarity = atoi(curLine.c_str());
-		}else if(!keyword.compare("COLOR")){
-			curLine = curLine.substr(0, curLine.find(" "));
-			if(!curLine.compare("RED")){
-				color = MONSTER_RED;
-			}else if(!curLine.compare("GREEN")){
-				color = MONSTER_GREEN;
-			}else if(!curLine.compare("BLUE")){
-				color = MONSTER_BLUE;
-			}else if(!curLine.compare("CYAN")){
-				color = MONSTER_CYAN;
-			}else if(!curLine.compare("YELLOW")){
-				color = MONSTER_YELLOW;
-			}else if(!curLine.compare("MAGENTA")){
-				color = MONSTER_MAGENTA;
-			}else if(!curLine.compare("WHITE")){
-				color = MONSTER_WHITE;
-			}else if(!curLine.compare("BLACK")){
-				color = MONSTER_BLACK;
-			}
-		}else if(!keyword.compare("HP")){
-			Dice newDice(curLine);
-			HPd = newDice;
-		}else if(!keyword.compare("DAM")){
-			Dice newDice(curLine);
-			ATTd = newDice;
-		}else if(!keyword.compare("SPEED")){
-			Dice newDice(curLine);
-			SPd = newDice;
+	while(true){
+		Dice HPd,ATTd,SPd;
+		string name, desc, abilities;
+		char symbol = '0';
+		MonsterColor color = MONSTER_RED;
+		int rarity = 10;
+		while(getline(file, curLine)&&curLine.compare("BEGIN MONSTER")){
 		}
+		if(file.peek() == -1){
+			goto fileFinished;
+		}	
+		//Inside a monster definition
+		while(getline(file, curLine) && curLine.compare("END")){
+			cout << "Parsing: '" << curLine << "'" << endl;
+			string keyword = curLine.substr(0, curLine.find(" "));
+			curLine.erase(0,curLine.find(" ")+1);
+			cout << "Keyword is '" << keyword << "'" << endl;
+			cout << "What's left is '" << curLine << "'" <<endl;
+			if(!keyword.compare("NAME")){
+				name = curLine;
+			}else if(!keyword.compare("DESC")){
+				while(getline(file,curLine) && curLine.compare(".")){
+					desc.append(curLine);
+					desc.append("\n");
+				}
+			}else if(!keyword.compare("ABIL")){
+				if(curLine.compare("ABIL")) abilities = curLine;
+			}else if(!keyword.compare("SYMB")){
+				symbol = curLine[0];
+			}else if(!keyword.compare("RRTY")){
+				rarity = atoi(curLine.c_str());
+			}else if(!keyword.compare("COLOR")){
+				curLine = curLine.substr(0, curLine.find(" "));
+				if(!curLine.compare("RED")){
+					color = MONSTER_RED;
+				}else if(!curLine.compare("GREEN")){
+					color = MONSTER_GREEN;
+				}else if(!curLine.compare("BLUE")){
+					color = MONSTER_BLUE;
+				}else if(!curLine.compare("CYAN")){
+					color = MONSTER_CYAN;
+				}else if(!curLine.compare("YELLOW")){
+					color = MONSTER_YELLOW;
+				}else if(!curLine.compare("MAGENTA")){
+					color = MONSTER_MAGENTA;
+				}else if(!curLine.compare("WHITE")){
+					color = MONSTER_WHITE;
+				}else if(!curLine.compare("BLACK")){
+					color = MONSTER_BLACK;
+				}
+			}else if(!keyword.compare("HP")){
+				Dice newDice(curLine);
+				HPd = newDice;
+			}else if(!keyword.compare("DAM")){
+				Dice newDice(curLine);
+				ATTd = newDice;
+			}else if(!keyword.compare("SPEED")){
+				Dice newDice(curLine);
+				SPd = newDice;
+			}
+		}
+		cout << endl;
+		//Reached the end
+
+		MonsterBlueprint *blueprint = new MonsterBlueprint(
+			name,desc,abilities,
+			SPd,HPd,ATTd,
+			symbol,color,rarity);
+		blueprintList.push_back(*blueprint);
 	}
-	cout << endl << endl;
-	//Reached the end
-
-	MonsterBlueprint *blueprint = new MonsterBlueprint(
-		name,desc,abilities,
-		SPd,HPd,ATTd,
-		symbol,color,rarity);
-	blueprintList.push_back(*blueprint);
-
+	fileFinished:
 	*listSize = blueprintList.size();
 	return blueprintList;
 }
@@ -152,17 +163,16 @@ ostream & operator<<(ostream &out, const MonsterBlueprint &r){
 		colorName = (char*) "Black";
 		break;
 	}
-	out << "Name: " << r.name << endl;
-	out << endl << "Description: " << r.description << endl;
-	out << endl << "Color: " << colorName << endl;
-	out << endl << "Speed: " << r.speed << endl;
-	out << endl << "Abilities: " <<r.abilities <<endl;
-	out << endl << "Hitpoints: " << r.hitpoints << endl;
-	out << endl << "Attack: " << r.attackDamage << endl;
-	out << endl << "Symbol: " << r.symbol << endl;
-	out << endl << "Rarity: " << r.rarity << endl;
+	out << r.name << endl;
+	out << r.description;
+	out << colorName << endl;
+	out << r.speed << endl;
+	out << r.abilities <<endl;
+	out << r.hitpoints << endl;
+	out << r.attackDamage << endl;
+	out << r.symbol << endl;
+	out << r.rarity << endl;
 	out << endl;
-
 	return out;
 }
 

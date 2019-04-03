@@ -15,6 +15,8 @@
 long seed;
 int nummon;
 
+using namespace std;
+
 
 
 //Strategy for strategy pattern
@@ -172,13 +174,13 @@ int executeDistances(){
 }
 
 int executeMonsters(){
-	std::vector<MonsterBlueprint> blueprintList;
+	vector<MonsterBlueprint> blueprintList;
 	int blueprintListSize;
 	blueprintList = parser_load_monster_list(&blueprintListSize);
 	
-	int i;
-	for(i=0;i<blueprintListSize; i++){
-		std::cout << blueprintList[i];
+	vector<MonsterBlueprint>::iterator iter;
+	for(iter = blueprintList.begin(); iter !=blueprintList.end(); iter++){
+		cout << *iter << endl;
 	}
 	
 	return 0;
