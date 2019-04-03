@@ -19,7 +19,7 @@ std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 
 	string curLine;
 	Dice d1,d2,d3;
-	char *name, *desc, *abilities;
+	string name, desc, abilities;
 	char symbol = '0';
 	MonsterColor color = MONSTER_RED;
 	int rarity = 10;
@@ -33,7 +33,12 @@ std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 		cout << "Keyword is '" << keyword << "'" << endl;
 		cout << "What's left is '" << curLine << "'" <<endl;
 		if(!keyword.compare("NAME")){
-			name = strdup(curLine.c_str());
+			name = curLine;
+		}else if(!keyword.compare("DESC")){
+			while(getline(file,curLine) && curLine.compare(".")){
+				desc.append(curLine);
+				desc.append("\n");
+			}
 		}
 	}
 	//Reached the end
@@ -48,7 +53,7 @@ std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 	return blueprintList;
 }
 
-MonsterBlueprint::MonsterBlueprint(char * name, char * description, char* abilities,
+MonsterBlueprint::MonsterBlueprint(string name, string description, string abilities,
 	Dice speed, Dice hitpoints, Dice attackDamage,
 	char symbol, MonsterColor color, int rarity){
 	this->name = name;

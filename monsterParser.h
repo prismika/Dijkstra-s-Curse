@@ -5,6 +5,8 @@
 #include <ostream>
 #include <vector>
 
+using namespace std;
+
 typedef enum{
 	MONSTER_RED,
 	MONSTER_GREEN,
@@ -30,20 +32,19 @@ public:
 
 class MonsterBlueprint{
 private:
-	char *name;
-	char *description;
+	string name;
+	string description;
 	Dice speed;
 	Dice hitpoints;
 	Dice attackDamage;
 	char symbol;
 	MonsterColor color;
 	int rarity;
-	char *abilities;
+	string abilities;
 public:
-	MonsterBlueprint(char * name, char * description, char* abilities,
+	MonsterBlueprint(string name, string description, string abilities,
 		Dice speed, Dice hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity);
-	int addAbility(char * newAblility);
 	friend std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r);
 	~MonsterBlueprint(){
 		//TODO free stuff here
