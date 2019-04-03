@@ -39,8 +39,33 @@ std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 				desc.append(curLine);
 				desc.append("\n");
 			}
+		}else if(!keyword.compare("ABIL")){
+			abilities = curLine;
+		}else if(!keyword.compare("SYMB")){
+			symbol = curLine[0];
+		}else if(!keyword.compare("RRTY")){
+			rarity = atoi(curLine.c_str());
+		}else if(!keyword.compare("COLOR")){
+			if(!curLine.compare("RED")){
+				color = MONSTER_RED;
+			}else if(!curLine.compare("GREEN")){
+				color = MONSTER_GREEN;
+			}else if(!curLine.compare("BLUE")){
+				color = MONSTER_BLUE;
+			}else if(!curLine.compare("CYAN")){
+				color = MONSTER_CYAN;
+			}else if(!curLine.compare("YELLOW")){
+				color = MONSTER_YELLOW;
+			}else if(!curLine.compare("MAGENTA")){
+				color = MONSTER_MAGENTA;
+			}else if(!curLine.compare("WHITE")){
+				color = MONSTER_WHITE;
+			}else if(!curLine.compare("BLACK")){
+				color = MONSTER_BLACK;
+			}
 		}
 	}
+	cout << endl << endl;
 	//Reached the end
 
 	MonsterBlueprint *blueprint = new MonsterBlueprint(
