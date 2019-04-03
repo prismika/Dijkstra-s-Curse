@@ -10,7 +10,6 @@ using namespace std;
 
 
 vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
-
 	ifstream file;
 	vector <MonsterBlueprint> blueprintList;
 	int l = strlen(getenv("HOME")) + strlen("/.rlg327/monster_desc.txt") + 1; 
@@ -20,11 +19,31 @@ vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 	file.open(filePath);
 
 	string curLine;
-	if(!getline(file, curLine)||curLine.compare(VERSION_NAME)){
+	getline(file, curLine);
+	if(curLine.compare(VERSION_NAME)){
 		cerr << "Ope. The file did not begin with the correct version information." <<endl;
+		cerr << curLine << endl;
+		cerr << "Length " << curLine.length() << endl;
+		cerr << VERSION_NAME << endl;
+		cerr << (int)curLine[28] <<endl;
+		cerr << "Length " << strlen(VERSION_NAME) << endl;
 		exit(1);
 	}
 	while(true){
+		nextMonsterDescription:
+		class SectionsSeen{
+		public:
+			bool NAME = false;
+			bool DESC = false;
+			bool COLOR = false;
+			bool SPEED = false;
+			bool ABIL = false;
+			bool HP = false;
+			bool DAM = false;
+			bool SYMB = false;
+			bool RRTY = false;
+		};
+		SectionsSeen sectionsSeen;
 		Dice HPd,ATTd,SPd;
 		string name, desc, abilities;
 		char symbol = '0';
@@ -43,19 +62,31 @@ vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 			cout << "Keyword is '" << keyword << "'" << endl;
 			cout << "What's left is '" << curLine << "'" <<endl;
 			if(!keyword.compare("NAME")){
+				if(sectionsSeen.NAME) goto nextMonsterDescription;
+				sectionsSeen.NAME = true;
 				name = curLine;
 			}else if(!keyword.compare("DESC")){
+				if(sectionsSeen.DESC) goto nextMonsterDescription;
+				sectionsSeen.DESC = true;
 				while(getline(file,curLine) && curLine.compare(".")){
 					desc.append(curLine);
 					desc.append("\n");
 				}
 			}else if(!keyword.compare("ABIL")){
+				if(sectionsSeen.ABIL) goto nextMonsterDescription;
+				sectionsSeen.ABIL = true;
 				if(curLine.compare("ABIL")) abilities = curLine;
 			}else if(!keyword.compare("SYMB")){
+				if(sectionsSeen.SYMB) goto nextMonsterDescription;
+				sectionsSeen.SYMB = true;
 				symbol = curLine[0];
 			}else if(!keyword.compare("RRTY")){
+				if(sectionsSeen.RRTY) goto nextMonsterDescription;
+				sectionsSeen.RRTY = true;
 				rarity = atoi(curLine.c_str());
 			}else if(!keyword.compare("COLOR")){
+				if(sectionsSeen.COLOR) goto nextMonsterDescription;
+				sectionsSeen.COLOR = true;
 				curLine = curLine.substr(0, curLine.find(" "));
 				if(!curLine.compare("RED")){
 					color = MONSTER_RED;
@@ -75,24 +106,41 @@ vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 					color = MONSTER_BLACK;
 				}
 			}else if(!keyword.compare("HP")){
+				if(sectionsSeen.HP) goto nextMonsterDescription;
+				sectionsSeen.HP = true;
 				Dice newDice(curLine);
 				HPd = newDice;
 			}else if(!keyword.compare("DAM")){
+				if(sectionsSeen.DAM) goto nextMonsterDescription;
+				sectionsSeen.DAM = true;
 				Dice newDice(curLine);
 				ATTd = newDice;
 			}else if(!keyword.compare("SPEED")){
+				if(sectionsSeen.SPEED) goto nextMonsterDescription;
+				sectionsSeen.SPEED = true;
 				Dice newDice(curLine);
 				SPd = newDice;
 			}
 		}
-		cout << endl;
-		//Reached the end
+		//Reached the end of this monster's description
+		if(!sectionsSeen.NAME
+			||!sectionsSeen.DESC
+			||!sectionsSeen.COLOR
+			||!sectionsSeen.SPEED
+			||!sectionsSeen.ABIL
+			||!sectionsSeen.HP
+			||!sectionsSeen.DAM
+			||!sectionsSeen.SYMB
+			||!sectionsSeen.RRTY){
+			goto nextMonsterDescription;
+		}
 
 		MonsterBlueprint *blueprint = new MonsterBlueprint(
 			name,desc,abilities,
 			SPd,HPd,ATTd,
 			symbol,color,rarity);
 		blueprintList.push_back(*blueprint);
+		cout << endl;
 	}
 	fileFinished:
 	*listSize = blueprintList.size();
