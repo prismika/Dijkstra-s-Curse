@@ -31,6 +31,7 @@ int executeLoadSave(void);
 int executeDistances(void);
 int executeDefault(void);
 int executeMonsters(void);
+int executeItems(void);
 int legacyFlag(void);
 
 int parseCLI(int argc, char * argv[], IncomingCommand * command){
@@ -46,8 +47,10 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 		bool nummon;
 		int monsterCount;
 		bool monsters;
+		bool items;
 	}flags;
-	flags.save=flags.load=flags.distances=flags.seed=flags.nummon=flags.monsters=false;
+	flags.save=flags.load=flags.distances=flags.seed=flags.nummon=
+	flags.monsters=flags.items=false;
 	flags.theSeed = flags.monsterCount = 0;
 
 	//Iterate through the command line input
@@ -73,6 +76,8 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 			}else return -1;
 		}else if(!strcmp(argv[i],"--monsters")){
 			flags.monsters = true;
+		}else if(!strcmp(argv[i],"--items")){
+			flags.items = true;
 		}else return -1;
 	}
 
@@ -97,6 +102,8 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 		command->execute = legacyFlag;//executeDistances;
 	}else if(flags.monsters){
 		command->execute = executeMonsters;
+	}else if(flags.items){
+		command->execute = executeItems;
 	}else{
 		command->execute = executeDefault;
 	}
@@ -183,5 +190,16 @@ int executeMonsters(){
 		cout << *iter << endl;
 	}
 	
+	return 0;
+}
+
+int executeItems(){
+	// vector<ItemBlueprint> blueprintList;
+	// parser_load_item_list(&blueprintList);
+	
+	// vector<ItemBlueprint>::iterator iter;
+	// for(iter = blueprintList.begin(); iter !=blueprintList.end(); iter++){
+	// 	cout << *iter << endl;
+	// }
 	return 0;
 }
