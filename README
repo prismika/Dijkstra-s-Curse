@@ -1,20 +1,14 @@
-This is Dijkstra's Curse, an ASCII-based rogue-like game (now in C++!). All structs have been turned into classes, except the ones in Sheaffer's heap.
+This is Dijkstra's Curse, an ASCII-based rogue-like game (now with custom monsters!). See the usage section for information on showcasing new functionality.
 
 Usage:
 ./dijkstrasCurse
-	Generates random dungeon and populates with monsters
+	Launches the game
 Flags:
+(NEW!)
+--monsters
+	Displays an atlas of monsters in the game
 --seed x
 	Seeds the random number generator with seed x
-
-Controls:
-	Use the keypad to move your character (make sure to turn on numlock). While on stairs, press '<' or '>' to access the next level. Pressing 'm' opens the monster list, which can be scrolled by using the up and down arrow keys. Pressing escape returns you to the map.
-
-	(New!) Press t to switch to teleport mode. Move the cursor and press t again to teleport. Press r in teleport mode to teleport to a random open spot.
-	Press f to toggle visibility.
-
-Bugs (AKA Features that people don't like):
-	Teleporting into rock sometimes causes a segfault. I believe this is caused by undefined behavior with the non-tunneling distance maps.
 
 Architecture:
 	This iteration has multiple files, with an architecture consisting of four rough layers:
@@ -27,6 +21,7 @@ Architecture:
 				+display (handles output)
 				+turnMaster (Discrete event simulator)
 				+inputCollector (for reading and cleaning user input)
+				+monsterParser (Loads monster blueprints from text file)
 
 	Layer 3:	+map (defines Map type, which handles block and entity locations, as well as interfaces facilitating entity movement)
 

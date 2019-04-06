@@ -85,4 +85,14 @@
 		-Add full functionality and randomness to teleportation mode
 3/28/19 -Limit visibility
 		-Update README and CHANGELOG
-
+3/31/19 -Implement remembered terrain
+		-Fix fog bugs
+		-Implement color for remembered blocks
+		-Fail to make them anything but orange
+		-Orange it is
+4/2/19	-Create monsterParse library with Dice and MonsterBlueprint classes
+		-Implement printing to ostream for both classes
+		-Successfully read fields from files
+		-Fix string comparison bug
+		-Add some error checking
+		-Update README and CHANGELOG
