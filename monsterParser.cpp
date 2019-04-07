@@ -45,7 +45,7 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 		};
 		SectionsSeen sectionsSeen;
 		Dice HPd,ATTd,SPd;
-		string name, desc, abilities;
+		string name, desc;
 		char symbol = '0';
 		MonsterColor color = MONSTER_RED;
 		int rarity = 10;
@@ -75,7 +75,7 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 			}else if(!keyword.compare("ABIL")){
 				if(sectionsSeen.ABIL) goto nextMonsterDescription;
 				sectionsSeen.ABIL = true;
-				if(curLine.compare("ABIL")) abilities = curLine;
+				if(curLine.compare("ABIL"));
 			}else if(!keyword.compare("SYMB")){
 				if(sectionsSeen.SYMB) goto nextMonsterDescription;
 				sectionsSeen.SYMB = true;
@@ -136,7 +136,7 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 		}
 
 		MonsterBlueprint *blueprint = new MonsterBlueprint(
-			name,desc,abilities,
+			name,desc,
 			SPd,HPd,ATTd,
 			symbol,color,rarity);
 		blueprintList.push_back(*blueprint);
@@ -145,12 +145,11 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 	return blueprintList;
 }
 
-MonsterBlueprint::MonsterBlueprint(string name, string description, string abilities,
+MonsterBlueprint::MonsterBlueprint(string name, string description,
 	Dice speed, Dice hitpoints, Dice attackDamage,
 	char symbol, MonsterColor color, int rarity){
 	this->name = name;
 	this->description = description;
-	this->abilities = abilities;
 	this->speed = speed;
 	this->hitpoints = hitpoints;
 	this->attackDamage = attackDamage;
@@ -161,28 +160,6 @@ MonsterBlueprint::MonsterBlueprint(string name, string description, string abili
 NPC * MonsterBlueprint::build(Coordinate position){
 	return new NPC();
 }
-
-// int MonsterBlueprint::addAbility(char * newAbility){
-// 	char * newAbilityCopy = strdup(newAbility);
-// 	abilities.push_back(newAbilityCopy);
-// 	return 0;
-// }
-
-// MonsterBlueprint & MonsterBlueprint::operator=(const MonsterBlueprint & r){
-// 	this->name = r.name;
-// 	this->symbol = r.symbol;
-// 	this->speed = r.speed;
-// 	this->color = r.color;
-// 	this->hitpoints = r.hitpoints;
-// 	this->attackDamage = r.attackDamage;
-// 	this->symbol = r.symbol;
-// 	this->color = r.color;
-// 	this->rarity = r.rarity;
-// 	this->description = r.description;
-// 	this->abilities = r.abilities;
-
-// 	return *this;
-// }
 
 ostream & operator<<(ostream &out, const MonsterBlueprint &r){
 	char * colorName;
@@ -216,7 +193,6 @@ ostream & operator<<(ostream &out, const MonsterBlueprint &r){
 	out << r.description;
 	out << colorName << endl;
 	out << r.speed << endl;
-	out << r.abilities <<endl;
 	out << r.hitpoints << endl;
 	out << r.attackDamage << endl;
 	out << r.symbol << endl;
