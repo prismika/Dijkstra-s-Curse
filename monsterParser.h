@@ -6,6 +6,7 @@
 #include <vector>
 #include "dice.h"
 #include "populationElements.h"
+#include "mapElements.h"
 
 using namespace std;
 
@@ -25,10 +26,11 @@ public:
 	MonsterBlueprint(string name, string description, string abilities,
 		Dice speed, Dice hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity);
-	friend std::ostream & operator<<(ostream &out, const MonsterBlueprint &r);
 	~MonsterBlueprint(){
 		//TODO free stuff here
 	}
+	NPC * build(Coordinate position);
+	friend std::ostream & operator<<(ostream &out, const MonsterBlueprint &r);
 	MonsterBlueprint & operator=(const MonsterBlueprint &r);
 };
 

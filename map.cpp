@@ -6,7 +6,7 @@
 #include "populationElements.h"
 #include "display.h"
 
-#define PC_VISIBILITY 3;
+#define PC_VISIBILITY 4;
 
 char symbols[] = "0123456789abcdef";
 bool pcDead = false;

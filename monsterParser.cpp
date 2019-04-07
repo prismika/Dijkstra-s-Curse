@@ -158,6 +158,9 @@ MonsterBlueprint::MonsterBlueprint(string name, string description, string abili
 	this->color = color;
 	this->rarity = rarity;
 }
+NPC * MonsterBlueprint::build(Coordinate position){
+	return new NPC();
+}
 
 // int MonsterBlueprint::addAbility(char * newAbility){
 // 	char * newAbilityCopy = strdup(newAbility);
@@ -165,21 +168,21 @@ MonsterBlueprint::MonsterBlueprint(string name, string description, string abili
 // 	return 0;
 // }
 
-MonsterBlueprint & MonsterBlueprint::operator=(const MonsterBlueprint & r){
-	this->name = r.name;
-	this->symbol = r.symbol;
-	this->speed = r.speed;
-	this->color = r.color;
-	this->hitpoints = r.hitpoints;
-	this->attackDamage = r.attackDamage;
-	this->symbol = r.symbol;
-	this->color = r.color;
-	this->rarity = r.rarity;
-	this->description = r.description;
-	this->abilities = r.abilities;
+// MonsterBlueprint & MonsterBlueprint::operator=(const MonsterBlueprint & r){
+// 	this->name = r.name;
+// 	this->symbol = r.symbol;
+// 	this->speed = r.speed;
+// 	this->color = r.color;
+// 	this->hitpoints = r.hitpoints;
+// 	this->attackDamage = r.attackDamage;
+// 	this->symbol = r.symbol;
+// 	this->color = r.color;
+// 	this->rarity = r.rarity;
+// 	this->description = r.description;
+// 	this->abilities = r.abilities;
 
-	return *this;
-}
+// 	return *this;
+// }
 
 ostream & operator<<(ostream &out, const MonsterBlueprint &r){
 	char * colorName;

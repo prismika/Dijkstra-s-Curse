@@ -73,9 +73,10 @@ int populate_map(Map * map, int nummon){
 		entityList[entityListIndex++] = map_new_npc(map,curCoord,chars);
 		//--------------------------------
 		//But soon this:
-		//NPC *npc = blueprint.construct(curCoord);
+		NPC *npc = blueprint.build(curCoord);
 		//map->place_entity(npc, curCoord)
-		//entityList[entityListIndex++] = npc;
+		map_set_entity(map, curCoord.x, curCoord.y, npc);
+		entityList[entityListIndex++] = npc;
 	}
 
 	//Create tighter entity list

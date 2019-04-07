@@ -75,12 +75,15 @@ void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coord
 	*coord = ent->move_strategy(ent, map, mapTunnel);
 }
 
-Entity::Entity(){
+Entity::Entity():hitpoints(0),color(MONSTER_RED),symbol('m'),
+speed(10), dead(0){
 	this->name = new string();
 	this->description = new string();
 }
 
-NPC::NPC(){
+NPC::NPC():Entity(){
+	this->isPC = false;
+	this->move_strategy = nonTunnelMove;
 }
 
 NPC::NPC(string *name, string *description,
@@ -94,4 +97,5 @@ NPC::NPC(string *name, string *description,
 	this->symbol = symbol;
 	this->color = color;
 	this->rarity = rarity;
+	this->isPC = false;
 }
