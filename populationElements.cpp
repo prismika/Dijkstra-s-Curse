@@ -86,9 +86,10 @@ NPC::NPC():Entity(){
 	this->move_strategy = nonTunnelMove;
 }
 
-NPC::NPC(string *name, string *description,
+NPC::NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 	int speed, int hitpoints, Dice attackDamage,
-	char symbol, MonsterColor color, int rarity /*, abilities*/){
+	char symbol, MonsterColor color, int rarity,
+	Coordinate position){
 	this->name = name;
 	this->description = description;
 	this->speed = speed;
@@ -98,4 +99,41 @@ NPC::NPC(string *name, string *description,
 	this->color = color;
 	this->rarity = rarity;
 	this->isPC = false;
+	this->position = position;
+	struct{
+		bool SMART=false;
+		bool TELE=false;
+		bool TUNNEL=false;
+		bool ERRATIC=false;
+		bool PASS=false;
+		bool PICKUP=false;
+		bool DESTROY=false;
+		bool UNIQ=false;
+		bool BOSS=false;
+	}flags;
+	for(size_t i = 0; i < abilityList.size(); i++){
+		switch(abilityList[i]){
+			case MONSTER_ABILITY_SMART:
+			flags.SMART=true;
+			case MONSTER_ABILITY_TELE:
+			flags.TELE=true;
+			case MONSTER_ABILITY_TUNNEL:
+			flags.TUNNEL=true;
+			case MONSTER_ABILITY_ERRATIC:
+			flags.ERRATIC=true;
+			case MONSTER_ABILITY_PASS:
+			flags.PASS=true;
+			case MONSTER_ABILITY_PICKUP:
+			flags.PICKUP=true;
+			case MONSTER_ABILITY_DESTROY:
+			flags.DESTROY=true;
+			case MONSTER_ABILITY_UNIQ:
+			flags.UNIQ=true;
+			case MONSTER_ABILITY_BOSS:
+			flags.BOSS=true;
+			default:
+			break;
+		}
+	}
+	this->move_strategy = nonTunnelMove;
 }

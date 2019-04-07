@@ -8,20 +8,17 @@ using namespace std;
 #define VERSION_NAME "RLG327 MONSTER DESCRIPTION 1"
 
 static void parse_abilities(string *s, vector<MonsterAbility> *abilityList){
-	cout<<"Parsing abilities: " << *s<<endl;
 	bool done = false;
 	do{
 		int spaceIndex = s->find(" ");
 		string abilityString;
 		if(spaceIndex == -1){
-			cout<<"Couldn't find a space"<<endl;
 			abilityString = *s;
 			done = true;
 		}else{
 			abilityString = s->substr(0, spaceIndex);
 			s->erase(0,spaceIndex+1);
 		}
-		cout<<"Found ability: " << abilityString<<endl;
 		if(!abilityString.compare("SMART")){
 			abilityList->push_back(MONSTER_ABILITY_SMART);
 		}else if(!abilityString.compare("TELE")){
@@ -196,7 +193,9 @@ MonsterBlueprint::MonsterBlueprint(string name, string description, vector<Monst
 	this->rarity = rarity;
 }
 NPC * MonsterBlueprint::build(Coordinate position){
-	return new NPC();
+	return new NPC(&this->name, &this->description, this->abilityList,
+		(this->speed).roll(), (this->hitpoints).roll(), attackDamage,
+		this->symbol, this->color, this->rarity, position);
 }
 
 ostream & operator<<(ostream &out, const MonsterBlueprint &r){

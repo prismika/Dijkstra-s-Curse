@@ -3,6 +3,7 @@
 #include "mapElements.h"
 #include <cstdint>
 #include <string>
+#include <vector>
 #include "dice.h"
 
 using namespace std;
@@ -17,6 +18,18 @@ typedef enum{
 	MONSTER_WHITE,
 	MONSTER_BLACK
 }MonsterColor;
+
+typedef enum {
+	MONSTER_ABILITY_SMART,
+	MONSTER_ABILITY_TELE,
+	MONSTER_ABILITY_TUNNEL,
+	MONSTER_ABILITY_ERRATIC,
+	MONSTER_ABILITY_PASS,
+	MONSTER_ABILITY_PICKUP,
+	MONSTER_ABILITY_DESTROY,
+	MONSTER_ABILITY_UNIQ,
+	MONSTER_ABILITY_BOSS
+}MonsterAbility;
 
 class Entity{
 protected:
@@ -36,12 +49,11 @@ public:
 class NPC : public Entity{
 private:
 	int rarity;
-	//abilities bit vector
 public:
 	NPC();
-	NPC(string *name, string *description,
+	NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 		int speed, int hitpoints, Dice attackDamage,
-		char symbol, MonsterColor color, int rarity /*, abilities*/);
+		char symbol, MonsterColor color, int rarity, Coordinate position);
 	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);
 };
 
