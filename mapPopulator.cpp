@@ -3,9 +3,11 @@
 #include "map.h"
 #include "mapPopulator.h"
 #include "pathFinder.h"
-
+#include "monsterParser.h"
 
 #define PC_BUBBLE_SIZE 8
+
+using namespace std;
 
 Coordinate nextCoord(Coordinate coord){
 	if(coord.x<MAPWIDTH - 1){
@@ -21,7 +23,7 @@ Coordinate nextCoord(Coordinate coord){
 	coord.y = 0;
 	return coord;
 }
-Coordinate findOpenBlock(Map * map, Coordinate pcCoord){
+static Coordinate findOpenBlock(Map * map, Coordinate pcCoord){
 	BlockType canPlaceOn[] = {floor};
 	int canPlaceOnSize = 1;
 	Coordinate startingCoord;
@@ -57,12 +59,23 @@ int populate_map(Map * map, int nummon){
 	get_distance_map(map, pcCoord, distNonTunnel);
 	get_distance_map_tunneling(map, pcCoord, distTunnel);
 
+	//Place monsters
+	vector<MonsterBlueprint> blueprintList = parser_load_monster_list();
 	int i;
 	for(i=0; i<nummon;i++){
+		int monsterIndex = rand()%blueprintList.size();
+		//TODO this shouldn't be totally random
+		MonsterBlueprint blueprint = blueprintList[monsterIndex];
 		Coordinate curCoord = findOpenBlock(map, pcCoord);
 		if(curCoord.x == -1) break; //Map is full
+		//-------This for now----------
 		int chars = rand()%16;
 		entityList[entityListIndex++] = map_new_npc(map,curCoord,chars);
+		//--------------------------------
+		//But soon this:
+		//NPC *npc = blueprint.construct(curCoord);
+		//map->place_entity(npc, curCoord)
+		//entityList[entityListIndex++] = npc;
 	}
 
 	//Create tighter entity list

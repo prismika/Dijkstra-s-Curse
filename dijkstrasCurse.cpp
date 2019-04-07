@@ -182,8 +182,7 @@ int executeDistances(){
 
 int executeMonsters(){
 	vector<MonsterBlueprint> blueprintList;
-	int blueprintListSize;
-	blueprintList = parser_load_monster_list(&blueprintListSize);
+	blueprintList = parser_load_monster_list();
 	
 	vector<MonsterBlueprint>::iterator iter;
 	for(iter = blueprintList.begin(); iter !=blueprintList.end(); iter++){

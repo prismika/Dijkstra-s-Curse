@@ -20,12 +20,13 @@ typedef enum{
 
 class Entity{
 protected:
-	string name;
-	string description;
+	string *name;
+	string *description;
 	Dice attackDamage;
 	int hitpoints;
 	MonsterColor color;
 public:
+	Entity();
 	Coordinate position;
 	char symbol;
 	int speed;
@@ -37,7 +38,8 @@ private:
 	int rarity;
 	//abilities bit vector
 public:
-	NPC(string name, string description,
+	NPC();
+	NPC(string *name, string *description,
 		int speed, int hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity /*, abilities*/);
 	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);

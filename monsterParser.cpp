@@ -9,7 +9,7 @@ using namespace std;
 
 
 
-vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
+vector<MonsterBlueprint> parser_load_monster_list(){
 	ifstream file;
 	vector <MonsterBlueprint> blueprintList;
 	int l = strlen(getenv("HOME")) + strlen("/.rlg327/monster_desc.txt") + 1; 
@@ -142,7 +142,6 @@ vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 		blueprintList.push_back(*blueprint);
 	}
 	fileFinished:
-	*listSize = blueprintList.size();
 	return blueprintList;
 }
 

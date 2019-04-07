@@ -25,7 +25,7 @@ public:
 	MonsterBlueprint(string name, string description, string abilities,
 		Dice speed, Dice hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity);
-	friend std::ostream & operator<<(std::ostream &out, const MonsterBlueprint &r);
+	friend std::ostream & operator<<(ostream &out, const MonsterBlueprint &r);
 	~MonsterBlueprint(){
 		//TODO free stuff here
 	}
@@ -34,6 +34,6 @@ public:
 
 /*Beware! Malloc's the returned list and every item in it!
 They must all be freed!*/
-std::vector<MonsterBlueprint> parser_load_monster_list(int * listSize);
+vector<MonsterBlueprint> parser_load_monster_list();
 
 #endif

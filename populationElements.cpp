@@ -75,15 +75,23 @@ void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coord
 	*coord = ent->move_strategy(ent, map, mapTunnel);
 }
 
-NPC::NPC(string name, string description,
+Entity::Entity(){
+	this->name = new string();
+	this->description = new string();
+}
+
+NPC::NPC(){
+}
+
+NPC::NPC(string *name, string *description,
 	int speed, int hitpoints, Dice attackDamage,
 	char symbol, MonsterColor color, int rarity /*, abilities*/){
 	this->name = name;
 	this->description = description;
 	this->speed = speed;
-	this-> hitpoints = hitpoints;
-	this-> attackDamage = attackDamage;
-	this-> symbol = symbol;
+	this->hitpoints = hitpoints;
+	this->attackDamage = attackDamage;
+	this->symbol = symbol;
 	this->color = color;
 	this->rarity = rarity;
 }
