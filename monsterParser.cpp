@@ -56,11 +56,11 @@ vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 		}	
 		//Inside a monster definition
 		while(getline(file, curLine) && curLine.compare("END")){
-			cout << "Parsing: '" << curLine << "'" << endl;
+			// cout << "Parsing: '" << curLine << "'" << endl;
 			string keyword = curLine.substr(0, curLine.find(" "));
 			curLine.erase(0,curLine.find(" ")+1);
-			cout << "Keyword is '" << keyword << "'" << endl;
-			cout << "What's left is '" << curLine << "'" <<endl;
+			// cout << "Keyword is '" << keyword << "'" << endl;
+			// cout << "What's left is '" << curLine << "'" <<endl;
 			if(!keyword.compare("NAME")){
 				if(sectionsSeen.NAME) goto nextMonsterDescription;
 				sectionsSeen.NAME = true;
@@ -140,7 +140,6 @@ vector<MonsterBlueprint> parser_load_monster_list(int * listSize){
 			SPd,HPd,ATTd,
 			symbol,color,rarity);
 		blueprintList.push_back(*blueprint);
-		cout << endl;
 	}
 	fileFinished:
 	*listSize = blueprintList.size();
@@ -222,37 +221,4 @@ ostream & operator<<(ostream &out, const MonsterBlueprint &r){
 	out << r.rarity << endl;
 	out << endl;
 	return out;
-}
-
-Dice::Dice(void){
-	this->base = 1;
-	this->count = 2;
-	this->sides = 3;
-}
-
-Dice::Dice(int base, int count, int sides){
-	this->base = base;
-	this->count = count;
-	this->sides = sides;
-}
-
-Dice::Dice(string s){
-	base = stoi(s.substr(0, s.find("+")));
-	s.erase(0,s.find("+")+1);
-	count = stoi(s.substr(0, s.find("d")));
-	s.erase(0,s.find("d")+1);
-	sides = stoi(s);
-	cout<<"Created dice: " << *this <<endl;
-}
-
-int Dice::roll(){
-	int sum = base;
-	for(int i = 0; i < count; i++){
-		sum += rand()%sides + 1;
-	}
-	return sum;
-}
-
-ostream & operator<<(ostream &out, const Dice &d){
-	return out << d.base << " + " << d.count << "d" << d.sides;
 }

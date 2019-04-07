@@ -4,32 +4,11 @@
 #include <string>
 #include <ostream>
 #include <vector>
+#include "dice.h"
+#include "populationElements.h"
 
 using namespace std;
 
-typedef enum{
-	MONSTER_RED,
-	MONSTER_GREEN,
-	MONSTER_BLUE,
-	MONSTER_CYAN,
-	MONSTER_YELLOW,
-	MONSTER_MAGENTA,
-	MONSTER_WHITE,
-	MONSTER_BLACK
-}MonsterColor;
-
-class Dice{
-private:
-	int base;
-	int count;
-	int sides;
-public:
-	Dice(void);
-	Dice(int base, int count, int sides);
-	Dice(string s);
-	int roll();
-	friend std::ostream & operator<<(std::ostream &out, const Dice &d);
-};
 
 class MonsterBlueprint{
 private:

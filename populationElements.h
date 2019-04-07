@@ -1,10 +1,30 @@
 #ifndef POPULATIONELEMENTS_H
 #define POPULATIONELEMENTS_H
 #include "mapElements.h"
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdint>
+#include <string>
+#include "dice.h"
+
+using namespace std;
+
+typedef enum{
+	MONSTER_RED,
+	MONSTER_GREEN,
+	MONSTER_BLUE,
+	MONSTER_CYAN,
+	MONSTER_YELLOW,
+	MONSTER_MAGENTA,
+	MONSTER_WHITE,
+	MONSTER_BLACK
+}MonsterColor;
 
 class Entity{
+protected:
+	string name;
+	string description;
+	Dice attackDamage;
+	int hitpoints;
+	MonsterColor color;
 public:
 	Coordinate position;
 	char symbol;
@@ -14,8 +34,12 @@ public:
 };
 class NPC : public Entity{
 private:
-
+	int rarity;
+	//abilities bit vector
 public:
+	NPC(string name, string description,
+		int speed, int hitpoints, Dice attackDamage,
+		char symbol, MonsterColor color, int rarity /*, abilities*/);
 	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);
 };
 

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "populationElements.h"
 #include "mapElements.h"
+#include "dice.h"
 
 #define NPC_INTELLIGENT	0x0000000000000001
 #define NPC_TELEPATHIC	0x0000000000000002
@@ -72,4 +73,17 @@ void init_entity_pc(Entity *ent, Coordinate coord, char symbol){
 
 void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord){
 	*coord = ent->move_strategy(ent, map, mapTunnel);
+}
+
+NPC::NPC(string name, string description,
+	int speed, int hitpoints, Dice attackDamage,
+	char symbol, MonsterColor color, int rarity /*, abilities*/){
+	this->name = name;
+	this->description = description;
+	this->speed = speed;
+	this-> hitpoints = hitpoints;
+	this-> attackDamage = attackDamage;
+	this-> symbol = symbol;
+	this->color = color;
+	this->rarity = rarity;
 }
