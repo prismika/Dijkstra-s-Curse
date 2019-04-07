@@ -68,13 +68,7 @@ int populate_map(Map * map, int nummon){
 		MonsterBlueprint blueprint = blueprintList[monsterIndex];
 		Coordinate curCoord = findOpenBlock(map, pcCoord);
 		if(curCoord.x == -1) break; //Map is full
-		//-------This for now----------
-		int chars = rand()%16;
-		entityList[entityListIndex++] = map_new_npc(map,curCoord,chars);
-		//--------------------------------
-		//But soon this:
 		NPC *npc = blueprint.build(curCoord);
-		//map->place_entity(npc, curCoord)
 		map_set_entity(map, curCoord.x, curCoord.y, npc);
 		entityList[entityListIndex++] = npc;
 	}
