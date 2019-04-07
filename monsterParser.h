@@ -11,15 +11,15 @@
 using namespace std;
 
 typedef enum {
-	SMART,
-	TELE,
-	TUNNEL,
-	ERRATIC,
-	PASS,
-	PICKUP,
-	DESTROY,
-	UNIQ,
-	BOSS
+	MONSTER_ABILITY_SMART,
+	MONSTER_ABILITY_TELE,
+	MONSTER_ABILITY_TUNNEL,
+	MONSTER_ABILITY_ERRATIC,
+	MONSTER_ABILITY_PASS,
+	MONSTER_ABILITY_PICKUP,
+	MONSTER_ABILITY_DESTROY,
+	MONSTER_ABILITY_UNIQ,
+	MONSTER_ABILITY_BOSS
 }MonsterAbility;
 
 class MonsterBlueprint{
@@ -34,7 +34,7 @@ private:
 	int rarity;
 	vector<MonsterAbility> abilityList;
 public:
-	MonsterBlueprint(string name, string description,
+	MonsterBlueprint(string name, string description, vector<MonsterAbility> abilityList,
 		Dice speed, Dice hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity);
 	~MonsterBlueprint(){

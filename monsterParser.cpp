@@ -7,7 +7,42 @@
 using namespace std;
 #define VERSION_NAME "RLG327 MONSTER DESCRIPTION 1"
 
-
+static void parse_abilities(string *s, vector<MonsterAbility> *abilityList){
+	cout<<"Parsing abilities: " << *s<<endl;
+	bool done = false;
+	do{
+		int spaceIndex = s->find(" ");
+		string abilityString;
+		if(spaceIndex == -1){
+			cout<<"Couldn't find a space"<<endl;
+			abilityString = *s;
+			done = true;
+		}else{
+			abilityString = s->substr(0, spaceIndex);
+			s->erase(0,spaceIndex+1);
+		}
+		cout<<"Found ability: " << abilityString<<endl;
+		if(!abilityString.compare("SMART")){
+			abilityList->push_back(MONSTER_ABILITY_SMART);
+		}else if(!abilityString.compare("TELE")){
+			abilityList->push_back(MONSTER_ABILITY_TELE);
+		}else if(!abilityString.compare("TUNNEL")){
+			abilityList->push_back(MONSTER_ABILITY_TUNNEL);
+		}else if(!abilityString.compare("ERRATIC")){
+			abilityList->push_back(MONSTER_ABILITY_ERRATIC);
+		}else if(!abilityString.compare("PASS")){
+			abilityList->push_back(MONSTER_ABILITY_PASS);
+		}else if(!abilityString.compare("PICKUP")){
+			abilityList->push_back(MONSTER_ABILITY_PICKUP);
+		}else if(!abilityString.compare("DESTROY")){
+			abilityList->push_back(MONSTER_ABILITY_DESTROY);
+		}else if(!abilityString.compare("UNIQ")){
+			abilityList->push_back(MONSTER_ABILITY_UNIQ);
+		}else if(!abilityString.compare("BOSS")){
+			abilityList->push_back(MONSTER_ABILITY_BOSS);
+		}
+	}while(!done);
+}
 
 vector<MonsterBlueprint> parser_load_monster_list(){
 	ifstream file;
@@ -46,6 +81,7 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 		SectionsSeen sectionsSeen;
 		Dice HPd,ATTd,SPd;
 		string name, desc;
+		vector<MonsterAbility> abilityList;
 		char symbol = '0';
 		MonsterColor color = MONSTER_RED;
 		int rarity = 10;
@@ -75,7 +111,7 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 			}else if(!keyword.compare("ABIL")){
 				if(sectionsSeen.ABIL) goto nextMonsterDescription;
 				sectionsSeen.ABIL = true;
-				if(curLine.compare("ABIL"));
+				if(curLine.compare("ABIL")) parse_abilities(&curLine,&abilityList);
 			}else if(!keyword.compare("SYMB")){
 				if(sectionsSeen.SYMB) goto nextMonsterDescription;
 				sectionsSeen.SYMB = true;
@@ -136,7 +172,7 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 		}
 
 		MonsterBlueprint *blueprint = new MonsterBlueprint(
-			name,desc,
+			name,desc, abilityList,
 			SPd,HPd,ATTd,
 			symbol,color,rarity);
 		blueprintList.push_back(*blueprint);
@@ -145,11 +181,13 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 	return blueprintList;
 }
 
-MonsterBlueprint::MonsterBlueprint(string name, string description,
+
+MonsterBlueprint::MonsterBlueprint(string name, string description, vector<MonsterAbility> abilityList,
 	Dice speed, Dice hitpoints, Dice attackDamage,
 	char symbol, MonsterColor color, int rarity){
 	this->name = name;
 	this->description = description;
+	this->abilityList = abilityList;
 	this->speed = speed;
 	this->hitpoints = hitpoints;
 	this->attackDamage = attackDamage;
@@ -193,6 +231,10 @@ ostream & operator<<(ostream &out, const MonsterBlueprint &r){
 	out << r.description;
 	out << colorName << endl;
 	out << r.speed << endl;
+	for(size_t i = 0; i < r.abilityList.size();i++){
+		out << r.abilityList[i];
+	}
+	out << endl;
 	out << r.hitpoints << endl;
 	out << r.attackDamage << endl;
 	out << r.symbol << endl;
