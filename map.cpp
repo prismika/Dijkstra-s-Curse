@@ -103,8 +103,8 @@ Entity * map_get_pc(Map * map){
 	return map->populationList[0];
 }
 
-Entity * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
-	Entity * ent = (Entity *) malloc(sizeof(Entity));
+NPC * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
+	NPC * ent = (NPC *) malloc(sizeof(NPC));
 	char symbol = symbols[characteristics];
 	init_entity_npc(ent,coord,symbol,characteristics);
 	map_set_entity(map, coord.x, coord.y, ent);

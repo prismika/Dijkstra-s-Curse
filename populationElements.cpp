@@ -26,26 +26,26 @@ static void descend(Coordinate position, DistanceMap * dist, Coordinate * ret){
 	}
 }
 
-Coordinate tunnelMove(Entity * ent, DistanceMap * map, DistanceMap * mapTunnel){
+Coordinate tunnelMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
 	Coordinate ret;
 	descend(ent->position,mapTunnel,&ret);
 	return ret;
 }
 
-Coordinate nonTunnelMove(Entity * ent, DistanceMap * map, DistanceMap * mapTunnel){
+Coordinate nonTunnelMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
 	Coordinate ret;
 	descend(ent->position,map,&ret);
 	return ret;
 }
 
-Coordinate rightMove(Entity * ent, DistanceMap * map, DistanceMap * mapTunnel){
+Coordinate rightMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
 	Coordinate ret;
 	ret.x = ent->position.x+1;
 	ret.y = ent->position.y;
 	return ret;
 }
 
-void init_entity_npc(Entity *ent, Coordinate coord, char symbol, uint32_t characteristics){
+void init_entity_npc(NPC *ent, Coordinate coord, char symbol, uint32_t characteristics){
 	ent->position = coord;
 	ent->symbol = symbol;
 	ent->dead = false;
@@ -68,9 +68,8 @@ void init_entity_pc(Entity *ent, Coordinate coord, char symbol){
 	ent-> isPC = true;
 	//end->pc = &pc;
 	//ent->npc = NULL;
-	ent->move_strategy = rightMove;
 }
 
-void entity_get_move(Entity *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord){
+void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord){
 	*coord = ent->move_strategy(ent, map, mapTunnel);
 }
