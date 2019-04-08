@@ -27,16 +27,39 @@ static void descend(Coordinate position, DistanceMap * dist, Coordinate * ret){
 	}
 }
 
+Coordinate erraticMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+	Coordinate ret = ent->position;
+	ret.y += rand()%3 - 1;
+	ret.x += rand()%3 - 1;
+	return ret;
+}
+
 Coordinate tunnelMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
 	Coordinate ret;
 	descend(ent->position,mapTunnel,&ret);
 	return ret;
 }
 
+Coordinate tunnelMoveErratic(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+	if(rand()%2){
+		return erraticMove(ent,map,mapTunnel);
+	}else{
+		return tunnelMove(ent,map,mapTunnel);
+	}
+}
+
 Coordinate nonTunnelMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
 	Coordinate ret;
 	descend(ent->position,map,&ret);
 	return ret;
+}
+
+Coordinate nonTunnelMoveErratic(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+	if(rand()%2){
+		return erraticMove(ent,map,mapTunnel);
+	}else{
+		return nonTunnelMove(ent,map,mapTunnel);
+	}
 }
 
 Coordinate rightMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
@@ -113,27 +136,44 @@ NPC::NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 	}flags;
 	for(size_t i = 0; i < abilityList.size(); i++){
 		switch(abilityList[i]){
-			case MONSTER_ABILITY_SMART:
+		case MONSTER_ABILITY_SMART:
 			flags.SMART=true;
-			case MONSTER_ABILITY_TELE:
+			break;
+		case MONSTER_ABILITY_TELE:
 			flags.TELE=true;
-			case MONSTER_ABILITY_TUNNEL:
+			break;
+		case MONSTER_ABILITY_TUNNEL:
 			flags.TUNNEL=true;
-			case MONSTER_ABILITY_ERRATIC:
+			break;
+		case MONSTER_ABILITY_ERRATIC:
 			flags.ERRATIC=true;
-			case MONSTER_ABILITY_PASS:
+			break;
+		case MONSTER_ABILITY_PASS:
 			flags.PASS=true;
-			case MONSTER_ABILITY_PICKUP:
+			break;
+		case MONSTER_ABILITY_PICKUP:
 			flags.PICKUP=true;
-			case MONSTER_ABILITY_DESTROY:
+			break;
+		case MONSTER_ABILITY_DESTROY:
 			flags.DESTROY=true;
-			case MONSTER_ABILITY_UNIQ:
+			break;
+		case MONSTER_ABILITY_UNIQ:
 			flags.UNIQ=true;
-			case MONSTER_ABILITY_BOSS:
+			break;
+		case MONSTER_ABILITY_BOSS:
 			flags.BOSS=true;
+			break;
 			default:
 			break;
 		}
 	}
-	this->move_strategy = nonTunnelMove;
+	if(flags.TUNNEL && flags.ERRATIC){
+		this->move_strategy = tunnelMoveErratic;
+	}else if(!flags.TUNNEL && flags.ERRATIC){
+		this->move_strategy = nonTunnelMoveErratic;
+	}else if(flags.TUNNEL){
+		this->move_strategy = tunnelMove;
+	}else{
+		this->move_strategy = nonTunnelMove;
+	}
 }
