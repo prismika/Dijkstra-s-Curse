@@ -178,6 +178,7 @@ vector<MonsterBlueprint> parser_load_monster_list(){
 	return blueprintList;
 }
 
+MonsterBlueprint::MonsterBlueprint(){}
 
 MonsterBlueprint::MonsterBlueprint(string name, string description, vector<MonsterAbility> abilityList,
 	Dice speed, Dice hitpoints, Dice attackDamage,
@@ -192,6 +193,11 @@ MonsterBlueprint::MonsterBlueprint(string name, string description, vector<Monst
 	this->color = color;
 	this->rarity = rarity;
 }
+
+int MonsterBlueprint::getRarity(){
+	return this->rarity;
+}
+
 NPC * MonsterBlueprint::build(Coordinate position){
 	return new NPC(&this->name, &this->description, this->abilityList,
 		(this->speed).roll(), (this->hitpoints).roll(), attackDamage,

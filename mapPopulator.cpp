@@ -62,9 +62,11 @@ int populate_map(Map * map, int nummon){
 	//Place monsters
 	vector<MonsterBlueprint> blueprintList = parser_load_monster_list();
 	int i;
+	int monsterIndex;
 	for(i=0; i<nummon;i++){
-		int monsterIndex = rand()%blueprintList.size();
-		//TODO this shouldn't be totally random
+		do{
+			monsterIndex = rand()%blueprintList.size();
+		}while(rand()%100 >= blueprintList[monsterIndex].getRarity());
 		MonsterBlueprint blueprint = blueprintList[monsterIndex];
 		Coordinate curCoord = findOpenBlock(map, pcCoord);
 		if(curCoord.x == -1) break; //Map is full

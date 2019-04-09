@@ -22,12 +22,14 @@ private:
 	int rarity;
 	vector<MonsterAbility> abilityList;
 public:
+	MonsterBlueprint();
 	MonsterBlueprint(string name, string description, vector<MonsterAbility> abilityList,
 		Dice speed, Dice hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity);
 	~MonsterBlueprint(){
 		//TODO free stuff here
 	}
+	int getRarity();
 	NPC * build(Coordinate position);
 	friend std::ostream & operator<<(ostream &out, const MonsterBlueprint &r);
 	MonsterBlueprint & operator=(const MonsterBlueprint &r);

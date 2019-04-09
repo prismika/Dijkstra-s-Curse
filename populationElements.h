@@ -55,6 +55,7 @@ public:
 		int speed, int hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity, Coordinate position);
 	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);
+	int getRarity();
 };
 
 void init_entity_npc(NPC *ent, Coordinate coord, char symbol, uint32_t characteristics);

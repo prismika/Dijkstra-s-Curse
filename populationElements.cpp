@@ -177,3 +177,7 @@ NPC::NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 		this->move_strategy = nonTunnelMove;
 	}
 }
+
+int NPC::getRarity(){
+	return this->rarity;
+}
