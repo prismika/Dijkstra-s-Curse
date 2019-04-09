@@ -111,7 +111,7 @@ NPC * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
 	return ent;
 }
 Entity * map_new_pc(Map * map, Coordinate coord){
-	Entity * ent = (Entity *) malloc(sizeof(Entity));
+	Entity * ent = new Entity();
 	init_entity_pc(ent,coord,'@');
 	map_set_entity(map, coord.x, coord.y, ent);
 	return ent;
