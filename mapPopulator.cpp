@@ -56,8 +56,8 @@ static void populate_with_items(Map * map, int numitems){
 	for(i = 0; i < numitems; i++){
 		Coordinate itemCoord;
 		map_choose_random_block(map,canPlaceOn,canPlaceOnSize,&itemCoord);
-		// int itemIndex = rand()%blueprintList.size();
-		// Item item = blueprintList[itemIndex].build();
+		int itemIndex = rand()%blueprintList.size();
+		Item * item = blueprintList[itemIndex].build();
 		// map_place_item(map,item,itemCoord);
 	}
 }

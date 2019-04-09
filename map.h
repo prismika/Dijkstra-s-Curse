@@ -8,7 +8,6 @@
 
 class Map{
 private:
-	Item * itemMap[MAPHEIGHT][MAPWIDTH];
 public:
 	Block block[MAPHEIGHT][MAPWIDTH];
 	Block block_remembered[MAPHEIGHT][MAPWIDTH];
@@ -17,6 +16,7 @@ public:
 	int height;
 	Entity * populationMap[MAPHEIGHT][MAPWIDTH];
 	Entity ** populationList;
+	Item * itemMap[MAPHEIGHT][MAPWIDTH];
 	int populationListSize;
 	DistanceMap distanceMapNonTunneling;
 	DistanceMap distanceMapTunneling;

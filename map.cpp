@@ -38,6 +38,7 @@ void map_init(Map * map){
 	for(i = 0; i < MAPHEIGHT; ++i){
 		for(j = 0; j < MAPWIDTH; ++j){
 			retMap.populationMap[i][j] = NULL;
+			retMap.itemMap[i][j] = NULL;
 		}
 	}
 	retMap.populationList = NULL;
@@ -111,7 +112,7 @@ bool map_has_entity_at(Map * map, int x, int y){
 	return !(map->populationMap[y][x] == NULL);
 }
 bool map_has_item_at(Map * map, int x, int y){
-	return true;
+	return !(map->itemMap[y][x] == NULL);
 }
 void map_get_entity(Map * map, int x, int y, Entity * ent){
 	*ent = *(map->populationMap[y][x]);
@@ -248,10 +249,5 @@ int map_update_remembered(Map * map){
 }
 
 Item * Map::getItemAt(Coordinate coord){
-	string s = "Name!!";
-	string t = "Description!!";
-	return new Item(s,t,
-		ITEM_TYPE_SCROLL, MONSTER_MAGENTA,
-		5, 5, 5, 5, 5, 5, 5, 5,
-		false, 20);
+	return itemMap[coord.y][coord.x];
 }
