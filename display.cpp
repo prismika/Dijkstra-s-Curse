@@ -120,7 +120,10 @@ int display_map_foggy(Map * map){
 			if(isVisible && map_has_entity_at(map, x, y)){
 				Entity curEnt;
 				map_get_entity(map,x,y,&curEnt);
+				int color = getNcursesColor(curEnt.getColor());
+				attron(COLOR_PAIR(color));
 				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
+				attroff(COLOR_PAIR(color));
 			}else{
 				Block curBlock;
 				map_get_block_remembered(map,x,y,&curBlock);
