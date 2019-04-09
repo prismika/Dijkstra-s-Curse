@@ -91,7 +91,7 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 	if(flags.nummon){
 		nummon = flags.monsterCount;
 	}else{
-		nummon = 5;
+		nummon = 10;
 	}
 	if(flags.save && !flags.load){
 		command->execute = executeSave;

@@ -58,6 +58,7 @@ public:
            bool artifact,
            int rarity);
 	int getRarity();
+	
 	friend ostream & operator<<(ostream &out, const ItemBlueprint &r);
 };
 

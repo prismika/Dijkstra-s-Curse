@@ -46,7 +46,23 @@ static Coordinate findOpenBlock(Map * map, Coordinate pcCoord){
 	return curCoord;
 
 }
+
+static void populate_with_items(Map * map, int numitems){
+	vector<ItemBlueprint> blueprintList = parser_load_item_list();
+	BlockType canPlaceOn[] = {floor};
+	int canPlaceOnSize = 1;
+	int i;
+	for(i = 0; i < numitems; i++){
+		Coordinate itemCoord;
+		map_choose_random_block(map,canPlaceOn,canPlaceOnSize,&itemCoord);
+		// int itemIndex = rand()%blueprintList.size();
+		// Item item = blueprintList[itemIndex];
+		// map_place_item(map,item,itemCoord);
+	}
+}
+
 int populate_map(Map * map, int nummon){
+	populate_with_items(map, 10);
 	Entity * entityList[MAPHEIGHT*MAPWIDTH];
 	int entityListIndex = 0;
 	Coordinate pcCoord;
