@@ -105,11 +105,11 @@ vector<ItemBlueprint> parser_load_item_list(){
 		}	
 		//Inside a monster definition
 		while(getline(file, curLine) && curLine.compare("END")){
-			cout << "Parsing: '" << curLine << "'" << endl;
+			// cout << "Parsing: '" << curLine << "'" << endl;
 			string keyword = curLine.substr(0, curLine.find(" "));
 			curLine.erase(0,curLine.find(" ")+1);
-			cout << "Keyword is '" << keyword << "'" << endl;
-			cout << "What's left is '" << curLine << "'" <<endl;
+			// cout << "Keyword is '" << keyword << "'" << endl;
+			// cout << "What's left is '" << curLine << "'" <<endl;
 			if(!keyword.compare("NAME")){
 				if(sectionsSeen.NAME) goto nextItemDescription;
 				sectionsSeen.NAME = true;
@@ -260,6 +260,23 @@ ItemBlueprint::ItemBlueprint(string &name,
 
 int ItemBlueprint::getRarity(){
 	return this->rarity;
+}
+
+Item * ItemBlueprint::build(){
+	return new Item(this->name,
+	this->description,
+	this->type,
+	this->color,
+	(this->hit).roll(),
+	(this->damage).roll(),
+	(this->dodge).roll(),
+	(this->defence).roll(),
+	(this->weight).roll(),
+	(this->speed).roll(),
+	(this->attribute).roll(),
+	(this->value).roll(),
+	this->artifact,
+	this->rarity);
 }
 
 // NPC * MonsterBlueprint::build(Coordinate position){

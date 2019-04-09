@@ -9,30 +9,6 @@
 
 using namespace std;
 
-typedef enum
-{
-	ITEM_TYPE_no_type,
-	ITEM_TYPE_WEAPON,
-	ITEM_TYPE_OFFHAND,
-	ITEM_TYPE_RANGED,
-	ITEM_TYPE_ARMOR,
-	ITEM_TYPE_HELMET,
-	ITEM_TYPE_CLOAK,
-	ITEM_TYPE_GLOVES,
-	ITEM_TYPE_BOOTS,
-	ITEM_TYPE_RING,
-	ITEM_TYPE_AMULET,
-	ITEM_TYPE_LIGHT,
-	ITEM_TYPE_SCROLL,
-	ITEM_TYPE_BOOK,
-	ITEM_TYPE_FLASK,
-	ITEM_TYPE_GOLD,
-	ITEM_TYPE_AMMUNITION,
-	ITEM_TYPE_FOOD,
-	ITEM_TYPE_WAND,
-	ITEM_TYPE_CONTAINER
-}ItemType;
-
 class ItemBlueprint{
 private:
 	string name, description;
@@ -58,7 +34,8 @@ public:
            bool artifact,
            int rarity);
 	int getRarity();
-	
+	//Dynamically allocates new item
+	Item * build();
 	friend ostream & operator<<(ostream &out, const ItemBlueprint &r);
 };
 

@@ -4,6 +4,7 @@
 #include "mapPopulator.h"
 #include "pathFinder.h"
 #include "monsterParser.h"
+#include "itemParser.h"
 
 #define PC_BUBBLE_SIZE 8
 
@@ -56,7 +57,7 @@ static void populate_with_items(Map * map, int numitems){
 		Coordinate itemCoord;
 		map_choose_random_block(map,canPlaceOn,canPlaceOnSize,&itemCoord);
 		// int itemIndex = rand()%blueprintList.size();
-		// Item item = blueprintList[itemIndex];
+		// Item item = blueprintList[itemIndex].build();
 		// map_place_item(map,item,itemCoord);
 	}
 }

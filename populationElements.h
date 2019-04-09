@@ -8,6 +8,7 @@
 
 using namespace std;
 
+//--------------------Entities (living things)-------------------
 typedef enum{
 	MONSTER_RED,
 	MONSTER_GREEN,
@@ -61,5 +62,48 @@ public:
 
 void init_entity_pc(Entity *ent, Coordinate coord, char symbol);
 void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);
+
+
+//---------------------Items-------------------------
+typedef enum{
+	ITEM_TYPE_no_type,
+	ITEM_TYPE_WEAPON,
+	ITEM_TYPE_OFFHAND,
+	ITEM_TYPE_RANGED,
+	ITEM_TYPE_ARMOR,
+	ITEM_TYPE_HELMET,
+	ITEM_TYPE_CLOAK,
+	ITEM_TYPE_GLOVES,
+	ITEM_TYPE_BOOTS,
+	ITEM_TYPE_RING,
+	ITEM_TYPE_AMULET,
+	ITEM_TYPE_LIGHT,
+	ITEM_TYPE_SCROLL,
+	ITEM_TYPE_BOOK,
+	ITEM_TYPE_FLASK,
+	ITEM_TYPE_GOLD,
+	ITEM_TYPE_AMMUNITION,
+	ITEM_TYPE_FOOD,
+	ITEM_TYPE_WAND,
+	ITEM_TYPE_CONTAINER
+}ItemType;
+
+class Item{
+private:
+	string name;
+	string description;
+	ItemType type;
+	MonsterColor color;
+	int hit, damage, dodge, defence, weight, speed, attribute, value;
+	bool artifact;
+	int rarity;
+public:
+	Item();
+	Item(string name, string description,
+	ItemType type, MonsterColor color,
+	int hit, int damage, int dodge, int defence,
+	int weight, int speed, int attribute, int value,
+	bool artifact, int rarity);
+};
 
 #endif

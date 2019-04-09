@@ -167,3 +167,30 @@ NPC::NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 int NPC::getRarity(){
 	return this->rarity;
 }
+
+
+
+
+//---------------------Items------------------------
+
+Item::Item(string name, string description,
+	ItemType type, MonsterColor color,
+	int hit, int damage, int dodge, int defence,
+	int weight, int speed, int attribute, int value,
+	bool artifact, int rarity)
+	:name(name),
+	description(description),
+	type(type),
+	color(color),
+	hit(hit),
+	damage(damage),
+	dodge(dodge),
+	defence(defence),
+	weight(weight),
+	speed(speed),
+	attribute(attribute),
+	value(value),
+	artifact(artifact),
+	rarity(rarity){
+
+}
