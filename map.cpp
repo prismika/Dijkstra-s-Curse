@@ -110,6 +110,9 @@ Entity * map_new_pc(Map * map, Coordinate coord){
 bool map_has_entity_at(Map * map, int x, int y){
 	return !(map->populationMap[y][x] == NULL);
 }
+bool map_has_item_at(Map * map, int x, int y){
+	return true;
+}
 void map_get_entity(Map * map, int x, int y, Entity * ent){
 	*ent = *(map->populationMap[y][x]);
 }

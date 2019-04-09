@@ -97,6 +97,7 @@ private:
 	int hit, damage, dodge, defence, weight, speed, attribute, value;
 	bool artifact;
 	int rarity;
+	char symbol;
 public:
 	Item();
 	Item(string name, string description,
@@ -104,6 +105,7 @@ public:
 	int hit, int damage, int dodge, int defence,
 	int weight, int speed, int attribute, int value,
 	bool artifact, int rarity);
+	char getSymbol();
 };
 
 #endif

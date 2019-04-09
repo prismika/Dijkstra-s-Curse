@@ -192,5 +192,9 @@ Item::Item(string name, string description,
 	value(value),
 	artifact(artifact),
 	rarity(rarity){
+	this->symbol = '/';
+}
 
+char Item::getSymbol(){
+	return this->symbol;
 }

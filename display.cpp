@@ -97,6 +97,12 @@ int display_map(Map * map){
 				attron(COLOR_PAIR(color));
 				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
 				attroff(COLOR_PAIR(color));
+			}else if(map_has_item_at(map,x,y)){
+				Coordinate curCoord;
+				curCoord.x = x;
+				curCoord.y = y;
+				Item * item = map->getItemAt(curCoord);
+				mvaddch(y+SPACE_ABOVE_MAP,x,item->getSymbol());
 			}else{
 				Block curBlock;
 				map_getBlock(map,x,y,&curBlock);
