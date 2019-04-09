@@ -11,6 +11,7 @@ using namespace std;
 
 typedef enum
 {
+	ITEM_TYPE_no_type,
 	ITEM_TYPE_WEAPON,
 	ITEM_TYPE_OFFHAND,
 	ITEM_TYPE_RANGED,
@@ -34,8 +35,7 @@ typedef enum
 
 class ItemBlueprint{
 private:
-	string name;
-	string description;
+	string name, description;
 	ItemType type;
 	MonsterColor color;
 	Dice hit, damage, dodge, defence, weight, speed, attribute, value;

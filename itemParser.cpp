@@ -10,153 +10,227 @@
 #define VERSION_NAME "RLG327 OBJECT DESCRIPTION 1"
 
 
-
+static void parse_type(string* s, ItemType* type){
+	if(!s->compare("WEAPON")){
+		*type = ITEM_TYPE_WEAPON;
+	}else if(!s->compare("OFFHAND")){
+		*type = ITEM_TYPE_OFFHAND;
+	}else if(!s->compare("RANGED")){
+		*type = ITEM_TYPE_RANGED;
+	}else if(!s->compare("ARMOR")){
+		*type = ITEM_TYPE_ARMOR;
+	}else if(!s->compare("HELMET")){
+		*type = ITEM_TYPE_HELMET;
+	}else if(!s->compare("CLOAK")){
+		*type = ITEM_TYPE_CLOAK;
+	}else if(!s->compare("GLOVES")){
+		*type = ITEM_TYPE_GLOVES;
+	}else if(!s->compare("BOOTS")){
+		*type = ITEM_TYPE_BOOTS;
+	}else if(!s->compare("RING")){
+		*type = ITEM_TYPE_RING;
+	}else if(!s->compare("AMULET")){
+		*type = ITEM_TYPE_AMULET;
+	}else if(!s->compare("LIGHT")){
+		*type = ITEM_TYPE_LIGHT;
+	}else if(!s->compare("SCROLL")){
+		*type = ITEM_TYPE_SCROLL;
+	}else if(!s->compare("BOOK")){
+		*type = ITEM_TYPE_BOOK;
+	}else if(!s->compare("FLASK")){
+		*type = ITEM_TYPE_FLASK;
+	}else if(!s->compare("GOLD")){
+		*type = ITEM_TYPE_GOLD;
+	}else if(!s->compare("AMMUNITION")){
+		*type = ITEM_TYPE_AMMUNITION;
+	}else if(!s->compare("FOOD")){
+		*type = ITEM_TYPE_FOOD;
+	}else if(!s->compare("WAND")){
+		*type = ITEM_TYPE_WAND;
+	}else if(!s->compare("CONTAINER")){
+		*type = ITEM_TYPE_CONTAINER;
+	}
+}
 
 vector<ItemBlueprint> parser_load_item_list(){
-// 	ifstream file;
-// 	vector <MonsterBlueprint> blueprintList;
-// 	int l = strlen(getenv("HOME")) + strlen("/.rlg327/monster_desc.txt") + 1; 
-// 	char * filePath = (char *) malloc(l);
-// 	strcpy(filePath,getenv("HOME"));
-// 	strcat(filePath,"/.rlg327/monster_desc.txt");
-// 	file.open(filePath);
+	ifstream file;
+	vector <ItemBlueprint> blueprintList;
+	int l = strlen(getenv("HOME")) + strlen("/.rlg327/object_desc.txt") + 1; 
+	char * filePath = (char *) malloc(l);
+	strcpy(filePath,getenv("HOME"));
+	strcat(filePath,"/.rlg327/object_desc.txt");
+	file.open(filePath);
 
-// 	string curLine;
-// 	getline(file, curLine);
-// 	if(curLine.compare(VERSION_NAME)){
-// 		cerr << "Ope. The file did not begin with the correct version information." <<endl;
-// 		cerr << curLine << endl;
-// 		cerr << "Length " << curLine.length() << endl;
-// 		cerr << VERSION_NAME << endl;
-// 		cerr << (int)curLine[28] <<endl;
-// 		cerr << "Length " << strlen(VERSION_NAME) << endl;
-// 		exit(1);
-// 	}
-// 	while(true){
-// 		nextMonsterDescription:
-// 		class SectionsSeen{
-// 		public:
-// 			bool NAME = false;
-// 			bool DESC = false;
-// 			bool COLOR = false;
-// 			bool SPEED = false;
-// 			bool ABIL = false;
-// 			bool HP = false;
-// 			bool DAM = false;
-// 			bool SYMB = false;
-// 			bool RRTY = false;
-// 		};
-// 		SectionsSeen sectionsSeen;
-// 		Dice HPd,ATTd,SPd;
-// 		string name, desc;
-// 		vector<MonsterAbility> abilityList;
-// 		char symbol = '0';
-// 		MonsterColor color = MONSTER_RED;
-// 		int rarity = 10;
-// 		while(getline(file, curLine)&&curLine.compare("BEGIN MONSTER")){
-// 		}
-// 		if(file.peek() == -1){
-// 			goto fileFinished;
-// 		}	
-// 		//Inside a monster definition
-// 		while(getline(file, curLine) && curLine.compare("END")){
-// 			// cout << "Parsing: '" << curLine << "'" << endl;
-// 			string keyword = curLine.substr(0, curLine.find(" "));
-// 			curLine.erase(0,curLine.find(" ")+1);
-// 			// cout << "Keyword is '" << keyword << "'" << endl;
-// 			// cout << "What's left is '" << curLine << "'" <<endl;
-// 			if(!keyword.compare("NAME")){
-// 				if(sectionsSeen.NAME) goto nextMonsterDescription;
-// 				sectionsSeen.NAME = true;
-// 				name = curLine;
-// 			}else if(!keyword.compare("DESC")){
-// 				if(sectionsSeen.DESC) goto nextMonsterDescription;
-// 				sectionsSeen.DESC = true;
-// 				while(getline(file,curLine) && curLine.compare(".")){
-// 					desc.append(curLine);
-// 					desc.append("\n");
-// 				}
-// 			}else if(!keyword.compare("ABIL")){
-// 				if(sectionsSeen.ABIL) goto nextMonsterDescription;
-// 				sectionsSeen.ABIL = true;
-// 				if(curLine.compare("ABIL")) parse_abilities(&curLine,&abilityList);
-// 			}else if(!keyword.compare("SYMB")){
-// 				if(sectionsSeen.SYMB) goto nextMonsterDescription;
-// 				sectionsSeen.SYMB = true;
-// 				symbol = curLine[0];
-// 			}else if(!keyword.compare("RRTY")){
-// 				if(sectionsSeen.RRTY) goto nextMonsterDescription;
-// 				sectionsSeen.RRTY = true;
-// 				rarity = atoi(curLine.c_str());
-// 			}else if(!keyword.compare("COLOR")){
-// 				if(sectionsSeen.COLOR) goto nextMonsterDescription;
-// 				sectionsSeen.COLOR = true;
-// 				curLine = curLine.substr(0, curLine.find(" "));
-// 				if(!curLine.compare("RED")){
-// 					color = MONSTER_RED;
-// 				}else if(!curLine.compare("GREEN")){
-// 					color = MONSTER_GREEN;
-// 				}else if(!curLine.compare("BLUE")){
-// 					color = MONSTER_BLUE;
-// 				}else if(!curLine.compare("CYAN")){
-// 					color = MONSTER_CYAN;
-// 				}else if(!curLine.compare("YELLOW")){
-// 					color = MONSTER_YELLOW;
-// 				}else if(!curLine.compare("MAGENTA")){
-// 					color = MONSTER_MAGENTA;
-// 				}else if(!curLine.compare("WHITE")){
-// 					color = MONSTER_WHITE;
-// 				}else if(!curLine.compare("BLACK")){
-// 					color = MONSTER_BLACK;
-// 				}
-// 			}else if(!keyword.compare("HP")){
-// 				if(sectionsSeen.HP) goto nextMonsterDescription;
-// 				sectionsSeen.HP = true;
-// 				Dice newDice(curLine);
-// 				HPd = newDice;
-// 			}else if(!keyword.compare("DAM")){
-// 				if(sectionsSeen.DAM) goto nextMonsterDescription;
-// 				sectionsSeen.DAM = true;
-// 				Dice newDice(curLine);
-// 				ATTd = newDice;
-// 			}else if(!keyword.compare("SPEED")){
-// 				if(sectionsSeen.SPEED) goto nextMonsterDescription;
-// 				sectionsSeen.SPEED = true;
-// 				Dice newDice(curLine);
-// 				SPd = newDice;
-// 			}
-// 		}
+	string curLine;
+	getline(file, curLine);
+	if(curLine.compare(VERSION_NAME)){
+		cerr << "Ope. The file did not begin with the correct version information." <<endl;
+		cerr << curLine << endl;
+		cerr << "Length " << curLine.length() << endl;
+		cerr << VERSION_NAME << endl;
+		cerr << (int)curLine[28] <<endl;
+		cerr << "Length " << strlen(VERSION_NAME) << endl;
+		exit(1);
+	}
+	while(true){
+		nextItemDescription:
+		class SectionsSeen{
+		public:
+			bool NAME = false;
+			bool DESC = false;
+			bool TYPE = false;
+			bool COLOR = false;
+			bool HIT = false;
+			bool DAM = false;
+			bool DODGE = false;
+			bool DEF = false;
+			bool WEIGHT = false;
+			bool SPEED = false;
+			bool ATTR = false;
+			bool VAL = false;
+			bool ART = false;
+			bool RRTY = false;
+		};
+		SectionsSeen sectionsSeen;
+		string name, desc;
+		ItemType type = ITEM_TYPE_no_type;
+		MonsterColor color = MONSTER_RED;
+		Dice hit, damage, dodge, defence, weight, speed, attribute, value;
+		bool artifact = false;
+		int rarity = 10;
+		while(getline(file, curLine)&&curLine.compare("BEGIN OBJECT")){
+		}
+		if(file.peek() == -1){
+			goto fileFinished;
+		}	
+		//Inside a monster definition
+		while(getline(file, curLine) && curLine.compare("END")){
+			cout << "Parsing: '" << curLine << "'" << endl;
+			string keyword = curLine.substr(0, curLine.find(" "));
+			curLine.erase(0,curLine.find(" ")+1);
+			cout << "Keyword is '" << keyword << "'" << endl;
+			cout << "What's left is '" << curLine << "'" <<endl;
+			if(!keyword.compare("NAME")){
+				if(sectionsSeen.NAME) goto nextItemDescription;
+				sectionsSeen.NAME = true;
+				name = curLine;
+			}else if(!keyword.compare("DESC")){
+				if(sectionsSeen.DESC) goto nextItemDescription;
+				sectionsSeen.DESC = true;
+				while(getline(file,curLine) && curLine.compare(".")){
+					desc.append(curLine);
+					desc.append("\n");
+				}
+			}else if(!keyword.compare("TYPE")){
+				if(sectionsSeen.TYPE) goto nextItemDescription;
+				sectionsSeen.TYPE = true;
+				parse_type(&curLine,&type);
+			}else if(!keyword.compare("COLOR")){
+				if(sectionsSeen.COLOR) goto nextItemDescription;
+				sectionsSeen.COLOR = true;
+				curLine = curLine.substr(0, curLine.find(" "));
+				if(!curLine.compare("RED")){
+					color = MONSTER_RED;
+				}else if(!curLine.compare("GREEN")){
+					color = MONSTER_GREEN;
+				}else if(!curLine.compare("BLUE")){
+					color = MONSTER_BLUE;
+				}else if(!curLine.compare("CYAN")){
+					color = MONSTER_CYAN;
+				}else if(!curLine.compare("YELLOW")){
+					color = MONSTER_YELLOW;
+				}else if(!curLine.compare("MAGENTA")){
+					color = MONSTER_MAGENTA;
+				}else if(!curLine.compare("WHITE")){
+					color = MONSTER_WHITE;
+				}else if(!curLine.compare("BLACK")){
+					color = MONSTER_BLACK;
+				}
+			}else if(!keyword.compare("HIT")){
+				if(sectionsSeen.HIT) goto nextItemDescription;
+				sectionsSeen.HIT = true;
+				Dice newDice(curLine);
+				hit = newDice;
+			}else if(!keyword.compare("DAM")){
+				if(sectionsSeen.DAM) goto nextItemDescription;
+				sectionsSeen.DAM = true;
+				Dice newDice(curLine);
+				damage = newDice;
+			}else if(!keyword.compare("DODGE")){
+				if(sectionsSeen.DODGE) goto nextItemDescription;
+				sectionsSeen.DODGE = true;
+				Dice newDice(curLine);
+				dodge = newDice;
+			}else if(!keyword.compare("DEF")){
+				if(sectionsSeen.DEF) goto nextItemDescription;
+				sectionsSeen.DEF = true;
+				Dice newDice(curLine);
+				defence = newDice;
+			}else if(!keyword.compare("WEIGHT")){
+				if(sectionsSeen.WEIGHT) goto nextItemDescription;
+				sectionsSeen.WEIGHT = true;
+				Dice newDice(curLine);
+				weight = newDice;
+			}else if(!keyword.compare("SPEED")){
+				if(sectionsSeen.SPEED) goto nextItemDescription;
+				sectionsSeen.SPEED = true;
+				Dice newDice(curLine);
+				speed = newDice;
+			}else if(!keyword.compare("ATTR")){
+				if(sectionsSeen.ATTR) goto nextItemDescription;
+				sectionsSeen.ATTR = true;
+				Dice newDice(curLine);
+				attribute = newDice;
+			}else if(!keyword.compare("VAL")){
+				if(sectionsSeen.VAL) goto nextItemDescription;
+				sectionsSeen.VAL = true;
+				Dice newDice(curLine);
+				value = newDice;
+			}else if(!keyword.compare("ART")){
+				if(sectionsSeen.ART) goto nextItemDescription;
+				sectionsSeen.ART = true;
+				artifact = !curLine.compare("TRUE");
+			}else if(!keyword.compare("RRTY")){
+				if(sectionsSeen.RRTY) goto nextItemDescription;
+				sectionsSeen.RRTY = true;
+				rarity = stoi(curLine);
+			}
+		}
 // 		//Reached the end of this monster's description
-// 		if(!sectionsSeen.NAME
-// 			||!sectionsSeen.DESC
-// 			||!sectionsSeen.COLOR
-// 			||!sectionsSeen.SPEED
-// 			||!sectionsSeen.ABIL
-// 			||!sectionsSeen.HP
-// 			||!sectionsSeen.DAM
-// 			||!sectionsSeen.SYMB
-// 			||!sectionsSeen.RRTY){
-// 			goto nextMonsterDescription;
-// 		}
+		if(!sectionsSeen.NAME ||
+			!sectionsSeen.DESC ||
+			!sectionsSeen.TYPE ||
+			!sectionsSeen.COLOR ||
+			!sectionsSeen.HIT ||
+			!sectionsSeen.DAM ||
+			!sectionsSeen.DODGE ||
+			!sectionsSeen.DEF ||
+			!sectionsSeen.WEIGHT ||
+			!sectionsSeen.SPEED ||
+			!sectionsSeen.ATTR ||
+			!sectionsSeen.VAL ||
+			!sectionsSeen.ART ||
+			!sectionsSeen.RRTY){
+			goto nextItemDescription;
+		}
 
-// 		MonsterBlueprint *blueprint = new MonsterBlueprint(
-// 			name,desc, abilityList,
-// 			SPd,HPd,ATTd,
-// 			symbol,color,rarity);
-// 		blueprintList.push_back(*blueprint);
-// 	}
-// 	fileFinished:
-	// return blueprintList;
-
-	vector<ItemBlueprint> blueprintList;
-	string s,t;
-	s = "Name";
-	t = "Description!";
-	Dice hit, damage, dodge, defence, weight, speed, attribute, value;
-	ItemBlueprint blueprint(s,t,ITEM_TYPE_WEAPON,MONSTER_RED,
-		hit, damage, dodge, defence, weight, speed, attribute, value,
-		false, 10);
-	blueprintList.push_back(blueprint);
+		ItemBlueprint *blueprint = new ItemBlueprint(
+			name, desc,
+			type,
+			color,
+			hit,
+			damage,
+			dodge,
+			defence,
+			weight,
+			speed,
+			attribute,
+			value,
+			artifact,
+			rarity);
+		blueprintList.push_back(*blueprint);
+	}
+	fileFinished:
 	return blueprintList;
 
 }
