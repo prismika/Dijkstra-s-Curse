@@ -8,9 +8,6 @@
 
 #define PC_VISIBILITY 4;
 
-char symbols[] = "0123456789abcdef";
-bool pcDead = false;
-
 void map_init(Map * map){
 	Map retMap;
 	Block default_remembered_block = block_create(rock,100);
@@ -103,19 +100,13 @@ Entity * map_get_pc(Map * map){
 	return map->populationList[0];
 }
 
-NPC * map_new_npc(Map * map, Coordinate coord, uint32_t characteristics){
-	NPC * ent = (NPC *) malloc(sizeof(NPC));
-	char symbol = symbols[characteristics];
-	init_entity_npc(ent,coord,symbol,characteristics);
-	map_set_entity(map, coord.x, coord.y, ent);
-	return ent;
-}
 Entity * map_new_pc(Map * map, Coordinate coord){
 	Entity * ent = new Entity();
 	init_entity_pc(ent,coord,'@');
 	map_set_entity(map, coord.x, coord.y, ent);
 	return ent;
 }
+
 bool map_has_entity_at(Map * map, int x, int y){
 	return !(map->populationMap[y][x] == NULL);
 }
@@ -129,9 +120,6 @@ void map_kill_entity(Map * map, Coordinate coord){
 	Entity * targetEnt = map_get_entity_address(map, coord.x, coord.y);
 	targetEnt->dead = true;
 	map_remove_entity(map, coord.x, coord.y);
-	if(targetEnt->isPC){
-		pcDead = true;
-	}
 }
 
 //Returns position of entity after move is attempted
@@ -205,7 +193,7 @@ void map_choose_random_block(Map *map, enum BlockType canChoose[], int canChoose
 }
 
 bool map_pc_is_dead(Map * map){
-	return pcDead;
+	return map->populationList[0]->dead;
 }
 
 DistanceMap * map_get_distance_map_non_tunneling(Map * map){

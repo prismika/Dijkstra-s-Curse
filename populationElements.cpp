@@ -4,11 +4,6 @@
 #include "mapElements.h"
 #include "dice.h"
 
-#define NPC_INTELLIGENT	0x0000000000000001
-#define NPC_TELEPATHIC	0x0000000000000002
-#define NPC_TUNNELING	0x0000000000000004
-#define NPC_ERRATIC		0x0000000000000008
-
 
 static void descend(Coordinate position, DistanceMap * dist, Coordinate * ret){
 	int x,y;
@@ -69,20 +64,6 @@ Coordinate rightMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
 	return ret;
 }
 
-void init_entity_npc(NPC *ent, Coordinate coord, char symbol, uint32_t characteristics){
-	ent->position = coord;
-	ent->symbol = symbol;
-	ent->dead = false;
-	ent->speed = (rand()%10) + 5;
-	ent->isPC = false;
-	//end->pc = NULL;
-	//ent->npc = &npc;
-	if(characteristics & NPC_TUNNELING){
-		ent->move_strategy = tunnelMove;
-	}else{
-		ent->move_strategy = nonTunnelMove;
-	}
-}
 
 void init_entity_pc(Entity *ent, Coordinate coord, char symbol){
 	ent->position = coord;

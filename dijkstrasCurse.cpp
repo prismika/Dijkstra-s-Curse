@@ -11,6 +11,7 @@
 #include "display.h"
 #include "gameTypes.h"
 #include "monsterParser.h"
+#include "itemParser.h"
 
 long seed;
 int nummon;
@@ -193,12 +194,12 @@ int executeMonsters(){
 }
 
 int executeItems(){
-	// vector<ItemBlueprint> blueprintList;
-	// parser_load_item_list(&blueprintList);
+	vector<ItemBlueprint> blueprintList;
+	blueprintList = parser_load_item_list();
 	
-	// vector<ItemBlueprint>::iterator iter;
-	// for(iter = blueprintList.begin(); iter !=blueprintList.end(); iter++){
-	// 	cout << *iter << endl;
-	// }
+	vector<ItemBlueprint>::iterator iter;
+	for(iter = blueprintList.begin(); iter !=blueprintList.end(); iter++){
+		cout << *iter << endl;
+	}
 	return 0;
 }
