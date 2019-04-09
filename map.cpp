@@ -243,3 +243,12 @@ int map_update_remembered(Map * map){
 	}
 	return 0;
 }
+
+Item * Map::getItemAt(Coordinate coord){
+	string s = "Name!!";
+	string t = "Description!!";
+	return new Item(s,t,
+		ITEM_TYPE_SCROLL, MONSTER_MAGENTA,
+		5, 5, 5, 5, 5, 5, 5, 5,
+		false, 20);
+}

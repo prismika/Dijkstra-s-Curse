@@ -7,6 +7,8 @@
 
 
 class Map{
+private:
+	Item * itemMap[MAPHEIGHT][MAPWIDTH];
 public:
 	Block block[MAPHEIGHT][MAPWIDTH];
 	Block block_remembered[MAPHEIGHT][MAPWIDTH];
@@ -18,6 +20,7 @@ public:
 	int populationListSize;
 	DistanceMap distanceMapNonTunneling;
 	DistanceMap distanceMapTunneling;
+	Item * getItemAt(Coordinate coord);
 };
 
 void map_init(Map * map);
