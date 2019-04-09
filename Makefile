@@ -30,9 +30,9 @@ $(BIN): $(OBJS) dijkstrasCurse.o
 	@$(CXX) $(CFLAGS) -MMD -MF $*.d -c $<
 
 #Test things
-test: test.o $(OBJS)
+test: test.o
 	@$(ECHO) Linking $@
-	@$(CC) $^ -o $@ -lncurses
+	@$(CXX) $^ -o $@ -lncurses
 
 	
 #Make the tarball

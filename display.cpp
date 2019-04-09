@@ -7,9 +7,7 @@
 #include "map.h"
 
 #define SPACE_ABOVE_MAP 1
-#define COLOR_DEFAULT 0
-#define COLOR_MEMORY 1
-#define COLOR_PC 2
+#define COLOR_MEMORY COLOR_YELLOW
 
 char * deathString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
 "                                 (  .      )\n"
@@ -35,6 +33,29 @@ static char getBlockVisual(BlockType type){
 	}
 }
 
+static int getNcursesColor(MonsterColor color){
+	switch(color){
+	case MONSTER_RED:
+		return COLOR_RED;
+	case MONSTER_GREEN:
+		return COLOR_GREEN;
+	case MONSTER_BLUE:
+		return COLOR_BLUE;
+	case MONSTER_CYAN:
+		return COLOR_CYAN;
+	case MONSTER_YELLOW:
+		return COLOR_YELLOW;
+	case MONSTER_MAGENTA:
+		return COLOR_MAGENTA;
+	case MONSTER_WHITE:
+		return COLOR_WHITE;
+	case MONSTER_BLACK:
+		return COLOR_BLACK;
+	default:
+		return -1;
+	}
+}
+
 int display_init(){
 	// initscr();
 	// curs_set(0);
@@ -46,8 +67,14 @@ int display_init(){
 	curs_set(0);
 	keypad(stdscr, TRUE);
 	mvprintw(1, 1, "Loading...");
-	init_pair(COLOR_DEFAULT, COLOR_WHITE, COLOR_BLACK);
-	init_pair(COLOR_MEMORY, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(COLOR_RED, COLOR_RED, COLOR_BLACK);
+	init_pair(COLOR_GREEN, COLOR_GREEN, COLOR_BLACK);
+	init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
+	init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
+	init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+	init_pair(COLOR_WHITE, COLOR_WHITE, COLOR_BLACK);
+	init_pair(COLOR_BLACK, COLOR_BLACK, COLOR_BLACK);
 
 	return 0;
 }
@@ -66,7 +93,10 @@ int display_map(Map * map){
 			if(map_has_entity_at(map, x, y)){
 				Entity curEnt;
 				map_get_entity(map,x,y,&curEnt);
+				int color = getNcursesColor(curEnt.getColor());
+				attron(COLOR_PAIR(color));
 				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
+				attroff(COLOR_PAIR(color));
 			}else{
 				Block curBlock;
 				map_getBlock(map,x,y,&curBlock);
@@ -97,9 +127,9 @@ int display_map_foggy(Map * map){
 				if(isVisible){
 					mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
 				}else{
-					attron(COLOR_PAIR(COLOR_MEMORY));
+					attron(COLOR_PAIR(COLOR_YELLOW));
 					mvaddch(y+SPACE_ABOVE_MAP,x,getBlockVisual(curBlock.type));
-					attroff(COLOR_PAIR(COLOR_MEMORY));
+					attroff(COLOR_PAIR(COLOR_YELLOW));
 				}
 			}
 		}

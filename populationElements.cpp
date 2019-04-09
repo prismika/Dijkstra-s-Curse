@@ -104,6 +104,10 @@ speed(10), dead(0){
 	this->description = new string();
 }
 
+MonsterColor Entity::getColor(){
+	return MONSTER_CYAN;
+}
+
 NPC::NPC():Entity(){
 	this->isPC = false;
 	this->move_strategy = nonTunnelMove;

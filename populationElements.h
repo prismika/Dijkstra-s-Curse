@@ -40,6 +40,7 @@ protected:
 	MonsterColor color;
 public:
 	Entity();
+	MonsterColor getColor();
 	Coordinate position;
 	char symbol;
 	int speed;

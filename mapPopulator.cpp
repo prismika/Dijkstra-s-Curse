@@ -62,8 +62,8 @@ int populate_map(Map * map, int nummon){
 	//Place monsters
 	vector<MonsterBlueprint> blueprintList = parser_load_monster_list();
 	int i;
-	int monsterIndex;
 	for(i=0; i<nummon;i++){
+		int monsterIndex;
 		do{
 			monsterIndex = rand()%blueprintList.size();
 		}while(rand()%100 >= blueprintList[monsterIndex].getRarity());
@@ -82,9 +82,6 @@ int populate_map(Map * map, int nummon){
 	}
 	map->populationList = entityList_tight;
 	map->populationListSize = entityListIndex;
-	// For testing display population function
-	// display_populationList(entityList_tight, entityListIndex);
-	// usleep(5000000);
 
 	return 0;
 }
