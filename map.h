@@ -21,6 +21,7 @@ public:
 	DistanceMap distanceMapNonTunneling;
 	DistanceMap distanceMapTunneling;
 	Item * getItemAt(Coordinate coord);
+	int placeItem(Item * item, Coordinate coord);
 };
 
 void map_init(Map * map);

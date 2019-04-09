@@ -251,3 +251,8 @@ int map_update_remembered(Map * map){
 Item * Map::getItemAt(Coordinate coord){
 	return itemMap[coord.y][coord.x];
 }
+
+int Map::placeItem(Item * item, Coordinate coord){
+	itemMap[coord.y][coord.x] = item;
+	return 0;
+}
