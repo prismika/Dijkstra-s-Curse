@@ -96,3 +96,19 @@
 		-Fix string comparison bug
 		-Add some error checking
 		-Update README and CHANGELOG
+4/6/19	-Create high-level skeleton code for --items flag
+		-Create NPC class that inherits from Entity
+4/7/19	-Debug parsing of monster abilities
+		-Instantiate NPC's from blueprints
+		-Successfully populate dungeon with custom monsters
+4/8/19	-Give NPC correct movement strategies.
+		-Implement "erratic" movement strategies.
+		-Render all entities in technicolor
+4/9/19	-Build an item parser
+		-Create an Item class
+		-Put items in the Map class and create necessary interfaces
+		-Display items successfully
+		-Populate dungeon with custom items
+		-...in color!
+		-Implement rarity-based item population and artifact status
+		-Update README and CHANGELOG
