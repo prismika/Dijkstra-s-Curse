@@ -59,7 +59,8 @@ static void populate_with_items(Map * map, int numitems){
 		int itemIndex;
 		do{
 			itemIndex = rand()%blueprintList.size();
-		}while(rand()%100 >= blueprintList[itemIndex].getRarity());
+		}while((rand()%100 >= blueprintList[itemIndex].getRarity())
+			|| (!blueprintList[itemIndex].isBuildable()));
 		Item * item = blueprintList[itemIndex].build();
 		map->placeItem(item,itemCoord);
 	}

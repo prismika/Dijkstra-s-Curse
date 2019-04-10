@@ -254,7 +254,7 @@ ItemBlueprint::ItemBlueprint(string &name,
 	:name(name), description(description), type(type), color(color),
 	hit(hit), damage(damage), dodge(dodge), defence(defence),
 	weight(weight), speed(speed), attribute(attribute), value(value),
-	artifact(artifact), rarity(rarity){
+	artifact(artifact), rarity(rarity), howManyExist(0){
 
 }
 
@@ -263,6 +263,7 @@ int ItemBlueprint::getRarity(){
 }
 
 Item * ItemBlueprint::build(){
+	this->howManyExist++;
 	return new Item(this->name,
 	this->description,
 	this->type,
@@ -277,6 +278,10 @@ Item * ItemBlueprint::build(){
 	(this->value).roll(),
 	this->artifact,
 	this->rarity);
+}
+
+bool ItemBlueprint::isBuildable(){
+	return !(artifact && (howManyExist > 0));
 }
 
 // NPC * MonsterBlueprint::build(Coordinate position){

@@ -17,6 +17,8 @@ private:
 	Dice hit, damage, dodge, defence, weight, speed, attribute, value;
 	bool artifact;
 	int rarity;
+
+  int howManyExist;
 public:
 	ItemBlueprint();
 	ItemBlueprint(string &name,
@@ -36,6 +38,7 @@ public:
 	int getRarity();
 	//Dynamically allocates new item
 	Item * build();
+  bool isBuildable();
 	friend ostream & operator<<(ostream &out, const ItemBlueprint &r);
 };
 
