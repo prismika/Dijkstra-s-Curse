@@ -192,9 +192,14 @@ Item::Item(string name, string description,
 	value(value),
 	artifact(artifact),
 	rarity(rarity){
-	this->symbol = '/';
+	char symbols[] = {'*','|',')','}','[',']','(','{','\\','=','"','_','~','?','!','$','/','\'','-','%'};
+	this->symbol = symbols[(int)type];
 }
 
 char Item::getSymbol(){
 	return this->symbol;
+}
+
+MonsterColor Item::getColor(){
+	return this->color;
 }

@@ -102,7 +102,10 @@ int display_map(Map * map){
 				curCoord.x = x;
 				curCoord.y = y;
 				Item * item = map->getItemAt(curCoord);
+				int color = getNcursesColor(item->getColor());
+				attron(COLOR_PAIR(color));
 				mvaddch(y+SPACE_ABOVE_MAP,x,item->getSymbol());
+				attroff(COLOR_PAIR(color));
 			}else{
 				Block curBlock;
 				map_getBlock(map,x,y,&curBlock);
@@ -129,6 +132,15 @@ int display_map_foggy(Map * map){
 				int color = getNcursesColor(curEnt.getColor());
 				attron(COLOR_PAIR(color));
 				mvaddch(y+SPACE_ABOVE_MAP,x,curEnt.symbol);
+				attroff(COLOR_PAIR(color));
+			}else if(isVisible && map_has_item_at(map,x,y)){
+				Coordinate curCoord;
+				curCoord.x = x;
+				curCoord.y = y;
+				Item * item = map->getItemAt(curCoord);
+				int color = getNcursesColor(item->getColor());
+				attron(COLOR_PAIR(color));
+				mvaddch(y+SPACE_ABOVE_MAP,x,item->getSymbol());
 				attroff(COLOR_PAIR(color));
 			}else{
 				Block curBlock;

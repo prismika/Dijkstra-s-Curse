@@ -65,6 +65,8 @@ void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coord
 
 
 //---------------------Items-------------------------
+//If you reorder this enum, God himself will smite you where you stand.
+//Also display has a convenient lookup table that depends on this order.
 typedef enum{
 	ITEM_TYPE_no_type,
 	ITEM_TYPE_WEAPON,
@@ -106,6 +108,7 @@ public:
 	int weight, int speed, int attribute, int value,
 	bool artifact, int rarity);
 	char getSymbol();
+	MonsterColor getColor();
 };
 
 #endif
