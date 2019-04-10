@@ -96,7 +96,9 @@ private:
 	string description;
 	ItemType type;
 	MonsterColor color;
-	int hit, damage, dodge, defence, weight, speed, attribute, value;
+	int hit;
+	Dice damage;
+	int dodge, defence, weight, speed, attribute, value;
 	bool artifact;
 	int rarity;
 	char symbol;
@@ -104,7 +106,7 @@ public:
 	Item();
 	Item(string name, string description,
 	ItemType type, MonsterColor color,
-	int hit, int damage, int dodge, int defence,
+	int hit, Dice damage, int dodge, int defence,
 	int weight, int speed, int attribute, int value,
 	bool artifact, int rarity);
 	char getSymbol();

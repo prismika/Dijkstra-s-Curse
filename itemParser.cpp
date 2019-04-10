@@ -269,7 +269,7 @@ Item * ItemBlueprint::build(){
 	this->type,
 	this->color,
 	(this->hit).roll(),
-	(this->damage).roll(),
+	this->damage,
 	(this->dodge).roll(),
 	(this->defence).roll(),
 	(this->weight).roll(),

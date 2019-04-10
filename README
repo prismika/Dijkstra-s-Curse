@@ -1,7 +1,7 @@
 Dijkstra's Curse
 (Now with inert items!)
 
-This iteration of Dijkstra's Curse populates the dungeon with customized monsters and items. See itemParser.h for the ItemBlueprint class and monsterParser.h for the MonsterBlueprint class. These classes both have "build" methods that serve to instantiate the items/monsters that they describe. The populator (mapPopulator.h) makes use of these new methods to place items and monsters in the dungeon, with frequency based on rarity and "artifact" status. The rendering and technicolor is all handled by the display (display.h).
+This iteration of Dijkstra's Curse populates the dungeon with customized monsters and items. See itemParser.h for the ItemBlueprint class and monsterParser.h for the MonsterBlueprint class. These classes both have "build" methods that serve to instantiate the items/monsters that they describe. See populationElements.h for the Item class. The populator (mapPopulator.h) makes use of these new methods to place items and monsters in the dungeon, with frequency based on rarity and "artifact" status. The rendering and technicolor is all handled by the display (display.h).
 
 The semester is coming to an end! Stay strong!
 
@@ -36,4 +36,4 @@ Architecture:
 	Lower Level:+heap (Dr. Sheaffer's heap)
 				+mapElements (stores map specs and defines types such as Block, BlockType, DistanceMap, etc.)
 				+pathFinder (implements Dijkstra's algorithm and generates distance maps)
-				+populationElements (defines types for characters such as Entity, etc.)
+				+populationElements (defines types such as Entity (for characters), Item, etc.)

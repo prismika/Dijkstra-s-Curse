@@ -175,7 +175,7 @@ int NPC::getRarity(){
 
 Item::Item(string name, string description,
 	ItemType type, MonsterColor color,
-	int hit, int damage, int dodge, int defence,
+	int hit, Dice damage, int dodge, int defence,
 	int weight, int speed, int attribute, int value,
 	bool artifact, int rarity)
 	:name(name),
