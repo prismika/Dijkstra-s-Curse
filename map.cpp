@@ -101,13 +101,6 @@ PC * map_get_pc(Map * map){
 	return (PC*)map->populationList[0];
 }
 
-PC * map_new_pc(Map * map, Coordinate coord){
-	PC * ent = new PC();
-	init_entity_pc(ent,coord,'@');
-	map_set_entity(map, coord.x, coord.y, ent);
-	return ent;
-}
-
 bool map_has_entity_at(Map * map, int x, int y){
 	return !(map->populationMap[y][x] == NULL);
 }

@@ -110,8 +110,8 @@ int readFile(Map * newMap){
 	Coordinate pcPos;
 	pcPos.x=pcPosXIn;
 	pcPos.y=pcPosYIn;
-	PC pc;
-	init_entity_pc(&pc,pcPos,'@');
+	PC pc();
+	pc.setPosition(pcPos);
 	map_set_entity(newMap, pcPos.x,pcPos.y, &pc);
 	//Hardness matrix
 	for(i=0;i<MAPHEIGHT;++i){

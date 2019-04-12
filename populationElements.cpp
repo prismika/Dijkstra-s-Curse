@@ -64,15 +64,6 @@ Coordinate rightMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
 	return ret;
 }
 
-
-void init_entity_pc(PC *pc, Coordinate coord, char symbol){
-	pc->position = coord;
-	pc->symbol = symbol;
-	pc->dead = false;
-	pc-> speed = 5;
-	pc-> isPC = true;
-}
-
 void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord){
 	*coord = ent->move_strategy(ent, map, mapTunnel);
 }
@@ -95,6 +86,11 @@ PC::PC(){
 	this->color = MONSTER_CYAN;
 	this->attackDamage.set(0,1,4);
 	this->dead = false;
+}
+
+int PC::setPosition(Coordinate coord){
+	this->position = coord;
+	return 0;
 }
 
 NPC::NPC():Entity(){

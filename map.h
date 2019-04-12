@@ -28,7 +28,6 @@ void map_init(Map * map);
 int map_getBlock(Map * map, int x, int y, Block * outputBlock);
 int map_setBlock(Map * map, int x, int y, Block * inputBlock);
 void map_change_block_type(Map * map, int x, int y, BlockType type);
-PC * map_new_pc(Map * map, Coordinate coord);
 void map_set_entity(Map * map, int x, int y, Entity * ent);
 //Performs all necessary checks and changes to attempt the specified move
 Coordinate map_move_entity(Map * map, Entity * ent, Coordinate coord);

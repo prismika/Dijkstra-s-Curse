@@ -52,6 +52,7 @@ public:
 class PC : public Entity{
 public:
 	PC();
+	int setPosition(Coordinate position);
 };
 
 class NPC : public Entity{
@@ -66,7 +67,6 @@ public:
 	int getRarity();
 };
 
-void init_entity_pc(PC *pc, Coordinate coord, char symbol);
 void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);
 
 

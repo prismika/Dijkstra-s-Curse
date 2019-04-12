@@ -6,7 +6,6 @@
 #include <iostream>
 #include <vector>
 #include "map.h"
-#include "mapIO.h"
 #include "mapElements.h"
 #include "display.h"
 #include "gameTypes.h"
@@ -94,11 +93,11 @@ int parseCLI(int argc, char * argv[], IncomingCommand * command){
 		nummon = 10;
 	}
 	if(flags.save && !flags.load){
-		command->execute = executeSave;
+		command->execute = legacyFlag;
 	}else if(flags.load && !flags.save){
-		command->execute = executeLoad;
+		command->execute = legacyFlag;
 	}else if(flags.load && flags.save){
-		command->execute = executeLoadSave;
+		command->execute = legacyFlag;
 	}else if(flags.distances){
 		command->execute = legacyFlag;//executeDistances;
 	}else if(flags.monsters){
@@ -139,29 +138,29 @@ int legacyFlag(){
 }
 
 int executeLoad(){
-	Map theMap;
-	map_init(&theMap);
-	readFile(&theMap);
-	display_map(&theMap);
+	// Map theMap;
+	// map_init(&theMap);
+	// readFile(&theMap);
+	// display_map(&theMap);
 	return 0;
 }
 
 int executeSave(){
-	Map theMap;
-	std::cout << "Seed:" << seed << std::endl;
-	map_init(&theMap);
-	generate_map(&theMap,seed);
-	display_map(&theMap);
-	writeFile(&theMap);
+	// Map theMap;
+	// std::cout << "Seed:" << seed << std::endl;
+	// map_init(&theMap);
+	// generate_map(&theMap,seed);
+	// display_map(&theMap);
+	// writeFile(&theMap);
 	return 0;
 }
 
 int executeLoadSave(){
-	Map theMap;
-	map_init(&theMap);
-	readFile(&theMap);
-	display_map(&theMap);
-	writeFile(&theMap);
+	// Map theMap;
+	// map_init(&theMap);
+	// readFile(&theMap);
+	// display_map(&theMap);
+	// writeFile(&theMap);
 	return 0;
 }
 
