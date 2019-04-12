@@ -30,7 +30,7 @@ public:
 private:
 	Entity * nextTurnEnt;
 	bool fog;
-	int interpret_pc_input(Entity * pc, InputState * inState, OriginalGameType * game);
+	int interpret_pc_input(PC * pc, InputState * inState, OriginalGameType * game);
 };
 
 
@@ -74,7 +74,7 @@ private:
 	void init_level();
 	void delete_level();
 	void quit_game();
-	int interpret_pc_input(Entity * pc, InputState * inState);
+	int interpret_pc_input(PC * pc, InputState * inState);
 	void handle_death(void);
 
 	friend class MovementGameMode;

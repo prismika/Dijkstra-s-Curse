@@ -48,6 +48,12 @@ public:
 	bool dead;
 	bool isPC;
 };
+
+class PC : public Entity{
+public:
+	PC();
+};
+
 class NPC : public Entity{
 private:
 	int rarity;
@@ -60,7 +66,7 @@ public:
 	int getRarity();
 };
 
-void init_entity_pc(Entity *ent, Coordinate coord, char symbol);
+void init_entity_pc(PC *pc, Coordinate coord, char symbol);
 void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);
 
 

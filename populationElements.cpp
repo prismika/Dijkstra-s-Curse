@@ -65,29 +65,36 @@ Coordinate rightMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
 }
 
 
-void init_entity_pc(Entity *ent, Coordinate coord, char symbol){
-	ent->position = coord;
-	ent->symbol = symbol;
-	ent->dead = false;
-	ent-> speed = 5;
-	ent-> isPC = true;
-	//end->pc = &pc;
-	//ent->npc = NULL;
+void init_entity_pc(PC *pc, Coordinate coord, char symbol){
+	pc->position = coord;
+	pc->symbol = symbol;
+	pc->dead = false;
+	pc-> speed = 5;
+	pc-> isPC = true;
 }
 
 void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord){
 	*coord = ent->move_strategy(ent, map, mapTunnel);
 }
 
-Entity::Entity():hitpoints(10),symbol('m'), speed(10), dead(0){
-	this->name = new string();
-	this->description = new string();
-	this->isPC = true;
-	this->color = MONSTER_CYAN;
+Entity::Entity():hitpoints(0),symbol('m'), speed(0), dead(0){
+	
 }
 
 MonsterColor Entity::getColor(){
 	return this->color;
+}
+
+PC::PC(){
+	this->symbol = '@';
+	this->speed = 10;
+	this->hitpoints = 1000;
+	this->name = new string("The Hero");
+	this->description = new string("A fearless hero that refuses\nto accept the Curse of Dijkstra");
+	this->isPC = true;
+	this->color = MONSTER_CYAN;
+	this->attackDamage.set(0,1,4);
+	this->dead = false;
 }
 
 NPC::NPC():Entity(){

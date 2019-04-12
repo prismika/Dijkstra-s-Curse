@@ -24,6 +24,12 @@ Dice::Dice(string s){
 	sides = stoi(s);
 }
 
+void Dice::set(int base, int count, int sides){
+	this->base = base;
+	this->count = count;
+	this->sides = sides;
+}
+
 int Dice::roll(){
 	int sum = base;
 	for(int i = 0; i < count; i++){

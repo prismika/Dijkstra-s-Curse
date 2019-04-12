@@ -94,13 +94,14 @@ int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 	if(nextTurnEnt == NULL) return -2; //Turnmaster should never be empty
 	//If the next turn belongs to an NPC, they gotta do what the gotta do
 	if(nextTurnEnt->isPC){
+		PC * pc = (PC*) nextTurnEnt;
 		fog ?
 			display_map_foggy(&game->theMap) :
 			display_map(&game->theMap);
 		//Get user input [Blocking call]
 		inputState_update(&game->inputState);//TODO make mode-dependent
 		//Interpret and execute input with helper function
-		int interpretStatus = interpret_pc_input(nextTurnEnt, &game->inputState, game);
+		int interpretStatus = interpret_pc_input(pc, &game->inputState, game);
 		if(interpretStatus == -1){
 			return -1;
 		}
@@ -116,7 +117,7 @@ int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 	return 0;
 }
 
-int MovementGameMode::interpret_pc_input(Entity * pc, InputState * inState, OriginalGameType * game){
+int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, OriginalGameType * game){
 	InputType inputType = inputState_get_last(inState);
 	if(inputType == input_quit){
 			return -1;
