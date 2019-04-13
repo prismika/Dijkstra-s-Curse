@@ -5,72 +5,9 @@
 #include <string>
 #include <vector>
 #include "dice.h"
-
 using namespace std;
 
-//--------------------Entities (living things)-------------------
-typedef enum{
-	MONSTER_RED,
-	MONSTER_GREEN,
-	MONSTER_BLUE,
-	MONSTER_CYAN,
-	MONSTER_YELLOW,
-	MONSTER_MAGENTA,
-	MONSTER_WHITE,
-	MONSTER_BLACK
-}MonsterColor;
-
-typedef enum {
-	MONSTER_ABILITY_SMART,
-	MONSTER_ABILITY_TELE,
-	MONSTER_ABILITY_TUNNEL,
-	MONSTER_ABILITY_ERRATIC,
-	MONSTER_ABILITY_PASS,
-	MONSTER_ABILITY_PICKUP,
-	MONSTER_ABILITY_DESTROY,
-	MONSTER_ABILITY_UNIQ,
-	MONSTER_ABILITY_BOSS
-}MonsterAbility;
-
-class Entity{
-protected:
-	string *name;
-	string *description;
-	Dice attackDamage;
-	int hitpoints;
-	MonsterColor color;
-	int speed;
-public:
-	Entity();
-	MonsterColor getColor();
-	int getSpeed();
-	int rollDamage();
-	Coordinate position;
-	char symbol;
-	bool dead;
-	bool isPC;
-};
-
-class PC : public Entity{
-public:
-	PC();
-	int setPosition(Coordinate position);
-};
-
-class NPC : public Entity{
-private:
-	int rarity;
-public:
-	NPC();
-	NPC(string *name, string *description, vector<MonsterAbility> abilityList,
-		int speed, int hitpoints, Dice attackDamage,
-		char symbol, MonsterColor color, int rarity, Coordinate position);
-	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);
-	int getRarity();
-};
-
-void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);
-
+#define INVENTORY_SIZE 10
 
 //---------------------Items-------------------------
 //If you reorder this enum, God himself will smite you where you stand.
@@ -98,6 +35,17 @@ typedef enum{
 	ITEM_TYPE_CONTAINER
 }ItemType;
 
+typedef enum{
+	MONSTER_RED,
+	MONSTER_GREEN,
+	MONSTER_BLUE,
+	MONSTER_CYAN,
+	MONSTER_YELLOW,
+	MONSTER_MAGENTA,
+	MONSTER_WHITE,
+	MONSTER_BLACK
+}MonsterColor;
+
 class Item{
 private:
 	string name;
@@ -120,5 +68,64 @@ public:
 	char getSymbol();
 	MonsterColor getColor();
 };
+
+//--------------------Entities (living things)-------------------
+typedef enum {
+	MONSTER_ABILITY_SMART,
+	MONSTER_ABILITY_TELE,
+	MONSTER_ABILITY_TUNNEL,
+	MONSTER_ABILITY_ERRATIC,
+	MONSTER_ABILITY_PASS,
+	MONSTER_ABILITY_PICKUP,
+	MONSTER_ABILITY_DESTROY,
+	MONSTER_ABILITY_UNIQ,
+	MONSTER_ABILITY_BOSS
+}MonsterAbility;
+
+class Entity{
+protected:
+	string *name;
+	string *description;
+	Dice attackDamage;
+	int hitpoints;
+	MonsterColor color;
+	int speed;
+public:
+	Coordinate position;
+	char symbol;
+	bool dead;
+	bool isPC;
+	Entity();
+	MonsterColor getColor();
+	int getSpeed();
+	int rollDamage();
+};
+
+class PC : public Entity{
+private:
+	Item *inventory[INVENTORY_SIZE];
+	int itemsInInventory;
+public:
+	PC();
+	int setPosition(Coordinate position);
+	Item * getInventoryItem(int slot);
+	bool hasInventoryItem(int slot);
+	int giveItem(Item * item);
+	Item * dropSlot(int slot);
+};
+
+class NPC : public Entity{
+private:
+	int rarity;
+public:
+	NPC();
+	NPC(string *name, string *description, vector<MonsterAbility> abilityList,
+		int speed, int hitpoints, Dice attackDamage,
+		char symbol, MonsterColor color, int rarity, Coordinate position);
+	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);
+	int getRarity();
+};
+
+void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);
 
 #endif

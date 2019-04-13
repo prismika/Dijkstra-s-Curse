@@ -94,11 +94,34 @@ PC::PC(){
 	this->color = MONSTER_CYAN;
 	this->attackDamage.set(0,1,4);
 	this->dead = false;
+	int i;
+	for(i = 0; i < INVENTORY_SIZE; i++){
+		this->inventory[i] = NULL;
+	}
 }
 
 int PC::setPosition(Coordinate coord){
 	this->position = coord;
 	return 0;
+}
+
+Item * PC::getInventoryItem(int slot){
+	return this->inventory[slot];
+}
+
+bool PC::hasInventoryItem(int slot){
+	return this->inventory[slot] != NULL;
+}
+
+int PC::giveItem(Item * item){ //STUB
+	this->inventory[0] = item;
+	return 0;
+}
+
+Item * PC::dropSlot(int slot){
+	Item * toDrop = this->inventory[slot];
+	this->inventory[slot] = NULL;
+	return toDrop;
 }
 
 NPC::NPC():Entity(){
