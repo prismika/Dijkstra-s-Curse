@@ -68,12 +68,20 @@ void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coord
 	*coord = ent->move_strategy(ent, map, mapTunnel);
 }
 
-Entity::Entity():hitpoints(0),symbol('m'), speed(0), dead(0){
+Entity::Entity():hitpoints(0),speed(0),symbol('m'),dead(0){
 	
 }
 
 MonsterColor Entity::getColor(){
 	return this->color;
+}
+
+int Entity::getSpeed(){
+	return this->speed;
+}
+
+int Entity::rollDamage(){
+	return this->attackDamage.roll();
 }
 
 PC::PC(){

@@ -50,7 +50,7 @@ Entity * turnmaster_get_next_turn(TurnMaster * tm){
 	}
 
 	Entity * nextEnt = nextEntry->entity;
-	nextEntry->priority += 1000/(nextEnt->speed);
+	nextEntry->priority += 1000/(nextEnt->getSpeed());
 	heap_remove_min(&(tm->heap));
 	if(!(nextEnt->dead)){
 		heap_insert(&(tm->heap),nextEntry);

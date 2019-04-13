@@ -39,12 +39,14 @@ protected:
 	Dice attackDamage;
 	int hitpoints;
 	MonsterColor color;
+	int speed;
 public:
 	Entity();
 	MonsterColor getColor();
+	int getSpeed();
+	int rollDamage();
 	Coordinate position;
 	char symbol;
-	int speed;
 	bool dead;
 	bool isPC;
 };
