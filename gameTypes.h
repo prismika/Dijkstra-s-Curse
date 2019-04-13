@@ -9,6 +9,7 @@
 #include "mapPopulator.h"
 #include "turnMaster.h"
 #include "inputCollector.h"
+#include "populationElements.h"
 
 class OriginalGameType;
 
@@ -63,6 +64,7 @@ public:
 private:
 	long seed;
 	int nummon;
+	PC * pc;
 	Map theMap;
 	TurnMaster turnMaster;
 	InputState inputState;

@@ -20,6 +20,7 @@ OriginalGameType::OriginalGameType(int seed, int nummon){
 	this->nummon = nummon;
 	std::cout << "Seed:" << seed;
 	//Init things
+	pc = new PC();
 	gameMode = new MovementGameMode;
 	display_init();
 	inputState_init(&inputState);
@@ -49,7 +50,7 @@ int OriginalGameType::runGame(){
 void OriginalGameType::init_level(){
 	map_init(&theMap);
 	generate_map(&theMap,++seed);
-	populate_map(&theMap,nummon);
+	populate_map(&theMap,pc,nummon);
 	map_update_remembered(&theMap);
 	turnmaster_init(&turnMaster);
 	//Get population matrix from map to fill turnmaster

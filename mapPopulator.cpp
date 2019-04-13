@@ -66,7 +66,7 @@ static void populate_with_items(Map * map, int numitems){
 	}
 }
 
-int populate_map(Map * map, int nummon){
+int populate_map(Map * map, PC *pc, int nummon){
 	populate_with_items(map, 10);
 	Entity * entityList[MAPHEIGHT*MAPWIDTH];
 	int entityListIndex = 0;
@@ -74,7 +74,6 @@ int populate_map(Map * map, int nummon){
 	BlockType canPlaceOn[] = {floor};
 	int canPlaceOnSize = 1;
 	map_choose_random_block(map,canPlaceOn,canPlaceOnSize,&pcCoord);
-	PC * pc = new PC();
 	pc->setPosition(pcCoord);
 	map_set_entity(map,pcCoord.x,pcCoord.y,pc);
 	entityList[entityListIndex++] = pc;
