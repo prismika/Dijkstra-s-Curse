@@ -62,6 +62,22 @@ private:
 	int interpret_pc_input(InputState * inState, OriginalGameType * game);
 };
 
+class InventoryDisplayGameMode : public GameMode{
+public:
+	InventoryDisplayGameMode();
+	int execute_mode_actions(OriginalGameType * game);
+private:
+	int interpret_pc_input(InputState * inState, OriginalGameType * game);
+};
+
+class EquipmentDisplayGameMode : public GameMode{
+public:
+	EquipmentDisplayGameMode();
+	int execute_mode_actions(OriginalGameType * game);
+private:
+	int interpret_pc_input(InputState * inState, OriginalGameType * game);
+};
+
 
 
 class OriginalGameType{
@@ -90,6 +106,8 @@ private:
 	friend class ListGameMode;
 	friend class TeleportGameMode;
 	friend class InventoryWearGameMode;
+	friend class InventoryDisplayGameMode;
+	friend class EquipmentDisplayGameMode;
 };
 
 

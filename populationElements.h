@@ -70,6 +70,7 @@ public:
 	string * getName();
 	MonsterColor getColor();
 	int getSpeed();
+	int rollDamage();
 };
 
 //--------------------Entities (living things)-------------------

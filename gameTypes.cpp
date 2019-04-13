@@ -184,6 +184,10 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 		fog = !fog;
 	}else if(inputType == input_wear){
 		game->gameMode = new InventoryWearGameMode;
+	}else if(inputType == input_i){
+		game->gameMode = new InventoryDisplayGameMode;
+	}else if(inputType == input_e){
+		game->gameMode = new EquipmentDisplayGameMode;
 	}
 	return 0;
 }
@@ -196,9 +200,9 @@ ListGameMode::ListGameMode(){
 }
 
 int ListGameMode::execute_mode_actions(OriginalGameType * game){
-	// display_population_list_offset(&game->theMap, scrollOffset+1);
-	PC * pc = map_get_pc(&game->theMap);
-	display_equipment(pc);
+	display_population_list_offset(&game->theMap, scrollOffset+1);
+	// PC * pc = map_get_pc(&game->theMap);
+	// display_equipment(pc);
 	//Get user input [Blocking call]
 	inputState_update(&game->inputState);//TODO make mode-dependent
 	//Interpret and execute input with helper function
@@ -385,7 +389,6 @@ int InventoryWearGameMode::interpret_pc_input(InputState * inState, OriginalGame
 			break;
 		default:
 			equipSlot = -1;
-			game->gameMode = new MovementGameMode;
 			break;
 	}
 	if(equipSlot != -1){
@@ -394,3 +397,68 @@ int InventoryWearGameMode::interpret_pc_input(InputState * inState, OriginalGame
 	return 0;
 }
 
+InventoryDisplayGameMode::InventoryDisplayGameMode(){}
+
+int InventoryDisplayGameMode::execute_mode_actions(OriginalGameType * game){
+	PC * pc = game->pc;
+	display_inventory(pc);
+	//Get user input [Blocking call]
+	inputState_update(&game->inputState);
+	int interpretStatus = interpret_pc_input(&game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	return 0;
+}
+
+int InventoryDisplayGameMode::interpret_pc_input(InputState * inState, OriginalGameType * game){
+	InputType inputType = inputState_get_last(inState);
+	//Mode-independent checks
+	if(inputType == input_quit){
+		game->quit_game();
+		return -1;
+	}
+	//This switch statement is awful because I designed my input system weirdly
+	switch(inputType){
+		case input_escape:
+			game->gameMode = new MovementGameMode;
+			return 0;
+		//Paste in code here for looking at stats
+		default:
+			break;
+	}
+	return 0;
+}
+
+EquipmentDisplayGameMode::EquipmentDisplayGameMode(){}
+
+int EquipmentDisplayGameMode::execute_mode_actions(OriginalGameType * game){
+	PC * pc = game->pc;
+	display_equipment(pc);
+	//Get user input [Blocking call]
+	inputState_update(&game->inputState);
+	int interpretStatus = interpret_pc_input(&game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	return 0;
+}
+
+int EquipmentDisplayGameMode::interpret_pc_input(InputState * inState, OriginalGameType * game){
+	InputType inputType = inputState_get_last(inState);
+	//Mode-independent checks
+	if(inputType == input_quit){
+		game->quit_game();
+		return -1;
+	}
+	//This switch statement is awful because I designed my input system weirdly
+	switch(inputType){
+		case input_escape:
+			game->gameMode = new MovementGameMode;
+			return 0;
+		//Paste in code here for looking at stats
+		default:
+			break;
+	}
+	return 0;
+}

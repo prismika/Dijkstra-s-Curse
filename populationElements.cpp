@@ -116,7 +116,14 @@ int PC::getSpeed(){
 }
 
 int PC::rollDamage(){
-	return 1;
+	int total = this->attackDamage.roll();
+	int slot;
+	for(slot = 0; slot < EQUIPMENT_SIZE; slot++){
+		if(this->hasEquipmentItem(slot)){
+			total+= getEquipmentItem(slot)->rollDamage();
+		}
+	}
+	return total;
 }
 
 int PC::setPosition(Coordinate coord){
@@ -304,4 +311,8 @@ string *Item::getName(){
 
 int Item::getSpeed(){
 	return this->speed;
+}
+
+int Item::rollDamage(){
+	return this->damage.roll();
 }
