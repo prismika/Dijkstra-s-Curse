@@ -70,6 +70,7 @@ public:
 	string * getName();
 	MonsterColor getColor();
 	int getSpeed();
+	ItemType getType();
 	int rollDamage();
 };
 

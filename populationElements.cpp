@@ -165,10 +165,56 @@ Item * PC::dropSlot(int slot){
 	return toDrop;
 }
 
-int PC::equip(int slot){//STUB
-	Item * toEquip = this->inventory[slot];
-	this->inventory[slot] = NULL;
-	this->equipment[0] = toEquip;
+int PC::equip(int inventorySlot){//STUB
+	if(!this->inventory[inventorySlot]){
+		return -1;
+	}
+	Item * toEquip = this->inventory[inventorySlot];
+	int equipmentSlot = -1;
+	switch(toEquip->getType()){
+		case ITEM_TYPE_WEAPON:
+		equipmentSlot = 0;
+		break;
+		case ITEM_TYPE_OFFHAND:
+		equipmentSlot = 1;
+		break;
+		case ITEM_TYPE_RANGED:
+		equipmentSlot = 2;
+		break;
+		case ITEM_TYPE_ARMOR:
+		equipmentSlot = 3;
+		break;
+		case ITEM_TYPE_HELMET:
+		equipmentSlot = 4;
+		break;
+		case ITEM_TYPE_CLOAK:
+		equipmentSlot = 5;
+		break;
+		case ITEM_TYPE_GLOVES:
+		equipmentSlot = 6;
+		break;
+		case ITEM_TYPE_BOOTS:
+		equipmentSlot = 7;
+		break;
+		case ITEM_TYPE_AMULET:
+		equipmentSlot = 8;
+		break;
+		case ITEM_TYPE_LIGHT:
+		equipmentSlot = 9;
+		break;
+		case ITEM_TYPE_RING:
+		if(equipment[10] == NULL){
+			equipmentSlot = 10;
+		}else{
+			equipmentSlot = 11;
+		}
+		break;
+		default:
+		return -2;
+	}
+	//The slots swap places, even if equipment slot is NULL
+	this->inventory[inventorySlot] = this->equipment[equipmentSlot];
+	this->equipment[equipmentSlot] = toEquip;
 	return 0;
 }
 
@@ -311,6 +357,10 @@ string *Item::getName(){
 
 int Item::getSpeed(){
 	return this->speed;
+}
+
+ItemType Item::getType(){
+	return this->type;
 }
 
 int Item::rollDamage(){

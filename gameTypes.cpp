@@ -201,8 +201,6 @@ ListGameMode::ListGameMode(){
 
 int ListGameMode::execute_mode_actions(OriginalGameType * game){
 	display_population_list_offset(&game->theMap, scrollOffset+1);
-	// PC * pc = map_get_pc(&game->theMap);
-	// display_equipment(pc);
 	//Get user input [Blocking call]
 	inputState_update(&game->inputState);//TODO make mode-dependent
 	//Interpret and execute input with helper function
@@ -367,7 +365,7 @@ int InventoryWearGameMode::interpret_pc_input(InputState * inState, OriginalGame
 			equipSlot = 4;
 			game->gameMode = new MovementGameMode;
 			break;
-		case input_null:
+		case input_rest:
 			equipSlot = 5;
 			game->gameMode = new MovementGameMode;
 			break;
