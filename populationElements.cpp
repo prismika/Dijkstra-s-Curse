@@ -104,6 +104,21 @@ PC::PC(){
 	}
 }
 
+int PC::getSpeed(){
+	int total = this->speed;
+	int slot;
+	for(slot = 0; slot < EQUIPMENT_SIZE; slot++){
+		if(this->hasEquipmentItem(slot)){
+			total += getEquipmentItem(slot)->getSpeed();
+		}
+	}
+	return total;
+}
+
+int PC::rollDamage(){
+	return 1;
+}
+
 int PC::setPosition(Coordinate coord){
 	this->position = coord;
 	return 0;
@@ -285,4 +300,8 @@ MonsterColor Item::getColor(){
 
 string *Item::getName(){
 	return &this->name;
+}
+
+int Item::getSpeed(){
+	return this->speed;
 }

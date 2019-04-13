@@ -69,6 +69,7 @@ public:
 	char getSymbol();
 	string * getName();
 	MonsterColor getColor();
+	int getSpeed();
 };
 
 //--------------------Entities (living things)-------------------
@@ -112,6 +113,8 @@ private:
 	int itemsInInventory;
 public:
 	PC();
+	int getSpeed();
+	int rollDamage();
 	int setPosition(Coordinate position);
 	bool hasInventoryItem(int slot);
 	bool hasEquipmentItem(int slot);
