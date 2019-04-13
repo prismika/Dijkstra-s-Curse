@@ -67,7 +67,7 @@ static void populate_with_items(Map * map, int numitems){
 }
 
 int populate_map(Map * map, PC *pc, int nummon){
-	populate_with_items(map, 10);
+	populate_with_items(map, 20);
 	Entity * entityList[MAPHEIGHT*MAPWIDTH];
 	int entityListIndex = 0;
 	Coordinate pcCoord;

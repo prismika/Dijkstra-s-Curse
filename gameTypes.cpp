@@ -188,6 +188,8 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 		game->gameMode = new InventoryDisplayGameMode;
 	}else if(inputType == input_e){
 		game->gameMode = new EquipmentDisplayGameMode;
+	}else if(inputType == input_random){
+		game->gameMode = new EquipmentRemoveGameMode;
 	}
 	return 0;
 }
@@ -428,6 +430,8 @@ int InventoryDisplayGameMode::interpret_pc_input(InputState * inState, OriginalG
 	return 0;
 }
 
+
+
 EquipmentDisplayGameMode::EquipmentDisplayGameMode(){}
 
 int EquipmentDisplayGameMode::execute_mode_actions(OriginalGameType * game){
@@ -457,6 +461,81 @@ int EquipmentDisplayGameMode::interpret_pc_input(InputState * inState, OriginalG
 		//Paste in code here for looking at stats
 		default:
 			break;
+	}
+	return 0;
+}
+
+
+
+
+EquipmentRemoveGameMode::EquipmentRemoveGameMode(){}
+
+int EquipmentRemoveGameMode::execute_mode_actions(OriginalGameType * game){
+	PC * pc = game->pc;
+	display_equipment(pc);
+	//Get user input [Blocking call]
+	inputState_update(&game->inputState);
+	int interpretStatus = interpret_pc_input(&game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	return 0;
+}
+
+int EquipmentRemoveGameMode::interpret_pc_input(InputState * inState, OriginalGameType * game){
+	InputType inputType = inputState_get_last(inState);
+	//Mode-independent checks
+	if(inputType == input_quit){
+		game->quit_game();
+		return -1;
+	}
+	//This switch statement is awful because I designed my input system weirdly
+	int removeSlot;
+	switch(inputType){
+		case input_escape:
+			game->gameMode = new MovementGameMode;
+			return 0;
+		case input_a:
+			removeSlot = 0;
+			break;
+		case input_downleft:
+			removeSlot = 1;
+			break;
+		case input_c:
+			removeSlot = 2;
+			break;
+		case input_d:
+			removeSlot = 3;
+			break;
+		case input_e:
+			removeSlot = 4;
+			break;
+		case input_fog:
+			removeSlot = 5;
+			break;
+		case input_g:
+			removeSlot = 6;
+			break;
+		case input_left:
+			removeSlot = 7;
+			break;
+		case input_i:
+			removeSlot = 8;
+			break;
+		case input_down:
+			removeSlot = 9;
+			break;
+		case input_up:
+			removeSlot = 10;
+			break;
+		case input_right:
+			removeSlot = 11;
+			break;
+		default:
+			return -2;
+	}
+	if(game->pc->unequip(removeSlot)>=0){
+		game->gameMode = new MovementGameMode;
 	}
 	return 0;
 }

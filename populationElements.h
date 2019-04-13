@@ -112,7 +112,7 @@ private:
 	Item *equipment[EQUIPMENT_SIZE];/*WEAPON, OFFHAND,
 	RANGED, ARMOR, HELMET, CLOAK, GLOVES, BOOTS,
 	AMULET, LIGHT, and two for RING*/
-	int itemsInInventory;
+	int itemsInInventory;//Vestigial. Don't trust his lies.
 public:
 	PC();
 	int getSpeed();
@@ -126,6 +126,9 @@ public:
 	int giveItem(Item * item);
 	Item * dropSlot(int slot);
 	int equip(int slot);
+	/*Returns slot number. -1 if no such equipment, -2 if
+	no opens slots in inventory*/
+	int unequip(int slot);
 };
 
 class NPC : public Entity{

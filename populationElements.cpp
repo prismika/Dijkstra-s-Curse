@@ -218,6 +218,21 @@ int PC::equip(int inventorySlot){//STUB
 	return 0;
 }
 
+int PC::unequip(int equipmentSlot){
+	if(equipment[equipmentSlot] == NULL){
+		return -1;
+	}
+	int i;
+	for(i = 0; i < INVENTORY_SIZE; i++){
+		if(!(this->inventory[i])){
+			this->inventory[i] = this->equipment[equipmentSlot];
+			this->equipment[equipmentSlot] = NULL;
+			return i;
+		}
+	}
+	return -2;
+}
+
 NPC::NPC():Entity(){
 	this->isPC = false;
 	this->move_strategy = nonTunnelMove;
