@@ -106,6 +106,9 @@ public:
 class PC : public Entity{
 private:
 	Item *inventory[INVENTORY_SIZE];
+	Item *equipment[EQUIPMENT_SIZE];/*WEAPON, OFFHAND,
+	RANGED, ARMOR, HELMET, CLOAK, GLOVES, BOOTS,
+	AMULET, LIGHT, and two for RING*/
 	int itemsInInventory;
 public:
 	PC();
@@ -117,6 +120,7 @@ public:
 	/* Returns slot number. -1 if no open slot.*/
 	int giveItem(Item * item);
 	Item * dropSlot(int slot);
+	// int equipSlot(int slot);
 };
 
 class NPC : public Entity{

@@ -99,6 +99,9 @@ PC::PC(){
 		this->inventory[i] = NULL;
 	}
 	this->itemsInInventory = 0;
+	for(i = 0; i < EQUIPMENT_SIZE; i++){
+		this->equipment[i] = NULL;
+	}
 }
 
 int PC::setPosition(Coordinate coord){
@@ -111,7 +114,7 @@ bool PC::hasInventoryItem(int slot){
 }
 
 bool PC::hasEquipmentItem(int slot){//STUB
-	return true;
+	return this->equipment[slot] != NULL;
 }
 
 Item * PC::getInventoryItem(int slot){
@@ -119,7 +122,7 @@ Item * PC::getInventoryItem(int slot){
 }
 
 Item * PC::getEquipmentItem(int slot){//STUB
-	return new Item();
+	return this->equipment[slot];
 }
 
 int PC::giveItem(Item * item){
@@ -127,6 +130,7 @@ int PC::giveItem(Item * item){
 	for(i = 0; i < INVENTORY_SIZE; i++){
 		if(!(this->inventory[i])){
 			this->inventory[i] = item;
+			this->itemsInInventory++;
 			return i;
 		}
 	}
