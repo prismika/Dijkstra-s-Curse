@@ -8,6 +8,7 @@
 using namespace std;
 
 #define INVENTORY_SIZE 10
+#define EQUIPMENT_SIZE 12
 
 //---------------------Items-------------------------
 //If you reorder this enum, God himself will smite you where you stand.
@@ -109,8 +110,10 @@ private:
 public:
 	PC();
 	int setPosition(Coordinate position);
-	Item * getInventoryItem(int slot);
 	bool hasInventoryItem(int slot);
+	bool hasEquipmentItem(int slot);
+	Item * getInventoryItem(int slot);
+	Item * getEquipmentItem(int slot);
 	/* Returns slot number. -1 if no open slot.*/
 	int giveItem(Item * item);
 	Item * dropSlot(int slot);

@@ -208,16 +208,29 @@ int display_add_cursor(Coordinate cursorPos){
 	return 0;
 }
 
-int display_inventory(PC *pc){//STUB
+int display_inventory(PC *pc){
 	Item * item;
 	int i;
 	for(i = 0; i < INVENTORY_SIZE; i++){
-		mvprintw(SPACE_ABOVE_MAP+1+2*i,20,"%d) ", i);
+		mvprintw(SPACE_ABOVE_MAP+1+2*i,30,"%d) ", i);
 		if(pc->hasInventoryItem(i)){
 			item = pc->getInventoryItem(i);
 			printw(item->getName()->c_str());
 		}
 	}
-	// printw("Item! You've got at item! Here it is!!!");
+	return 0;
+}
+
+
+int display_equipment(PC *pc){
+	Item * item;
+	int i;
+	for(i = 0; i < EQUIPMENT_SIZE; i++){
+		mvprintw(SPACE_ABOVE_MAP + 2 + i,30,"%c) ", i+'a');
+		if(pc->hasEquipmentItem(i)){
+			item = pc->getEquipmentItem(i);
+			printw(item->getName()->c_str());
+		}
+	}
 	return 0;
 }

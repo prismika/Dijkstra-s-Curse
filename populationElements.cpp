@@ -106,15 +106,23 @@ int PC::setPosition(Coordinate coord){
 	return 0;
 }
 
-Item * PC::getInventoryItem(int slot){
-	return this->inventory[slot];
-}
-
 bool PC::hasInventoryItem(int slot){
 	return this->inventory[slot] != NULL;
 }
 
-int PC::giveItem(Item * item){ //STUB
+bool PC::hasEquipmentItem(int slot){//STUB
+	return true;
+}
+
+Item * PC::getInventoryItem(int slot){
+	return this->inventory[slot];
+}
+
+Item * PC::getEquipmentItem(int slot){//STUB
+	return new Item();
+}
+
+int PC::giveItem(Item * item){
 	int i;
 	for(i = 0; i < INVENTORY_SIZE; i++){
 		if(!(this->inventory[i])){
