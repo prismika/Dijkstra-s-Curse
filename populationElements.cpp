@@ -96,9 +96,9 @@ PC::PC(){
 	this->dead = false;
 	int i;
 	for(i = 0; i < INVENTORY_SIZE; i++){
-		this->inventory[i] = new Item();
+		this->inventory[i] = NULL;
 	}
-	this->itemsInInventory = 10;
+	this->itemsInInventory = 0;
 }
 
 int PC::setPosition(Coordinate coord){
@@ -115,8 +115,14 @@ bool PC::hasInventoryItem(int slot){
 }
 
 int PC::giveItem(Item * item){ //STUB
-	this->inventory[0] = item;
-	return 0;
+	int i;
+	for(i = 0; i < INVENTORY_SIZE; i++){
+		if(!(this->inventory[i])){
+			this->inventory[i] = item;
+			return i;
+		}
+	}
+	return -1;
 }
 
 Item * PC::dropSlot(int slot){

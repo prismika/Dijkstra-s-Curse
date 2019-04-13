@@ -143,6 +143,11 @@ Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
 		}
 		map_remove_entity(map, position.x,position.y);
 		map_set_entity(map, target.x, target.y, ent);
+		//The pc picks up whatever item might be there
+		if(ent->isPC && map_has_item_at(map, target.x, target.y)){
+			((PC*)ent)->giveItem(map->itemMap[target.y][target.x]);
+			map->itemMap[target.y][target.x]=NULL;
+		}
 		return target;
 	//If target is hard rock, soften it
 	}else if(targetBlock.type == rock){

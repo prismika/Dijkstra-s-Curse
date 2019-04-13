@@ -111,6 +111,7 @@ public:
 	int setPosition(Coordinate position);
 	Item * getInventoryItem(int slot);
 	bool hasInventoryItem(int slot);
+	/* Returns slot number. -1 if no open slot.*/
 	int giveItem(Item * item);
 	Item * dropSlot(int slot);
 };
