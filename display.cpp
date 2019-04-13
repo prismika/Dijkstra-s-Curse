@@ -209,9 +209,15 @@ int display_add_cursor(Coordinate cursorPos){
 }
 
 int display_inventory(PC *pc){//STUB
-	Item * item = pc->getInventoryItem(0);
-	mvprintw(SPACE_ABOVE_MAP+2,10,"0) ");
-	printw(item->getName()->c_str());
+	Item * item;
+	int i;
+	for(i = 0; i < INVENTORY_SIZE; i++){
+		mvprintw(SPACE_ABOVE_MAP+1+2*i,20,"%d) ", i);
+		if(pc->hasInventoryItem(i)){
+			item = pc->getInventoryItem(i);
+			printw(item->getName()->c_str());
+		}
+	}
 	// printw("Item! You've got at item! Here it is!!!");
 	return 0;
 }

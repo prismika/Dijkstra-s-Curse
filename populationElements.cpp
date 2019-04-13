@@ -96,10 +96,9 @@ PC::PC(){
 	this->dead = false;
 	int i;
 	for(i = 0; i < INVENTORY_SIZE; i++){
-		this->inventory[i] = NULL;
+		this->inventory[i] = new Item();
 	}
-	this->inventory[0] = new Item();
-	this->itemsInInventory = 1;
+	this->itemsInInventory = 10;
 }
 
 int PC::setPosition(Coordinate coord){
