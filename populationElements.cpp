@@ -121,7 +121,7 @@ Item * PC::getInventoryItem(int slot){
 	return this->inventory[slot];
 }
 
-Item * PC::getEquipmentItem(int slot){//STUB
+Item * PC::getEquipmentItem(int slot){
 	return this->equipment[slot];
 }
 
@@ -141,6 +141,13 @@ Item * PC::dropSlot(int slot){
 	Item * toDrop = this->inventory[slot];
 	this->inventory[slot] = NULL;
 	return toDrop;
+}
+
+int PC::equip(int slot){//STUB
+	Item * toEquip = this->inventory[slot];
+	this->inventory[slot] = NULL;
+	this->equipment[0] = toEquip;
+	return 0;
 }
 
 NPC::NPC():Entity(){

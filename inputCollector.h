@@ -15,8 +15,16 @@ typedef enum{
 	input_escape,
 	input_quit,
 	input_teleport,
+	input_wear,
 	input_random,
-	input_fog
+	input_fog,
+	input_0,
+	input_a,
+	input_c,
+	input_d,
+	input_e,
+	input_g,
+	input_i
 }InputType;
 
 class InputState{

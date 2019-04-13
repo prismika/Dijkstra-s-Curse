@@ -120,7 +120,7 @@ public:
 	/* Returns slot number. -1 if no open slot.*/
 	int giveItem(Item * item);
 	Item * dropSlot(int slot);
-	// int equipSlot(int slot);
+	int equip(int slot);
 };
 
 class NPC : public Entity{

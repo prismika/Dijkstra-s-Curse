@@ -182,6 +182,8 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 		game->gameMode = new TeleportGameMode;
 	}else if(inputType == input_fog){
 		fog = !fog;
+	}else if(inputType == input_wear){
+		game->gameMode = new InventoryWearGameMode;
 	}
 	return 0;
 }
@@ -310,6 +312,85 @@ int TeleportGameMode::interpret_pc_input(InputState * inState, OriginalGameType 
 	}
 	cursorPos.x = std::max(std::min(cursorPos.x,MAPWIDTH-2),1);
 	cursorPos.y = std::max(std::min(cursorPos.y,MAPHEIGHT-2),1);
+	return 0;
+}
+
+InventoryWearGameMode::InventoryWearGameMode(){}
+
+int InventoryWearGameMode::execute_mode_actions(OriginalGameType * game){
+	// display_population_list_offset(&game->theMap, scrollOffset+1);
+	PC * pc = game->pc;
+	display_inventory(pc);
+	//Get user input [Blocking call]
+	inputState_update(&game->inputState);
+	int interpretStatus = interpret_pc_input(&game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	return 0;
+}
+
+int InventoryWearGameMode::interpret_pc_input(InputState * inState, OriginalGameType * game){
+	InputType inputType = inputState_get_last(inState);
+	//Mode-independent checks
+	if(inputType == input_quit){
+		game->quit_game();
+		return -1;
+	}
+	int equipSlot;
+	//This switch statement is awful because I designed my input system weirdly
+	switch(inputType){
+		case input_escape:
+			game->gameMode = new MovementGameMode;
+			return 0;
+		case input_0:
+			equipSlot = 0;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_downleft:
+			equipSlot = 1;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_down:
+			equipSlot = 2;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_downright:
+			equipSlot = 3;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_left:
+			equipSlot = 4;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_null:
+			equipSlot = 5;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_right:
+			equipSlot = 6;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_upleft:
+			equipSlot = 7;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_up:
+			equipSlot = 8;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_upright:
+			equipSlot = 9;
+			game->gameMode = new MovementGameMode;
+			break;
+		default:
+			equipSlot = -1;
+			game->gameMode = new MovementGameMode;
+			break;
+	}
+	if(equipSlot != -1){
+		game->pc->equip(equipSlot);
+	}
 	return 0;
 }
 

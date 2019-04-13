@@ -128,6 +128,33 @@ int inputState_update(InputState * inState){
 			newType = input_fog;
 			break;
 
+			case 'w':
+			newType = input_wear;
+			break;
+
+			case '0':
+			newType = input_0;
+			break;
+
+			case 'a':
+			newType = input_a;
+			break;
+			case 'c':
+			newType = input_c;
+			break;
+			case 'd':
+			newType = input_d;
+			break;
+			case 'e':
+			newType = input_e;
+			break;
+			case 'g':
+			newType = input_g;
+			break;
+			case 'i':
+			newType = input_i;
+			break;
+
 			default://If we reach this point, the input wasn't recognized
 			newType = input_null;
 			break;
