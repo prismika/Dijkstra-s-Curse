@@ -116,7 +116,7 @@ int inputState_update(InputState * inState){
 			newType = input_escape;
 			break;
 
-			case 't':
+			case 'T':
 			newType = input_teleport;
 			break;
 
@@ -130,6 +130,19 @@ int inputState_update(InputState * inState){
 
 			case 'w':
 			newType = input_wear;
+			break;
+
+			case 't':
+			newType = input_t;
+			break;
+			case 'x':
+			newType = input_x;
+			break;
+			case 'I':
+			newType = input_I;
+			break;
+			case 'L':
+			newType = input_L;
 			break;
 
 			case '0':
