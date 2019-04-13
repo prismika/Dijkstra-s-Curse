@@ -207,3 +207,11 @@ int display_add_cursor(Coordinate cursorPos){
 	mvprintw(cursorPos.y+1, cursorPos.x,"*");
 	return 0;
 }
+
+int display_inventory(PC *pc){//STUB
+	Item * item = pc->getInventoryItem(0);
+	mvprintw(SPACE_ABOVE_MAP+2,10,"0) ");
+	printw(item->getName()->c_str());
+	// printw("Item! You've got at item! Here it is!!!");
+	return 0;
+}

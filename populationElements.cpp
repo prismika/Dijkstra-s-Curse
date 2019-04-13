@@ -98,6 +98,8 @@ PC::PC(){
 	for(i = 0; i < INVENTORY_SIZE; i++){
 		this->inventory[i] = NULL;
 	}
+	this->inventory[0] = new Item();
+	this->itemsInInventory = 1;
 }
 
 int PC::setPosition(Coordinate coord){
@@ -206,6 +208,25 @@ int NPC::getRarity(){
 
 
 //---------------------Items------------------------
+Item::Item()
+	:name("Default Item!"),
+	description("I describe a default item!"),
+	type(ITEM_TYPE_no_type),
+	color(MONSTER_WHITE),
+	hit(0),
+	damage(Dice()),
+	dodge(0),
+	defence(0),
+	weight(0),
+	speed(0),
+	attribute(0),
+	value(0),
+	artifact(0),
+	rarity(0),
+	symbol('*')
+{
+
+}
 
 Item::Item(string name, string description,
 	ItemType type, MonsterColor color,
@@ -236,4 +257,8 @@ char Item::getSymbol(){
 
 MonsterColor Item::getColor(){
 	return this->color;
+}
+
+string *Item::getName(){
+	return &this->name;
 }

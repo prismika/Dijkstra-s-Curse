@@ -66,6 +66,7 @@ public:
 	int weight, int speed, int attribute, int value,
 	bool artifact, int rarity);
 	char getSymbol();
+	string * getName();
 	MonsterColor getColor();
 };
 

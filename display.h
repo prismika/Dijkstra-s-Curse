@@ -16,5 +16,6 @@ int display_message(char * s);
 int display_population_list(Entity ** list, int listSize, Coordinate pcPos);
 int display_population_list_offset(Map * map, int offset);
 int display_add_cursor(Coordinate cursorPos);
+int display_inventory(PC *pc);
 
 #endif

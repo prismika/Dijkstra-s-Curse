@@ -193,7 +193,9 @@ ListGameMode::ListGameMode(){
 }
 
 int ListGameMode::execute_mode_actions(OriginalGameType * game){
-	display_population_list_offset(&game->theMap, scrollOffset+1);
+	// display_population_list_offset(&game->theMap, scrollOffset+1);
+	PC * pc = map_get_pc(&game->theMap);
+	display_inventory(pc);
 	//Get user input [Blocking call]
 	inputState_update(&game->inputState);//TODO make mode-dependent
 	//Interpret and execute input with helper function
