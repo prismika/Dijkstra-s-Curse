@@ -8,6 +8,7 @@
 
 class Map{
 private:
+	
 public:
 	Block block[MAPHEIGHT][MAPWIDTH];
 	Block block_remembered[MAPHEIGHT][MAPWIDTH];
@@ -20,8 +21,10 @@ public:
 	int populationListSize;
 	DistanceMap distanceMapNonTunneling;
 	DistanceMap distanceMapTunneling;
+	bool bossIsDead;
 	Item * getItemAt(Coordinate coord);
 	int placeItem(Item * item, Coordinate coord);
+	bool isBossDead();
 };
 
 void map_init(Map * map);

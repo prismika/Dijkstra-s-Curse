@@ -33,14 +33,19 @@ int OriginalGameType::runGame(){
 	while(true){
 		int status = gameMode->execute_mode_actions(this);
 		if(status == -1){
-			quit_game();
+			quit_game(false);
 			return 0;
 		}
 		//Did the PC die???
 		if(map_pc_is_dead(&theMap)){
 			//Press f to pay respects
 			handle_death();
-			quit_game();
+			quit_game(false);
+			return 0;
+		}
+		if(theMap.isBossDead()){
+			handle_death();
+			quit_game(true);
 			return 0;
 		}
 	}
@@ -63,9 +68,9 @@ void OriginalGameType::delete_level(){
 	//delete map will go here
 }
 /*deinits everything and outputs the death message to the console.*/
-void OriginalGameType::quit_game(){
+void OriginalGameType::quit_game(bool win){
 	delete_level();
-	display_delete();
+	display_delete(win);
 }
 
 void OriginalGameType::handle_death(void){
@@ -225,7 +230,7 @@ int ListGameMode::interpret_pc_input(InputState * inState, OriginalGameType * ga
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent checks
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 
@@ -270,7 +275,7 @@ int TeleportGameMode::interpret_pc_input(InputState * inState, OriginalGameType 
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent check
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	switch(inputType){
@@ -346,7 +351,7 @@ int InventoryWearGameMode::interpret_pc_input(InputState * inState, OriginalGame
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent checks
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	int equipSlot;
@@ -423,7 +428,7 @@ int InventoryDisplayGameMode::interpret_pc_input(InputState * inState, OriginalG
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent checks
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	//This switch statement is awful because I designed my input system weirdly
@@ -458,7 +463,7 @@ int EquipmentDisplayGameMode::interpret_pc_input(InputState * inState, OriginalG
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent checks
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	//This switch statement is awful because I designed my input system weirdly
@@ -494,7 +499,7 @@ int EquipmentRemoveGameMode::interpret_pc_input(InputState * inState, OriginalGa
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent checks
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	//This switch statement is awful because I designed my input system weirdly
@@ -567,7 +572,7 @@ int InventoryDestroyGameMode::interpret_pc_input(InputState * inState, OriginalG
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent checks
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	int destroySlot;
@@ -645,7 +650,7 @@ int InventoryDropGameMode::interpret_pc_input(InputState * inState, OriginalGame
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent checks
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	int destroySlot;
@@ -725,7 +730,7 @@ int InventoryInspectGameMode::interpret_pc_input(InputState * inState, OriginalG
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent checks
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	int inspectSlot;
@@ -806,7 +811,7 @@ int EntityInspectGameMode::interpret_pc_input(InputState * inState, OriginalGame
 	InputType inputType = inputState_get_last(inState);
 	//Mode-independent check
 	if(inputType == input_quit){
-		game->quit_game();
+		game->quit_game(false);
 		return -1;
 	}
 	switch(inputType){

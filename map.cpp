@@ -47,6 +47,8 @@ void map_init(Map * map){
 	distance_map_init(&retMap.distanceMapNonTunneling);
 	distance_map_init(&retMap.distanceMapTunneling);
 
+	retMap.bossIsDead = false;
+
 	*map = retMap;
 }
 
@@ -116,6 +118,9 @@ static Entity * map_get_entity_address(Map * map, int x, int y){
 void map_kill_entity(Map * map, Coordinate coord){
 	Entity * targetEnt = map_get_entity_address(map, coord.x, coord.y);
 	targetEnt->dead = true;
+	if(!targetEnt->isPC){
+		map->bossIsDead = ((NPC*) targetEnt)->isBoss() || map->bossIsDead;
+	}
 	map_remove_entity(map, coord.x, coord.y);
 }
 
@@ -272,4 +277,8 @@ Item * Map::getItemAt(Coordinate coord){
 int Map::placeItem(Item * item, Coordinate coord){
 	itemMap[coord.y][coord.x] = item;
 	return 0;
+}
+
+bool Map::isBossDead(){
+	return this->bossIsDead;
 }

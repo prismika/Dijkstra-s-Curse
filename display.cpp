@@ -7,6 +7,8 @@
 #include "mapElements.h"
 #include "map.h"
 
+using namespace std;
+
 #define SPACE_ABOVE_MAP 1
 #define COLOR_MEMORY COLOR_YELLOW
 
@@ -21,7 +23,16 @@ char * deathString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 "                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"
 "                   Your hero has fought valliantly,\n"
 "				   but has succumb to Dijkstra's Curse\n\n\n\n\n\n";
-
+char * winString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+"                      __   __               __        __ _         _ \n"
+"                      \\ \\ / /  ___   _   _  \\ \\      / /(_)  __ _ | |\n"
+"                       \\ V /  / _ \\ | | | |  \\ \\ /\\ / / | | / _` || |\n"
+"                        | |  | (_) || |_| |   \\ V  V /  | || | | ||_|\n"
+"                        |_|   \\___/ |_.__/     \\_/\\_/   |_||_| |_|(_)\n\n"
+"                             You have escaped Dijkstra's Curse.\n"
+"                         Dijkstra sheds a single tear. He is proud.\n"
+"                 \"You found your path,\" he whispers. \"You found your path.\"\n"
+"\n\n\n\n\n\n";
 static char getBlockVisual(BlockType type){
 	switch(type){
 		case rock:		return ' ';
@@ -80,9 +91,9 @@ int display_init(){
 	return 0;
 }
 
-int display_delete(){
+int display_delete(bool win){
 	endwin();
-	std::cout << deathString;
+	cout << (win ? winString : deathString) <<endl;
 	return 0;
 }
 
@@ -213,7 +224,7 @@ int display_inventory(PC *pc){
 	Item * item;
 	int i;
 	for(i = 0; i < INVENTORY_SIZE; i++){
-		mvprintw(SPACE_ABOVE_MAP+1+2*i,30,"%d) ", i);
+		mvprintw(SPACE_ABOVE_MAP + 1 + i*2,30,"%d) ", i);
 		if(pc->hasInventoryItem(i)){
 			item = pc->getInventoryItem(i);
 			printw(item->getName()->c_str());

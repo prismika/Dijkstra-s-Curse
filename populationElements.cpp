@@ -330,6 +330,7 @@ NPC::NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 			break;
 		}
 	}
+	this->boss = flags.BOSS;
 	this->canTunnel = flags.TUNNEL;
 	if(flags.TUNNEL && flags.ERRATIC){
 		this->move_strategy = tunnelMoveErratic;
@@ -341,9 +342,11 @@ NPC::NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 		this->move_strategy = nonTunnelMove;
 	}
 }
-
 int NPC::getRarity(){
 	return this->rarity;
+}
+bool NPC::isBoss(){
+	return this->boss;
 }
 
 

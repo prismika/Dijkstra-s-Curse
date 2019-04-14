@@ -141,6 +141,7 @@ public:
 class NPC : public Entity{
 private:
 	int rarity;
+	bool boss;
 public:
 	NPC();
 	NPC(string *name, string *description, vector<MonsterAbility> abilityList,
@@ -148,6 +149,7 @@ public:
 		char symbol, MonsterColor color, int rarity, Coordinate position);
 	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);
 	int getRarity();
+	bool isBoss();
 };
 
 void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);

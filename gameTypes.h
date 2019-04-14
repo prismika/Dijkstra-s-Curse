@@ -135,7 +135,7 @@ private:
 	GameMode * gameMode;
 	void init_level();
 	void delete_level();
-	void quit_game();
+	void quit_game(bool win);
 	int interpret_pc_input(PC * pc, InputState * inState);
 	void handle_death(void);
 
