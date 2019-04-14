@@ -117,7 +117,7 @@ bool Entity::takeDamage(int hp){
 PC::PC(){
 	this->symbol = '@';
 	this->speed = 10;
-	this->hitpoints = 100;
+	this->hitpoints = 1000;
 	this->name = new string("The Hero");
 	this->description = new string("A fearless hero that refuses\nto accept the Curse of Dijkstra");
 	this->isPC = true;

@@ -121,6 +121,13 @@ int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 		entity_get_move((NPC *)nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
 		//Tell the map our intended move
 		map_move_entity(&game->theMap, nextTurnEnt, moveCoord);
+		//Did the pc die?
+		if(map_pc_is_dead(&game->theMap)){
+			//Press f to pay respects
+			game->handle_death();
+			game->quit_game(false);
+			return 0;
+		}
 		nextTurnEnt = turnmaster_get_next_turn(&game->turnMaster);
 		if(nextTurnEnt == NULL) return -2; //Turnmaster should never be empty
 	}
@@ -197,7 +204,7 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 		game->gameMode = new InventoryDisplayGameMode;
 	}else if(inputType == input_e){
 		game->gameMode = new EquipmentDisplayGameMode;
-	}else if(inputType == input_random){
+	}else if(inputType == input_t){
 		game->gameMode = new EquipmentRemoveGameMode;
 	}else if(inputType == input_x){
 		game->gameMode = new InventoryDestroyGameMode;
