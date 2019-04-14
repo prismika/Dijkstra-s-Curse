@@ -91,27 +91,29 @@ void OriginalGameType::handle_death(void){
 //------------------------MODES---------------------------
 MovementGameMode::MovementGameMode(){
 	fog = true;
-	nextTurnEnt = NULL;
 }
 
 int MovementGameMode::execute_mode_actions(OriginalGameType * game){
-	//Get next turn from turnMaster
-	nextTurnEnt = turnmaster_get_next_turn(&game->turnMaster);
+	//Assume it's the PC's turn
+	fog ?
+		display_map_foggy(&game->theMap):
+		display_map(&game->theMap);
+	//Get user input [Blocking call]
+	inputState_update(&game->inputState);//TODO make mode-dependent
+	//Interpret and execute input with helper function
+	int interpretStatus = interpret_pc_input(game->pc, &game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	if(interpretStatus != 1){
+		//PC didn't move. Don't advance the turn. We're done here.
+		return 0;
+	}
+
+	//Run the turnmaster like a madman
+	Entity * nextTurnEnt = turnmaster_get_next_turn(&game->turnMaster);
 	if(nextTurnEnt == NULL) return -2; //Turnmaster should never be empty
-	//If the next turn belongs to an NPC, they gotta do what the gotta do
-	if(nextTurnEnt->isPC){
-		PC * pc = (PC*) nextTurnEnt;
-		fog ?
-			display_map_foggy(&game->theMap) :
-			display_map(&game->theMap);
-		//Get user input [Blocking call]
-		inputState_update(&game->inputState);//TODO make mode-dependent
-		//Interpret and execute input with helper function
-		int interpretStatus = interpret_pc_input(pc, &game->inputState, game);
-		if(interpretStatus == -1){
-			return -1;
-		}
-	}else{
+	while(!nextTurnEnt->isPC){
 		//Calculate attempted move of entity with current turn
 		Coordinate moveCoord;
 		DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&game->theMap);
@@ -119,6 +121,8 @@ int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 		entity_get_move((NPC *)nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
 		//Tell the map our intended move
 		map_move_entity(&game->theMap, nextTurnEnt, moveCoord);
+		nextTurnEnt = turnmaster_get_next_turn(&game->turnMaster);
+		if(nextTurnEnt == NULL) return -2; //Turnmaster should never be empty
 	}
 	return 0;
 }
@@ -170,7 +174,7 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 		get_distance_map_tunneling(&game->theMap,newCoord,dist);
 		//Update remembered map
 		map_update_remembered(&game->theMap);
-		return 0;
+		return 1;
 	}//Check if the input was a stair movement
 	else if(inputState_is_stair(inState)){
 		Block pcBlock;

@@ -29,7 +29,6 @@ public:
 	MovementGameMode();
 	int execute_mode_actions(OriginalGameType * game);
 private:
-	Entity * nextTurnEnt;
 	bool fog;
 	int interpret_pc_input(PC * pc, InputState * inState, OriginalGameType * game);
 };
