@@ -192,6 +192,8 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 		game->gameMode = new EquipmentRemoveGameMode;
 	}else if(inputType == input_x){
 		game->gameMode = new InventoryDestroyGameMode;
+	}else if(inputType == input_d){
+		game->gameMode = new InventoryDropGameMode;
 	}
 	return 0;
 }
@@ -616,6 +618,86 @@ int InventoryDestroyGameMode::interpret_pc_input(InputState * inState, OriginalG
 	}
 	if(destroySlot != -1){
 		game->pc->destroy(destroySlot);
+	}
+	return 0;
+}
+
+InventoryDropGameMode::InventoryDropGameMode(){}
+
+int InventoryDropGameMode::execute_mode_actions(OriginalGameType * game){
+	// display_population_list_offset(&game->theMap, scrollOffset+1);
+	PC * pc = game->pc;
+	display_inventory(pc);
+	//Get user input [Blocking call]
+	inputState_update(&game->inputState);
+	int interpretStatus = interpret_pc_input(&game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	return 0;
+}
+
+int InventoryDropGameMode::interpret_pc_input(InputState * inState, OriginalGameType * game){
+	InputType inputType = inputState_get_last(inState);
+	//Mode-independent checks
+	if(inputType == input_quit){
+		game->quit_game();
+		return -1;
+	}
+	int destroySlot;
+	//This switch statement is awful because I designed my input system weirdly
+	switch(inputType){
+		case input_escape:
+			game->gameMode = new MovementGameMode;
+			return 0;
+		case input_0:
+			destroySlot = 0;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_downleft:
+			destroySlot = 1;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_down:
+			destroySlot = 2;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_downright:
+			destroySlot = 3;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_left:
+			destroySlot = 4;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_rest:
+			destroySlot = 5;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_right:
+			destroySlot = 6;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_upleft:
+			destroySlot = 7;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_up:
+			destroySlot = 8;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_upright:
+			destroySlot = 9;
+			game->gameMode = new MovementGameMode;
+			break;
+		default:
+			destroySlot = -1;
+			break;
+	}
+	Coordinate pcCoord = game->pc->position;
+	if(destroySlot != -1 && !map_has_item_at(&game->theMap,pcCoord.x, pcCoord.y)){
+		Item * item = game->pc->destroy(destroySlot);
+		game->theMap.placeItem(item,pcCoord);
 	}
 	return 0;
 }
