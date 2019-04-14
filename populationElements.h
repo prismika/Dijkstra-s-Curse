@@ -158,6 +158,7 @@ public:
 	void setCountPointers(int * howManyExist, int * howManyDead);
 	int getRarity();
 	bool isBoss();
+	int kill();
 };
 
 void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);

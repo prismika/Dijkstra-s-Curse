@@ -208,8 +208,8 @@ int MonsterBlueprint::getRarity(){
 
 bool MonsterBlueprint::isBuildable(){
 	return !unique
-		// || ((howManyExist == 0) && (howManyDead == 0));
-		|| (howManyExist == 0);
+		|| ((howManyExist == 0) && (howManyDead == 0));
+		// || (howManyExist == 0);
 }
 
 NPC * MonsterBlueprint::build(Coordinate position){

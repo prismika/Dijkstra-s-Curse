@@ -107,7 +107,11 @@ int Entity::attack(Entity * victim){
 
 bool Entity::takeDamage(int hp){
 	this->hitpoints -= hp;
-	return this->hitpoints < 0;
+	if(this->hitpoints < 0){
+		if(!this->isPC) ((NPC*)this)->kill();
+		return true;
+	}
+	return false;
 }
 
 PC::PC(){
@@ -355,7 +359,11 @@ void NPC::setCountPointers(int * howManyExist, int * howManyDead){
 	this->howManyDead = howManyDead;
 }
 
-
+int NPC::kill(){
+	this->dead = true;
+	*(this->howManyDead) += 1;
+	return 0;
+}
 
 
 //---------------------Items------------------------
