@@ -148,8 +148,12 @@ Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
 					return position;
 				}
 			}else{
-				//Should swap positions
-				map_kill_entity(map,target);
+				//NPC on NPC crime. Swap positions.
+				map_remove_entity(map, position.x,position.y);
+				map_remove_entity(map, target.x,target.y);
+				map_set_entity(map, target.x, target.y, ent);
+				map_set_entity(map, position.x, position.y, targetEnt);
+				return target;
 			}
 		}
 		map_remove_entity(map, position.x,position.y);
