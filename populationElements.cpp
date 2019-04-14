@@ -84,10 +84,28 @@ int Entity::rollDamage(){
 	return this->attackDamage.roll();
 }
 
+int Entity::attack(Entity * victim){
+	if(this->isPC){
+		PC * pc = (PC*) this;
+		victim->takeDamage(pc->rollDamage());
+	}else{
+		victim->takeDamage(this->rollDamage());
+	}
+	if(victim->hitpoints < 0){
+		victim->dead = true;
+	}
+	return 0;
+}
+
+bool Entity::takeDamage(int hp){
+	this->hitpoints -= hp;
+	return this->hitpoints < 0;
+}
+
 PC::PC(){
 	this->symbol = '@';
 	this->speed = 10;
-	this->hitpoints = 1000;
+	this->hitpoints = 100;
 	this->name = new string("The Hero");
 	this->description = new string("A fearless hero that refuses\nto accept the Curse of Dijkstra");
 	this->isPC = true;

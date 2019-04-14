@@ -139,7 +139,18 @@ Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
 	//If target is open, move there (and kill whatever is there)
 	if(targetBlock.hardness == 0){
 		if(map_has_entity_at(map, target.x,target.y)){
-			map_kill_entity(map,target);
+			Entity * targetEnt = map->populationMap[target.y][target.x];
+			if(ent->isPC ^ targetEnt->isPC){
+				ent->attack(targetEnt);
+				if(targetEnt->dead){
+					map_kill_entity(map,target);
+				}else{
+					return position;
+				}
+			}else{
+				//Should swap positions
+				map_kill_entity(map,target);
+			}
 		}
 		map_remove_entity(map, position.x,position.y);
 		map_set_entity(map, target.x, target.y, ent);

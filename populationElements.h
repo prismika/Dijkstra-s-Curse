@@ -105,6 +105,8 @@ public:
 	MonsterColor getColor();
 	int getSpeed();
 	int rollDamage();
+	int attack(Entity * victim);
+	bool takeDamage(int hp);
 };
 
 class PC : public Entity{
