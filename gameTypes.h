@@ -102,6 +102,14 @@ private:
 	int interpret_pc_input(InputState * inState, OriginalGameType * game);
 };
 
+class InventoryInspectGameMode : public GameMode{
+public:
+	InventoryInspectGameMode();
+	int execute_mode_actions(OriginalGameType * game);
+private:
+	int interpret_pc_input(InputState * inState, OriginalGameType * game);
+};
+
 
 
 class OriginalGameType{
@@ -135,6 +143,7 @@ private:
 	friend class EquipmentRemoveGameMode;
 	friend class InventoryDestroyGameMode;
 	friend class InventoryDropGameMode;
+	friend class InventoryInspectGameMode;
 };
 
 

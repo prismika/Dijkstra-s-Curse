@@ -18,5 +18,6 @@ int display_population_list_offset(Map * map, int offset);
 int display_add_cursor(Coordinate cursorPos);
 int display_inventory(PC *pc);
 int display_equipment(PC *pc);
+int display_item_description(Item * item);
 
 #endif

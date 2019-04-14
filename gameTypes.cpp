@@ -194,6 +194,8 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 		game->gameMode = new InventoryDestroyGameMode;
 	}else if(inputType == input_d){
 		game->gameMode = new InventoryDropGameMode;
+	}else if(inputType == input_I){
+		game->gameMode = new InventoryInspectGameMode;
 	}
 	return 0;
 }
@@ -701,3 +703,84 @@ int InventoryDropGameMode::interpret_pc_input(InputState * inState, OriginalGame
 	}
 	return 0;
 }
+
+InventoryInspectGameMode::InventoryInspectGameMode(){}
+
+int InventoryInspectGameMode::execute_mode_actions(OriginalGameType * game){
+	// display_population_list_offset(&game->theMap, scrollOffset+1);
+	PC * pc = game->pc;
+	display_inventory(pc);
+	//Get user input [Blocking call]
+	inputState_update(&game->inputState);
+	int interpretStatus = interpret_pc_input(&game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	return 0;
+}
+
+int InventoryInspectGameMode::interpret_pc_input(InputState * inState, OriginalGameType * game){
+	InputType inputType = inputState_get_last(inState);
+	//Mode-independent checks
+	if(inputType == input_quit){
+		game->quit_game();
+		return -1;
+	}
+	int inspectSlot;
+	//This switch statement is awful because I designed my input system weirdly
+	switch(inputType){
+		case input_escape:
+			game->gameMode = new MovementGameMode;
+			return 0;
+		case input_0:
+			inspectSlot = 0;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_downleft:
+			inspectSlot = 1;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_down:
+			inspectSlot = 2;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_downright:
+			inspectSlot = 3;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_left:
+			inspectSlot = 4;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_rest:
+			inspectSlot = 5;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_right:
+			inspectSlot = 6;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_upleft:
+			inspectSlot = 7;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_up:
+			inspectSlot = 8;
+			game->gameMode = new MovementGameMode;
+			break;
+		case input_upright:
+			inspectSlot = 9;
+			game->gameMode = new MovementGameMode;
+			break;
+		default:
+			inspectSlot = -1;
+			break;
+	}
+	if(game->pc->hasInventoryItem(inspectSlot)){
+		display_item_description(game->pc->getInventoryItem(inspectSlot));
+		getch();
+		game->gameMode = new MovementGameMode;
+	}
+	return 0;
+}
+

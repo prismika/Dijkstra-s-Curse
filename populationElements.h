@@ -72,6 +72,7 @@ public:
 	int getSpeed();
 	ItemType getType();
 	int rollDamage();
+	string *getDescription();
 };
 
 //--------------------Entities (living things)-------------------

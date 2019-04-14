@@ -388,3 +388,7 @@ ItemType Item::getType(){
 int Item::rollDamage(){
 	return this->damage.roll();
 }
+
+string * Item::getDescription(){
+	return &this->description;
+}

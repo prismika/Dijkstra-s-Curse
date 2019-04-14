@@ -2,6 +2,7 @@
 #include <iostream>
 #include <limits.h>
 #include <ncurses.h>
+#include <sstream>
 #include "display.h"
 #include "mapElements.h"
 #include "map.h"
@@ -232,5 +233,17 @@ int display_equipment(PC *pc){
 			printw(item->getName()->c_str());
 		}
 	}
+	return 0;
+}
+
+int display_item_description(Item * item){
+	erase();
+	stringstream ss(*item->getDescription());
+	string line;
+	int i = SPACE_ABOVE_MAP+6;
+	while(getline(ss,line,'\n')){
+		mvprintw(i++,3, line.c_str());
+	}
+	mvprintw(i+1, 3, "Press any key to return...");
 	return 0;
 }
