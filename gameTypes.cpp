@@ -50,7 +50,7 @@ int OriginalGameType::runGame(){
 void OriginalGameType::init_level(){
 	map_init(&theMap);
 	generate_map(&theMap,++seed);
-	populate_map(&theMap,pc,nummon);
+	mapPopulator.populate(&theMap,pc,nummon);
 	map_update_remembered(&theMap);
 	turnmaster_init(&turnMaster);
 	//Get population matrix from map to fill turnmaster

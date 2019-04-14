@@ -103,6 +103,7 @@ public:
 	bool isPC;
 	bool canTunnel;
 	Entity();
+	string * getName();
 	string * getDescription();
 	MonsterColor getColor();
 	int getSpeed();

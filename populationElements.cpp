@@ -72,6 +72,10 @@ Entity::Entity():hitpoints(0),speed(0),symbol('m'),dead(0){
 	
 }
 
+string * Entity::getName(){
+	return this->name;
+}
+
 string * Entity::getDescription(){
 	return this->description;
 }

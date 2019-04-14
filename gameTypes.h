@@ -131,10 +131,7 @@ private:
 	Map theMap;
 	TurnMaster turnMaster;
 	InputState inputState;
-	enum {
-		mode_map,
-		mode_monster_list
-	}mode;
+	MapPopulator mapPopulator;
 	GameMode * gameMode;
 	void init_level();
 	void delete_level();

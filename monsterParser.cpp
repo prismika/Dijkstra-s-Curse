@@ -183,8 +183,8 @@ MonsterBlueprint::MonsterBlueprint(){}
 MonsterBlueprint::MonsterBlueprint(string name, string description, vector<MonsterAbility> abilityList,
 	Dice speed, Dice hitpoints, Dice attackDamage,
 	char symbol, MonsterColor color, int rarity){
-	this->name = name;
-	this->description = description;
+	this->name = new string(name);
+	this->description = new string(description);
 	this->abilityList = abilityList;
 	this->speed = speed;
 	this->hitpoints = hitpoints;
@@ -199,7 +199,7 @@ int MonsterBlueprint::getRarity(){
 }
 
 NPC * MonsterBlueprint::build(Coordinate position){
-	return new NPC(&this->name, &this->description, this->abilityList,
+	return new NPC(this->name, this->description, this->abilityList,
 		(this->speed).roll(), (this->hitpoints).roll(), attackDamage,
 		this->symbol, this->color, this->rarity, position);
 }
@@ -232,8 +232,8 @@ ostream & operator<<(ostream &out, const MonsterBlueprint &r){
 		colorName = (char*) "Black";
 		break;
 	}
-	out << r.name << endl;
-	out << r.description;
+	out << *r.name << endl;
+	out << *r.description;
 	out << colorName << endl;
 	out << r.speed << endl;
 	for(size_t i = 0; i < r.abilityList.size();i++){

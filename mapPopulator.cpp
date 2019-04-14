@@ -48,26 +48,13 @@ static Coordinate findOpenBlock(Map * map, Coordinate pcCoord){
 
 }
 
-static void populate_with_items(Map * map, int numitems){
-	vector<ItemBlueprint> blueprintList = parser_load_item_list();
-	BlockType canPlaceOn[] = {floor};
-	int canPlaceOnSize = 1;
-	int i;
-	for(i = 0; i < numitems; i++){
-		Coordinate itemCoord;
-		map_choose_random_block(map,canPlaceOn,canPlaceOnSize,&itemCoord);
-		int itemIndex;
-		do{
-			itemIndex = rand()%blueprintList.size();
-		}while((rand()%100 >= blueprintList[itemIndex].getRarity())
-			|| (!blueprintList[itemIndex].isBuildable()));
-		Item * item = blueprintList[itemIndex].build();
-		map->placeItem(item,itemCoord);
-	}
+MapPopulator::MapPopulator(){
+	monsterAtlas = parser_load_monster_list();
+	itemAtlas = parser_load_item_list();
 }
 
-int populate_map(Map * map, PC *pc, int nummon){
-	populate_with_items(map, 20);
+int MapPopulator::populate(Map * map, PC * pc, int nummon){
+	populateWithItems(map, 20);
 	Entity * entityList[MAPHEIGHT*MAPWIDTH];
 	int entityListIndex = 0;
 	Coordinate pcCoord;
@@ -83,14 +70,13 @@ int populate_map(Map * map, PC *pc, int nummon){
 	get_distance_map_tunneling(map, pcCoord, distTunnel);
 
 	//Place monsters
-	vector<MonsterBlueprint> blueprintList = parser_load_monster_list();
 	int i;
 	for(i=0; i<nummon;i++){
 		int monsterIndex;
 		do{
-			monsterIndex = rand()%blueprintList.size();
-		}while(rand()%100 >= blueprintList[monsterIndex].getRarity());
-		MonsterBlueprint blueprint = blueprintList[monsterIndex];
+			monsterIndex = rand()%monsterAtlas.size();
+		}while(rand()%100 >= monsterAtlas[monsterIndex].getRarity());
+		MonsterBlueprint blueprint = monsterAtlas[monsterIndex];
 		Coordinate curCoord = findOpenBlock(map, pcCoord);
 		if(curCoord.x == -1) break; //Map is full
 		NPC *npc = blueprint.build(curCoord);
@@ -107,4 +93,21 @@ int populate_map(Map * map, PC *pc, int nummon){
 	map->populationListSize = entityListIndex;
 
 	return 0;
+}
+
+void MapPopulator::populateWithItems(Map * map, int numitems){
+	BlockType canPlaceOn[] = {floor};
+	int canPlaceOnSize = 1;
+	int i;
+	for(i = 0; i < numitems; i++){
+		Coordinate itemCoord;
+		map_choose_random_block(map,canPlaceOn,canPlaceOnSize,&itemCoord);
+		int itemIndex;
+		do{
+			itemIndex = rand()%itemAtlas.size();
+		}while((rand()%100 >= itemAtlas[itemIndex].getRarity())
+			|| (!itemAtlas[itemIndex].isBuildable()));
+		Item * item = itemAtlas[itemIndex].build();
+		map->placeItem(item,itemCoord);
+	}
 }

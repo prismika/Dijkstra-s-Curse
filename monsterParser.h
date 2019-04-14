@@ -12,8 +12,8 @@ using namespace std;
 
 class MonsterBlueprint{
 private:
-	string name;
-	string description;
+	string *name;
+	string *description;
 	Dice speed;
 	Dice hitpoints;
 	Dice attackDamage;
