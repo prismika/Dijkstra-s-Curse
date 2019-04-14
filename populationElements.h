@@ -101,6 +101,7 @@ public:
 	char symbol;
 	bool dead;
 	bool isPC;
+	bool canTunnel;
 	Entity();
 	MonsterColor getColor();
 	int getSpeed();

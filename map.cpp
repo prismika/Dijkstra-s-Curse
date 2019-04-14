@@ -128,8 +128,8 @@ Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
 	}
 	Block targetBlock;
 	map_getBlock(map, target.x,target.y, &targetBlock);
-	//If this is the PC, don't let him tunnel
-	if(ent->isPC && targetBlock.hardness > 0) return position;
+	//If it can't tunnel, don't let it tunnel
+	if(!ent->canTunnel && targetBlock.hardness > 0) return position;
 	//If target is soft rock, break it (it'll do the next "if" block too)
 	if(targetBlock.type == rock && targetBlock.hardness <= 85){
 		targetBlock.hardness = 0;

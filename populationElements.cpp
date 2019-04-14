@@ -112,6 +112,7 @@ PC::PC(){
 	this->color = MONSTER_CYAN;
 	this->attackDamage.set(0,1,4);
 	this->dead = false;
+	this->canTunnel = false;
 	int i;
 	for(i = 0; i < INVENTORY_SIZE; i++){
 		this->inventory[i] = NULL;
@@ -321,6 +322,7 @@ NPC::NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 			break;
 		}
 	}
+	this->canTunnel = flags.TUNNEL;
 	if(flags.TUNNEL && flags.ERRATIC){
 		this->move_strategy = tunnelMoveErratic;
 	}else if(!flags.TUNNEL && flags.ERRATIC){
