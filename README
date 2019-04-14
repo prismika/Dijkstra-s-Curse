@@ -1,26 +1,45 @@
 Dijkstra's Curse
-(Now with inert items!)
+(Now with too many commands!)
 
-This iteration of Dijkstra's Curse populates the dungeon with customized monsters and items. See itemParser.h for the ItemBlueprint class and monsterParser.h for the MonsterBlueprint class. These classes both have "build" methods that serve to instantiate the items/monsters that they describe. See populationElements.h for the Item class. The populator (mapPopulator.h) makes use of these new methods to place items and monsters in the dungeon, with frequency based on rarity and "artifact" status. The rendering and technicolor is all handled by the display (display.h).
+This iteration of Dijkstra's Curse introduces item functionality, inventory, combat, boss fights and many new commands!
 
-The semester is coming to an end! Stay strong!
+Controls:
+	Use a number pad to move
+	i: View inventory
+	e: View equipped items
+	w: Equip (wear) an item. Press a number to select a slot.
+	t: Unequip (take off) an item.
+	d: Drop item. Press a number to select a slot.
+	x: Destroy item. Press a number to select a slot.
+	I: Inspect item. Press a number to select a slot.
+	L: Look at creature. Move cursor with number pad and select with 't'.
+	q or 'esc': Return to map
+	Q: Quit game
+Secret Controls (shhh):
+	T: Teleport. Move cursor with number pad and select target with 'T'.
+	f: Toggle fog of war.
+
+New Code:
+	Combat semantics are handled in the map_move_entity function in map.cpp. Commands that switch "modes" (such as interacting with inventory or looking at creatures) are implemented using a state pattern in gameTypes.cpp. OriginalGameType represents the game itself, using the gameMode field to store a mode object. Each "[XXX]GameMode" class handles mode-specific behavior, switching itself out for another mode if needed.
+
+	Have a great week!
 
 Usage:
-./dijkstrasCurse
-	Launches the game
+	./dijkstrasCurse
+		Launches the game
 Flags:
---monsters
-	Displays an atlas of monsters in the game
---items
-	Displays a catalog of items in the game
---seed x
-	Seeds the random number generator with seed x
+	--monsters
+		Displays an atlas of monsters in the game
+	--items
+		Displays a catalog of items in the game
+	--seed x
+		Seeds the random number generator with seed x
 
 Architecture:
 	This project has many files, with an architecture consisting of four rough layers:
 
 	Layer 1: 	+dijkstrasCurse (parses CLI)
-				+gameTypes (defines controller classes)
+				+gameTypes (defines controller classes and game modes)
 
 	Layer 2: 	+mapBuilder (generates map)
 				+mapPopulator (populates map with NPC's)
@@ -36,4 +55,4 @@ Architecture:
 	Lower Level:+heap (Dr. Sheaffer's heap)
 				+mapElements (stores map specs and defines types such as Block, BlockType, DistanceMap, etc.)
 				+pathFinder (implements Dijkstra's algorithm and generates distance maps)
-				+populationElements (defines types such as Entity (for characters), Item, etc.)
+				+populationElements (defines types such as Entity (for characters), PC, NPC, Item, etc.)

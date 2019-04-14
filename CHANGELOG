@@ -112,3 +112,33 @@
 		-...in color!
 		-Implement rarity-based item population and artifact status
 		-Update README and CHANGELOG
+4/11/19 -Create PC subclass of Entity
+		-Refactor init code for PC
+4/12/19 -Refactor speed and attack damage code in Entity class.
+		-Add inventory to PC
+		-Display PC inventory
+		-Automatic item pickup
+		-Persist PC object across levels
+		-Item pickup bugfixes
+		-Add skeleton code for PC equipment slots
+4/13/19 -Rudimentary inventory equpping
+		-Create all necessary keybindings
+		-Calculate item-based speed for PC
+		-Equipment display mode
+		-Inventory display mode
+		-Smart equipping
+		-Equipment unequipping
+		-Item destruction
+		-Item dropping
+		-Item inspection
+		-PC vs NPC combat
+		-Make NPC's switch places instead of colliding
+		-Enforce non-tunneling
+4/14/19 -Entity inspection
+		-Parse monster descriptions only once when game loads
+		-Display win screen when boss is killed
+		-Fix bug causing turns to advance unnecessarily
+		-Artifacts act like artifacts
+		-Unique monsters act unique
+		-Bugfixes
+		-Update README and CHANGELOG
