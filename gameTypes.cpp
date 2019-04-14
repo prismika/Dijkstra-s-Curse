@@ -6,7 +6,6 @@
 #include <ncurses.h>
 #include <iostream>
 #include "map.h"
-#include "mapIO.h"
 #include "mapElements.h"
 #include "mapBuilder.h"
 #include "pathFinder.h"
