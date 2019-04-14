@@ -233,6 +233,13 @@ int PC::unequip(int equipmentSlot){
 	return -2;
 }
 
+Item * PC::destroy(int inventorySlot){
+	Item * item = this->inventory[inventorySlot];
+	this->inventory[inventorySlot] = NULL;
+	return item;
+}
+
+
 NPC::NPC():Entity(){
 	this->isPC = false;
 	this->move_strategy = nonTunnelMove;

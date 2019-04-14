@@ -129,6 +129,7 @@ public:
 	/*Returns slot number. -1 if no such equipment, -2 if
 	no opens slots in inventory*/
 	int unequip(int slot);
+	Item * destroy(int inventorySlot);
 };
 
 class NPC : public Entity{
