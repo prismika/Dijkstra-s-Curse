@@ -47,7 +47,7 @@ private:
 
 class TeleportGameMode : public GameMode{
 public:
-	TeleportGameMode();
+	TeleportGameMode(Coordinate pcPos);
 	int execute_mode_actions(OriginalGameType * game);
 private:
 	Coordinate cursorPos;
@@ -110,6 +110,14 @@ private:
 	int interpret_pc_input(InputState * inState, OriginalGameType * game);
 };
 
+class EntityInspectGameMode : public GameMode{
+public:
+	EntityInspectGameMode(Coordinate pcPos);
+	int execute_mode_actions(OriginalGameType * game);
+private:
+	Coordinate cursorPos;
+	int interpret_pc_input(InputState * inState, OriginalGameType * game);
+};
 
 
 class OriginalGameType{
@@ -144,6 +152,7 @@ private:
 	friend class InventoryDestroyGameMode;
 	friend class InventoryDropGameMode;
 	friend class InventoryInspectGameMode;
+	friend class EntityInspectGameMode;
 };
 
 

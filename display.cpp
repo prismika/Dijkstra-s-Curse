@@ -247,3 +247,15 @@ int display_item_description(Item * item){
 	mvprintw(i+1, 3, "Press any key to return...");
 	return 0;
 }
+
+int display_entity_description(Entity * ent){
+	erase();
+	stringstream ss(*ent->getDescription());
+	string line;
+	int i = SPACE_ABOVE_MAP+6;
+	while(getline(ss,line,'\n')){
+		mvprintw(i++,3, line.c_str());
+	}
+	mvprintw(i+1, 3, "Press any key to return...");
+	return 0;
+}

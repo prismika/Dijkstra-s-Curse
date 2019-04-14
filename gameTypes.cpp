@@ -179,7 +179,7 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 	}else if(inputType == input_mlist){
 		game->gameMode = new ListGameMode;
 	}else if(inputType == input_teleport){
-		game->gameMode = new TeleportGameMode;
+		game->gameMode = new TeleportGameMode(game->pc->position);
 	}else if(inputType == input_fog){
 		fog = !fog;
 	}else if(inputType == input_wear){
@@ -196,6 +196,8 @@ int MovementGameMode::interpret_pc_input(PC * pc, InputState * inState, Original
 		game->gameMode = new InventoryDropGameMode;
 	}else if(inputType == input_I){
 		game->gameMode = new InventoryInspectGameMode;
+	}else if(inputType == input_L){
+		game->gameMode = new EntityInspectGameMode(game->pc->position);
 	}
 	return 0;
 }
@@ -249,8 +251,8 @@ int ListGameMode::interpret_pc_input(InputState * inState, OriginalGameType * ga
 
 
 
-TeleportGameMode::TeleportGameMode(){
-	cursorPos = {1,1};
+TeleportGameMode::TeleportGameMode(Coordinate pcPos){
+	cursorPos = pcPos;
 }
 
 int TeleportGameMode::execute_mode_actions(OriginalGameType * game){
@@ -784,3 +786,73 @@ int InventoryInspectGameMode::interpret_pc_input(InputState * inState, OriginalG
 	return 0;
 }
 
+
+EntityInspectGameMode::EntityInspectGameMode(Coordinate pcPos){
+	cursorPos = pcPos;
+}
+
+int EntityInspectGameMode::execute_mode_actions(OriginalGameType * game){
+	display_map(&game->theMap);
+	display_add_cursor(cursorPos);
+	inputState_update(&game->inputState);
+	int interpretStatus = interpret_pc_input(&game->inputState, game);
+	if(interpretStatus == -1){
+		return -1;
+	}
+	return 0;
+}
+
+int EntityInspectGameMode::interpret_pc_input(InputState * inState, OriginalGameType * game){
+	InputType inputType = inputState_get_last(inState);
+	//Mode-independent check
+	if(inputType == input_quit){
+		game->quit_game();
+		return -1;
+	}
+	switch(inputType){
+		case input_right:
+		cursorPos.x++;
+		break;
+		case input_upright:
+		cursorPos.x++;
+		cursorPos.y--;
+		break;
+		case input_up:
+		cursorPos.y--;
+		break;
+		case input_upleft:
+		cursorPos.x--;
+		cursorPos.y--;
+		break;
+		case input_left:
+		cursorPos.x--;
+		break;
+		case input_downleft:
+		cursorPos.x--;
+		cursorPos.y++;
+		break;
+		case input_down:
+		cursorPos.y++;
+		break;
+		case input_downright:
+		cursorPos.x++;
+		cursorPos.y++;
+		break;
+
+		case input_t:{
+			Entity ent;
+			if(map_has_entity_at(&game->theMap, cursorPos.x, cursorPos.y)){
+				map_get_entity(&game->theMap, cursorPos.x, cursorPos.y, &ent);
+				display_entity_description(&ent);
+				getch();
+			}
+			game->gameMode = new MovementGameMode;
+		}break;
+
+		default:
+		break;
+	}
+	cursorPos.x = std::max(std::min(cursorPos.x,MAPWIDTH-2),1);
+	cursorPos.y = std::max(std::min(cursorPos.y,MAPHEIGHT-2),1);
+	return 0;
+}

@@ -72,6 +72,10 @@ Entity::Entity():hitpoints(0),speed(0),symbol('m'),dead(0){
 	
 }
 
+string * Entity::getDescription(){
+	return this->description;
+}
+
 MonsterColor Entity::getColor(){
 	return this->color;
 }
