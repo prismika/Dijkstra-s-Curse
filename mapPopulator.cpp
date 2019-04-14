@@ -55,6 +55,11 @@ MapPopulator::MapPopulator(){
 
 int MapPopulator::populate(Map * map, PC * pc, int nummon){
 	populateWithItems(map, 20);
+
+	for(size_t i = 0; i < monsterAtlas.size(); i++){
+		monsterAtlas[i].resetHowManyExist();
+	}
+
 	Entity * entityList[MAPHEIGHT*MAPWIDTH];
 	int entityListIndex = 0;
 	Coordinate pcCoord;
@@ -68,15 +73,15 @@ int MapPopulator::populate(Map * map, PC * pc, int nummon){
 	DistanceMap * distTunnel = map_get_distance_map_tunneling(map);
 	get_distance_map(map, pcCoord, distNonTunnel);
 	get_distance_map_tunneling(map, pcCoord, distTunnel);
-
 	//Place monsters
 	int i;
 	for(i=0; i<nummon;i++){
 		int monsterIndex;
 		do{
 			monsterIndex = rand()%monsterAtlas.size();
-		}while(rand()%100 >= monsterAtlas[monsterIndex].getRarity());
-		MonsterBlueprint blueprint = monsterAtlas[monsterIndex];
+		}while(rand()%100 >= monsterAtlas[monsterIndex].getRarity()
+			|| (!monsterAtlas[monsterIndex].isBuildable()));
+		MonsterBlueprint &blueprint = monsterAtlas[monsterIndex];
 		Coordinate curCoord = findOpenBlock(map, pcCoord);
 		if(curCoord.x == -1) break; //Map is full
 		NPC *npc = blueprint.build(curCoord);

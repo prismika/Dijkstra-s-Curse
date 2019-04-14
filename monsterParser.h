@@ -21,6 +21,9 @@ private:
 	MonsterColor color;
 	int rarity;
 	vector<MonsterAbility> abilityList;
+	bool unique;
+	int howManyExist;
+	int howManyDead;
 public:
 	MonsterBlueprint();
 	MonsterBlueprint(string name, string description, vector<MonsterAbility> abilityList,
@@ -30,7 +33,9 @@ public:
 		//TODO free stuff here
 	}
 	int getRarity();
+	bool isBuildable();
 	NPC * build(Coordinate position);
+	void resetHowManyExist();
 	friend std::ostream & operator<<(ostream &out, const MonsterBlueprint &r);
 	MonsterBlueprint & operator=(const MonsterBlueprint &r);
 };

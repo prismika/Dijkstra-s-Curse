@@ -147,12 +147,15 @@ class NPC : public Entity{
 private:
 	int rarity;
 	bool boss;
+	int * howManyExist;
+	int * howManyDead;
 public:
 	NPC();
 	NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 		int speed, int hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity, Coordinate position);
 	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);
+	void setCountPointers(int * howManyExist, int * howManyDead);
 	int getRarity();
 	bool isBoss();
 };

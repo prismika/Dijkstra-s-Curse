@@ -350,6 +350,11 @@ bool NPC::isBoss(){
 	return this->boss;
 }
 
+void NPC::setCountPointers(int * howManyExist, int * howManyDead){
+	this->howManyExist = howManyExist;
+	this->howManyDead = howManyDead;
+}
+
 
 
 

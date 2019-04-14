@@ -192,16 +192,37 @@ MonsterBlueprint::MonsterBlueprint(string name, string description, vector<Monst
 	this->symbol = symbol;
 	this->color = color;
 	this->rarity = rarity;
+	this->unique = false;
+	for(size_t i = 0; i < abilityList.size(); i++){
+		if(abilityList[i] == MONSTER_ABILITY_UNIQ){
+			this->unique = true;
+		}
+	}
+	this->howManyExist = 0;
+	this->howManyDead = 0;
 }
 
 int MonsterBlueprint::getRarity(){
 	return this->rarity;
 }
 
+bool MonsterBlueprint::isBuildable(){
+	return !unique
+		// || ((howManyExist == 0) && (howManyDead == 0));
+		|| (howManyExist == 0);
+}
+
 NPC * MonsterBlueprint::build(Coordinate position){
-	return new NPC(this->name, this->description, this->abilityList,
+	this->howManyExist++;
+	NPC * npc = new NPC(this->name, this->description, this->abilityList,
 		(this->speed).roll(), (this->hitpoints).roll(), attackDamage,
 		this->symbol, this->color, this->rarity, position);
+	npc->setCountPointers(&this->howManyExist, &this->howManyDead);
+	return npc;
+}
+
+void MonsterBlueprint::resetHowManyExist(){
+	this->howManyExist = 0;
 }
 
 ostream & operator<<(ostream &out, const MonsterBlueprint &r){
