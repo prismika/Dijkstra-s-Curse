@@ -19,6 +19,7 @@ private:
 	int rarity;
 
   int howManyExist;
+  int howManyPickedUp;//Not quite an accurate count. Only use to check > 0.
 public:
 	ItemBlueprint();
 	ItemBlueprint(string &name,
@@ -39,6 +40,7 @@ public:
 	//Dynamically allocates new item
 	Item * build();
   bool isBuildable();
+  void resetHowManyExist();
 	friend ostream & operator<<(ostream &out, const ItemBlueprint &r);
 };
 

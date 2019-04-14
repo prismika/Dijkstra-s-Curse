@@ -96,6 +96,9 @@ int MapPopulator::populate(Map * map, PC * pc, int nummon){
 }
 
 void MapPopulator::populateWithItems(Map * map, int numitems){
+	for(size_t i = 0; i < itemAtlas.size(); i++){
+		itemAtlas[i].resetHowManyExist();
+	}
 	BlockType canPlaceOn[] = {floor};
 	int canPlaceOnSize = 1;
 	int i;

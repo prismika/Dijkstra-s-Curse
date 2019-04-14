@@ -180,6 +180,7 @@ int PC::giveItem(Item * item){
 		if(!(this->inventory[i])){
 			this->inventory[i] = item;
 			this->itemsInInventory++;
+			item->pickedUp();
 			return i;
 		}
 	}
@@ -391,9 +392,19 @@ Item::Item(string name, string description,
 	attribute(attribute),
 	value(value),
 	artifact(artifact),
-	rarity(rarity){
+	rarity(rarity),
+	howManyPickedUp(0),
+	howManyExist(0){
 	char symbols[] = {'*','|',')','}','[',']','(','{','\\','=','"','_','~','?','!','$','/','\'','-','%'};
 	this->symbol = symbols[(int)type];
+}
+
+void Item::setHowManyPickedUp(int * p){
+	this->howManyPickedUp = p;
+}
+
+void Item::setHowManyExist(int * p){
+	this->howManyExist = p;
 }
 
 char Item::getSymbol(){
@@ -422,4 +433,8 @@ int Item::rollDamage(){
 
 string * Item::getDescription(){
 	return &this->description;
+}
+
+void Item::pickedUp(){
+	*(this->howManyPickedUp) += 1;
 }

@@ -59,6 +59,8 @@ private:
 	bool artifact;
 	int rarity;
 	char symbol;
+	int * howManyPickedUp;
+	int * howManyExist;
 public:
 	Item();
 	Item(string name, string description,
@@ -66,6 +68,8 @@ public:
 	int hit, Dice damage, int dodge, int defence,
 	int weight, int speed, int attribute, int value,
 	bool artifact, int rarity);
+	void setHowManyPickedUp(int * p);
+	void setHowManyExist(int * p);
 	char getSymbol();
 	string * getName();
 	MonsterColor getColor();
@@ -73,6 +77,7 @@ public:
 	ItemType getType();
 	int rollDamage();
 	string *getDescription();
+	void pickedUp();
 };
 
 //--------------------Entities (living things)-------------------
