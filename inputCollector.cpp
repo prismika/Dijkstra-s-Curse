@@ -112,6 +112,7 @@ int inputState_update(InputState * inState){
 			newType = input_mlist_down;
 			break;
 
+			case 'q':
 			case 27:
 			newType = input_escape;
 			break;
