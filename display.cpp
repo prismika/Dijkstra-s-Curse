@@ -224,10 +224,11 @@ int display_inventory(PC *pc){
 	Item * item;
 	int i;
 	for(i = 0; i < INVENTORY_SIZE; i++){
-		mvprintw(SPACE_ABOVE_MAP + 1 + i*2,30,"%d) ", i);
+		mvprintw(SPACE_ABOVE_MAP + 1 + i*2, 30, "%d) ", i);
 		if(pc->hasInventoryItem(i)){
 			item = pc->getInventoryItem(i);
 			printw(item->getName()->c_str());
+			mvprintw(SPACE_ABOVE_MAP + 2 + i*2, 31, "sp: %d", item->getSpeed());
 		}
 	}
 	return 0;
