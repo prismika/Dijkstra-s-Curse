@@ -311,19 +311,35 @@ bool Map::checkLOS(Coordinate source, Coordinate target){
 	int deltaX = target.x - source.x;
 	int deltaY = target.y - source.y;
 	Coordinate curCoord = source;
-		if(abs(deltaX) > abs(deltaY)){
+	if(abs(deltaX) > abs(deltaY)){
 		float deltaError = deltaY/(float)deltaX;
 		float error = 0;
 		int deltaYInc = (deltaY>0)? 1 : -1;
 		int curCoordXInc = (deltaX>0)? 1 : -1;
 		int errorInc = (deltaError>0)? -1 : 1;
-		for(; curCoord.x != target.x; curCoord.x+= curCoordXInc){
+		for(;curCoord.x != target.x; curCoord.x+= curCoordXInc){
 			if(this->obstructionAt(curCoord)){
 				return false;
 			}
 			error += deltaError;
 			if(abs(error) >= 0.5){
 				curCoord.y += deltaYInc;
+				error += errorInc;
+			}
+		}
+	}else{
+		float deltaError = deltaX/(float)deltaY;
+		float error = 0;
+		int deltaXInc = (deltaX>0)? 1 : -1;
+		int curCoordYInc = (deltaY>0)? 1 : -1;
+		int errorInc = (deltaError>0)? -1 : 1;
+		for(; curCoord.y != target.y; curCoord.y+= curCoordYInc){
+			if(this->obstructionAt(curCoord)){
+				return false;
+			}
+			error += deltaError;
+			if(abs(error) >= 0.5){
+				curCoord.x += deltaXInc;
 				error += errorInc;
 			}
 		}
