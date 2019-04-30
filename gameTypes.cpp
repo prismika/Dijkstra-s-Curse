@@ -817,7 +817,7 @@ EntityInspectGameMode::EntityInspectGameMode(Coordinate pcPos){
 }
 
 int EntityInspectGameMode::execute_mode_actions(OriginalGameType * game){
-	display_map(&game->theMap);
+	display_map_foggy(&game->theMap);
 	display_add_cursor(cursorPos);
 	inputState_update(&game->inputState);
 	int interpretStatus = interpret_pc_input(&game->inputState, game);

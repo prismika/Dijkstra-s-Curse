@@ -4,7 +4,7 @@ ECHO = echo
 RM = rm
 TAR = tar cvfz
 
-ASSIGNMENT = 1.09
+ASSIGNMENT = 1.10
 
 CFLAGS = -Wall -ggdb3
 

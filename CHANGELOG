@@ -142,3 +142,12 @@
 		-Unique monsters act unique
 		-Bugfixes
 		-Update README and CHANGELOG
+4/28/19 -Display item stats in inventory view
+4/29/19 -Display item stats in equipment view
+		-Display damage messages
+		-Implement line of sight restrictions for PC visibility
+		-Torches increase light radius
+		-Torches glow while on the ground
+		-Implement non-telepathic monsters
+		-Add a title screen
+		-Update README and CHANGELOG

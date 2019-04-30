@@ -1,7 +1,28 @@
 Dijkstra's Curse
-(Now with too many commands!)
+(Light and Statistics Update)
 
-This iteration of Dijkstra's Curse introduces item functionality, inventory, combat, boss fights and many new commands!
+This iteration of Dijkstra's Curse introduces a grab bag of features that makes the game semi-playable!
+
+New features:
+	+Equipping a torch increases the player's light radius!
+	+Only blocks in the player's line-of-sight are visible! (See Map::checkLOS in map.cpp for Bresenham's algorithm)
+	+Torches glow while sitting on the ground! This helps you find torches by following their glow, and lets you drop torches to illuminate blocks for as long as they are in your line of sight.
+	+Item stats are displayed in the inventory and equipment views! No more guessing what helps and what doesn't!
+	+Player hp and speed are displayed below the map!
+	+Messages now show who you damaged and how much!
+	+Non-telepathic monsters aren't telepathic anymore!
+	+There's a title screen!!
+
+
+Usage:
+	./dijkstrasCurse
+	Flags:
+		--monsters
+			Displays an atlas of monsters in the game
+		--items
+			Displays a catalog of items in the game
+		--seed x
+			Seeds the random number generator with seed x
 
 Controls:
 	Use a number pad to move
@@ -18,22 +39,6 @@ Controls:
 Secret Controls (shhh):
 	T: Teleport. Move cursor with number pad and select target with 'T'.
 	f: Toggle fog of war.
-
-New Code:
-	Combat semantics are handled in the map_move_entity function in map.cpp. Commands that switch "modes" (such as interacting with inventory or looking at creatures) are implemented using a state pattern in gameTypes.cpp. OriginalGameType represents the game itself, using the gameMode field to store a mode object. Each "[XXX]GameMode" class handles mode-specific behavior, switching itself out for another mode if needed.
-
-	Have a great week!
-
-Usage:
-	./dijkstrasCurse
-		Launches the game
-Flags:
-	--monsters
-		Displays an atlas of monsters in the game
-	--items
-		Displays a catalog of items in the game
-	--seed x
-		Seeds the random number generator with seed x
 
 Architecture:
 	This project has many files, with an architecture consisting of four rough layers:
