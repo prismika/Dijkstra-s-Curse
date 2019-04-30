@@ -113,6 +113,7 @@ public:
 	string * getDescription();
 	MonsterColor getColor();
 	int getSpeed();
+	int getHP();
 	int rollDamage();
 	int attack(Entity * victim);
 	bool takeDamage(int hp);

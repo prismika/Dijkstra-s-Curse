@@ -94,9 +94,12 @@ MovementGameMode::MovementGameMode(){
 
 int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 	//Assume it's the PC's turn
-	fog ?
-		display_map_foggy(&game->theMap):
+	if(fog){
+		display_map_foggy(&game->theMap);
+	}else{
 		display_map(&game->theMap);
+	}
+	display_pc_stats(game->pc);
 	//Get user input [Blocking call]
 	inputState_update(&game->inputState);//TODO make mode-dependent
 	//Interpret and execute input with helper function

@@ -98,7 +98,6 @@ int display_delete(bool win){
 }
 
 int display_map(Map * map){
-	erase();
 	int x,y;
 	for(y=0;y<MAPHEIGHT;++y){
 		for(x=0; x<MAPWIDTH; ++x){
@@ -130,7 +129,6 @@ int display_map(Map * map){
 }
 
 int display_map_foggy(Map * map){
-	erase();
 	int x,y;
 	for(y=0;y<MAPHEIGHT;++y){
 		for(x=0; x<MAPWIDTH; ++x){
@@ -184,7 +182,7 @@ int display_entity(Entity * ent){
 	return 0;
 }
 
-int display_message(char * s){
+int display_message(const char * s){
 	move(0,0);
 	clrtoeol();
 	mvprintw(0,1,s);
@@ -288,5 +286,13 @@ int display_entity_description(Entity * ent){
 		mvprintw(i++,3, line.c_str());
 	}
 	mvprintw(i+1, 3, "Press any key to return...");
+	return 0;
+}
+
+
+int display_pc_stats(PC * pc){
+	mvprintw(SPACE_ABOVE_MAP + MAPHEIGHT, 1, "");
+	printw("hp: %d ", pc->getHP());
+	printw("sp: %d ", pc->getSpeed());
 	return 0;
 }

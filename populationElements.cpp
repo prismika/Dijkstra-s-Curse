@@ -88,21 +88,28 @@ int Entity::getSpeed(){
 	return this->speed;
 }
 
+int Entity::getHP(){
+	return this->hitpoints;
+}
+
 int Entity::rollDamage(){
 	return this->attackDamage.roll();
 }
 
 int Entity::attack(Entity * victim){
+	int damage;
 	if(this->isPC){
 		PC * pc = (PC*) this;
-		victim->takeDamage(pc->rollDamage());
+		damage = pc->rollDamage();
+		victim->takeDamage(damage);
 	}else{
-		victim->takeDamage(this->rollDamage());
+		damage = this->rollDamage();
+		victim->takeDamage(damage);
 	}
 	if(victim->hitpoints < 0){
 		victim->dead = true;
 	}
-	return 0;
+	return damage;
 }
 
 bool Entity::takeDamage(int hp){

@@ -12,7 +12,7 @@ int display_distance_map(DistanceMap * dist);
 int display_room_list(Room *roomList);
 int display_population(Map * map);
 int display_entity(Entity * ent);
-int display_message(char * s);
+int display_message(const char * s);
 int display_population_list(Entity ** list, int listSize, Coordinate pcPos);
 int display_population_list_offset(Map * map, int offset);
 int display_add_cursor(Coordinate cursorPos);
@@ -20,5 +20,6 @@ int display_inventory(PC *pc);
 int display_equipment(PC *pc);
 int display_item_description(Item * item);
 int display_entity_description(Entity * ent);
+int display_pc_stats(PC * pc);
 
 #endif

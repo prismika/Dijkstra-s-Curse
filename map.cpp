@@ -1,6 +1,6 @@
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
-#include <stdbool.h>
+#include <string>
 #include "map.h"
 #include "mapElements.h"
 #include "populationElements.h"
@@ -125,6 +125,7 @@ void map_kill_entity(Map * map, Coordinate coord){
 }
 
 //Returns position of entity after move is attempted
+//This is a god function
 Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
 	Coordinate position = ent->position;
 	//If entity isn't even trying to move, we're done
@@ -146,10 +147,26 @@ Coordinate map_move_entity(Map * map, Entity * ent, Coordinate target){
 		if(map_has_entity_at(map, target.x,target.y)){
 			Entity * targetEnt = map->populationMap[target.y][target.x];
 			if(ent->isPC ^ targetEnt->isPC){
-				ent->attack(targetEnt);
+				int damage = ent->attack(targetEnt);
 				if(targetEnt->dead){
+					if(ent -> isPC){
+						string msg = "You killed a ";
+						msg += *targetEnt->getName();
+						msg += " by doing ";
+						msg += to_string(damage);
+						msg += " damage";
+						display_message(msg.c_str());
+					}
 					map_kill_entity(map,target);
 				}else{
+					if(ent->isPC){
+						string msg = "You hit a ";
+						msg += *targetEnt->getName();
+						msg += " for ";
+						msg += to_string(damage);
+						msg += " damage";
+						display_message(msg.c_str());
+					}
 					return position;
 				}
 			}else{
