@@ -25,6 +25,8 @@ public:
 	Item * getItemAt(Coordinate coord);
 	int placeItem(Item * item, Coordinate coord);
 	bool isBossDead();
+	bool checkLOS(Coordinate source, Coordinate target);
+	bool obstructionAt(Coordinate coord);
 };
 
 void map_init(Map * map);

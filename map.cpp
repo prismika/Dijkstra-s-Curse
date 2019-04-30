@@ -246,9 +246,14 @@ DistanceMap * map_get_distance_map_tunneling(Map * map){
 	return &(map->distanceMapTunneling);
 }
 
-bool map_block_is_visible(Map * map, Coordinate coord){
-	Coordinate pcPos = map_get_pc_position(map);
-	return distLInf(coord, pcPos) < PC_VISIBILITY;
+bool map_block_is_visible(Map * map, Coordinate targetCoord){
+	Coordinate pcCoord = map_get_pc_position(map);
+	bool closeEnough = distLInf(targetCoord, pcCoord) <= PC_VISIBILITY;
+	if(closeEnough){
+		return map->checkLOS(pcCoord, targetCoord);
+	}else{
+		return false;
+	}
 }
 
 
@@ -298,4 +303,34 @@ int Map::placeItem(Item * item, Coordinate coord){
 
 bool Map::isBossDead(){
 	return this->bossIsDead;
+}
+
+/*Bresenham's Algorithm*/
+bool Map::checkLOS(Coordinate source, Coordinate target){
+	if(source.x == target.x && source.y == target.y) return true;
+	int deltaX = target.x - source.x;
+	int deltaY = target.y - source.y;
+	Coordinate curCoord = source;
+		if(abs(deltaX) > abs(deltaY)){
+		float deltaError = deltaY/(float)deltaX;
+		float error = 0;
+		int deltaYInc = (deltaY>0)? 1 : -1;
+		int curCoordXInc = (deltaX>0)? 1 : -1;
+		int errorInc = (deltaError>0)? -1 : 1;
+		for(; curCoord.x != target.x; curCoord.x+= curCoordXInc){
+			if(this->obstructionAt(curCoord)){
+				return false;
+			}
+			error += deltaError;
+			if(abs(error) >= 0.5){
+				curCoord.y += deltaYInc;
+				error += errorInc;
+			}
+		}
+	}
+	return true;
+}
+
+bool Map::obstructionAt(Coordinate coord){
+	return this->block[coord.y][coord.x].hardness > 0;
 }
