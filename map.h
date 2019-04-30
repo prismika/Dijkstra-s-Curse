@@ -8,7 +8,7 @@
 
 class Map{
 private:
-	
+	//Nothing is up here because of legacy code reasons
 public:
 	Block block[MAPHEIGHT][MAPWIDTH];
 	Block block_remembered[MAPHEIGHT][MAPWIDTH];
@@ -17,12 +17,13 @@ public:
 	int height;
 	Entity * populationMap[MAPHEIGHT][MAPWIDTH];
 	Entity ** populationList;
-	Item * itemMap[MAPHEIGHT][MAPWIDTH];
 	int populationListSize;
+	Item * itemMap[MAPHEIGHT][MAPWIDTH];
 	DistanceMap distanceMapNonTunneling;
 	DistanceMap distanceMapTunneling;
 	bool bossIsDead;
 	Item * getItemAt(Coordinate coord);
+	Item * getItemAt(int x, int y);
 	int placeItem(Item * item, Coordinate coord);
 	bool isBossDead();
 	bool checkLOS(Coordinate source, Coordinate target);

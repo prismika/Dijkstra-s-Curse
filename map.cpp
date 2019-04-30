@@ -6,6 +6,8 @@
 #include "populationElements.h"
 #include "display.h"
 
+#define LIGHT_GLOW 3
+
 void map_init(Map * map){
 	Map retMap;
 	Block default_remembered_block = block_create(rock,100);
@@ -37,6 +39,7 @@ void map_init(Map * map){
 		for(j = 0; j < MAPWIDTH; ++j){
 			retMap.populationMap[i][j] = NULL;
 			retMap.itemMap[i][j] = NULL;
+			// retMap.isVisible[i][j] = false;
 		}
 	}
 	retMap.populationList = NULL;
@@ -247,12 +250,34 @@ DistanceMap * map_get_distance_map_tunneling(Map * map){
 bool map_block_is_visible(Map * map, Coordinate targetCoord){
 	PC * pc = map_get_pc(map);
 	Coordinate pcCoord = map_get_pc_position(map);
-	bool closeEnough = distLInf(targetCoord, pcCoord) <= pc->getGlow();
-	if(closeEnough){
-		return map->checkLOS(pcCoord, targetCoord);
-	}else{
-		return false;
+	int dist = distLInf(targetCoord,pcCoord);
+	if(!map->checkLOS(pcCoord, targetCoord)) return false;
+	if(dist <= pc->getGlow()) return true;
+
+	//TODO This is terrible from a performance perspective
+	for(int y = 0; y < MAPHEIGHT; y++){
+		for(int x = 0; x < MAPWIDTH; x++){
+			if(map_has_item_at(map, x, y)){
+				Item *item = map->getItemAt(x,y);
+				if(item->getType() == ITEM_TYPE_LIGHT){
+					Coordinate curCoord;
+					curCoord.x = x;
+					curCoord.y = y;
+					int dist = distLInf(curCoord, targetCoord);
+					// if(dist <= item->getAttribute()
+					// 	&& map->checkLOS(blah blah)) return true;
+					if(dist <= LIGHT_GLOW) return true;
+				}
+			}
+		}
 	}
+	// bool closeEnough = distLInf(targetCoord, pcCoord) <= pc->getGlow();
+	// if(closeEnough){
+	// 	return map->checkLOS(pcCoord, targetCoord);
+	// }else{
+	// 	return false;
+	// }
+	return false;
 }
 
 
@@ -295,6 +320,10 @@ Item * Map::getItemAt(Coordinate coord){
 	return itemMap[coord.y][coord.x];
 }
 
+Item * Map::getItemAt(int x, int y){
+	return itemMap[y][x];
+}
+
 int Map::placeItem(Item * item, Coordinate coord){
 	itemMap[coord.y][coord.x] = item;
 	return 0;
@@ -305,7 +334,7 @@ bool Map::isBossDead(){
 }
 
 /*Bresenham's Algorithm*/
-bool Map::checkLOS(Coordinate source, Coordinate target){
+bool Map::checkLOS(Coordinate target, Coordinate source){
 	if(source.x == target.x && source.y == target.y) return true;
 	int deltaX = target.x - source.x;
 	int deltaY = target.y - source.y;
