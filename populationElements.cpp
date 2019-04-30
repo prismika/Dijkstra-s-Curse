@@ -24,50 +24,124 @@ static void descend(Coordinate position, DistanceMap * dist, Coordinate * ret){
 	}
 }
 
-Coordinate erraticMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+static bool LOS(Coordinate source, Coordinate target, DistanceMap * map){
+	if(source.x == target.x && source.y == target.y) return true;
+	int deltaX = target.x - source.x;
+	int deltaY = target.y - source.y;
+	Coordinate curCoord = source;
+	if(abs(deltaX) > abs(deltaY)){
+		float deltaError = deltaY/(float)deltaX;
+		float error = 0;
+		int deltaYInc = (deltaY>0)? 1 : -1;
+		int curCoordXInc = (deltaX>0)? 1 : -1;
+		int errorInc = (deltaError>0)? -1 : 1;
+		for(;curCoord.x != target.x; curCoord.x+= curCoordXInc){
+			if(get_distance(map,curCoord.x, curCoord.y)>= INT_MAX - 255){
+				return false;
+			}
+			error += deltaError;
+			if(abs(error) >= 0.5){
+				curCoord.y += deltaYInc;
+				error += errorInc;
+			}
+		}
+	}else{
+		float deltaError = deltaX/(float)deltaY;
+		float error = 0;
+		int deltaXInc = (deltaX>0)? 1 : -1;
+		int curCoordYInc = (deltaY>0)? 1 : -1;
+		int errorInc = (deltaError>0)? -1 : 1;
+		for(; curCoord.y != target.y; curCoord.y+= curCoordYInc){
+			if(get_distance(map,curCoord.x, curCoord.y)>= INT_MAX - 255){
+				return false;
+			}
+			error += deltaError;
+			if(abs(error) >= 0.5){
+				curCoord.x += deltaXInc;
+				error += errorInc;
+			}
+		}
+	}
+	return true;
+}
+
+Coordinate erraticMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
 	Coordinate ret = ent->position;
 	ret.y += rand()%3 - 1;
 	ret.x += rand()%3 - 1;
 	return ret;
 }
 
-Coordinate tunnelMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+Coordinate tunnelMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
 	Coordinate ret;
 	descend(ent->position,mapTunnel,&ret);
 	return ret;
 }
 
-Coordinate tunnelMoveErratic(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+Coordinate tunnelMoveErratic(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
 	if(rand()%2){
-		return erraticMove(ent,map,mapTunnel);
+		return erraticMove(ent,map,mapTunnel,pc);
 	}else{
-		return tunnelMove(ent,map,mapTunnel);
+		return tunnelMove(ent,map,mapTunnel,pc);
 	}
 }
 
-Coordinate nonTunnelMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+Coordinate nonTunnelMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
 	Coordinate ret;
 	descend(ent->position,map,&ret);
 	return ret;
 }
 
-Coordinate nonTunnelMoveErratic(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+Coordinate nonTunnelMoveErratic(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
 	if(rand()%2){
-		return erraticMove(ent,map,mapTunnel);
+		return erraticMove(ent,map,mapTunnel,pc);
 	}else{
-		return nonTunnelMove(ent,map,mapTunnel);
+		return nonTunnelMove(ent,map,mapTunnel,pc);
 	}
 }
 
-Coordinate rightMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel){
+Coordinate tunnelNonTeleMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
+	if(LOS(ent->position, pc->position, map)){
+		return tunnelMove(ent,map,mapTunnel, pc);
+	}else{
+		return erraticMove(ent, map, mapTunnel, pc);
+	}
+}
+
+Coordinate nonTunnelNonTeleMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
+	if(LOS(ent->position, pc->position, map)){
+		return nonTunnelMove(ent,map,mapTunnel,pc);
+	}else{
+		// return erraticMove(ent,map,mapTunnel,pc);
+		return erraticMove(ent, map, mapTunnel, pc);
+	}
+}
+
+Coordinate tunnelNonTeleMoveErratic(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
+	if(rand()%2){
+		return erraticMove(ent,map,mapTunnel,pc);
+	}else{
+		return tunnelNonTeleMove(ent,map,mapTunnel,pc);
+	}
+}
+
+Coordinate nonTunnelNonTeleMoveErratic(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
+	if(rand()%2){
+		return erraticMove(ent,map,mapTunnel,pc);
+	}else{
+		return nonTunnelNonTeleMove(ent,map,mapTunnel,pc);
+	}
+}
+
+Coordinate rightMove(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC * pc){
 	Coordinate ret;
 	ret.x = ent->position.x+1;
 	ret.y = ent->position.y;
 	return ret;
 }
 
-void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord){
-	*coord = ent->move_strategy(ent, map, mapTunnel);
+void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord, PC * pc){
+	*coord = ent->move_strategy(ent, map, mapTunnel,pc);
 }
 
 Entity::Entity():hitpoints(0),speed(0),symbol('m'),dead(0){
@@ -363,14 +437,23 @@ NPC::NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 	}
 	this->boss = flags.BOSS;
 	this->canTunnel = flags.TUNNEL;
-	if(flags.TUNNEL && flags.ERRATIC){
+	if(flags.TUNNEL && flags.ERRATIC && flags.TELE){
 		this->move_strategy = tunnelMoveErratic;
-	}else if(!flags.TUNNEL && flags.ERRATIC){
+	}else if(flags.ERRATIC && flags.TELE){
 		this->move_strategy = nonTunnelMoveErratic;
-	}else if(flags.TUNNEL){
+	}else if(flags.TUNNEL && flags.TELE){
 		this->move_strategy = tunnelMove;
-	}else{
+	}else if(flags.TELE){
 		this->move_strategy = nonTunnelMove;
+	//Non-telepathic
+	}else if(flags.TUNNEL && flags.ERRATIC){
+		this->move_strategy = tunnelNonTeleMoveErratic;
+	}else if(flags.ERRATIC){
+		this->move_strategy = nonTunnelNonTeleMoveErratic;
+	}else if(flags.TUNNEL){
+		this->move_strategy = tunnelNonTeleMove;
+	}else{
+		this->move_strategy = nonTunnelNonTeleMove;
 	}
 }
 int NPC::getRarity(){

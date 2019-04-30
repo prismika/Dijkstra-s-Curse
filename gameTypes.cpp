@@ -120,7 +120,7 @@ int MovementGameMode::execute_mode_actions(OriginalGameType * game){
 		Coordinate moveCoord;
 		DistanceMap * distNonTunnel = map_get_distance_map_non_tunneling(&game->theMap);
 		DistanceMap * distTunnel = map_get_distance_map_tunneling(&game->theMap);
-		entity_get_move((NPC *)nextTurnEnt, distNonTunnel, distTunnel, &moveCoord);
+		entity_get_move((NPC *)nextTurnEnt, distNonTunnel, distTunnel, &moveCoord, game->pc);
 		//Tell the map our intended move
 		map_move_entity(&game->theMap, nextTurnEnt, moveCoord);
 		//Did the pc die?

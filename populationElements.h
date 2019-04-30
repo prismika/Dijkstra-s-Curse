@@ -159,13 +159,13 @@ public:
 	NPC(string *name, string *description, vector<MonsterAbility> abilityList,
 		int speed, int hitpoints, Dice attackDamage,
 		char symbol, MonsterColor color, int rarity, Coordinate position);
-	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel);
+	Coordinate (*move_strategy)(NPC * ent, DistanceMap * map, DistanceMap * mapTunnel, PC *pc);
 	void setCountPointers(int * howManyExist, int * howManyDead);
 	int getRarity();
 	bool isBoss();
 	int kill();
 };
 
-void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord);
+void entity_get_move(NPC *ent, DistanceMap * map, DistanceMap * mapTunnel, Coordinate * coord, PC * pc);
 
 #endif
