@@ -4,6 +4,8 @@
 #include "mapElements.h"
 #include "dice.h"
 
+#define PC_VISIBILITY 4;
+
 
 static void descend(Coordinate position, DistanceMap * dist, Coordinate * ret){
 	int x,y;
@@ -92,6 +94,10 @@ int Entity::getHP(){
 	return this->hitpoints;
 }
 
+int Entity::getGlow(){
+	return 0;
+}
+
 int Entity::rollDamage(){
 	return this->attackDamage.roll();
 }
@@ -162,6 +168,15 @@ int PC::rollDamage(){
 		}
 	}
 	return total;
+}
+
+int PC::getGlow(){
+	if(this->hasEquipmentItem(9)){
+		Item * light = getEquipmentItem(9);
+		return light->getAttribute() + PC_VISIBILITY;
+	}else{
+		return PC_VISIBILITY;
+	}
 }
 
 int PC::setPosition(Coordinate coord){
@@ -461,6 +476,10 @@ int Item::rollDamage(){
 
 string * Item::getDescription(){
 	return &this->description;
+}
+
+int Item::getAttribute(){
+	return this->attribute;
 }
 
 void Item::pickedUp(){

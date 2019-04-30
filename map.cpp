@@ -6,8 +6,6 @@
 #include "populationElements.h"
 #include "display.h"
 
-#define PC_VISIBILITY 4;
-
 void map_init(Map * map){
 	Map retMap;
 	Block default_remembered_block = block_create(rock,100);
@@ -247,8 +245,9 @@ DistanceMap * map_get_distance_map_tunneling(Map * map){
 }
 
 bool map_block_is_visible(Map * map, Coordinate targetCoord){
+	PC * pc = map_get_pc(map);
 	Coordinate pcCoord = map_get_pc_position(map);
-	bool closeEnough = distLInf(targetCoord, pcCoord) <= PC_VISIBILITY;
+	bool closeEnough = distLInf(targetCoord, pcCoord) <= pc->getGlow();
 	if(closeEnough){
 		return map->checkLOS(pcCoord, targetCoord);
 	}else{

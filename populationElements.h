@@ -78,6 +78,7 @@ public:
 	Dice &getDamage();
 	int rollDamage();
 	string *getDescription();
+	int getAttribute();
 	void pickedUp();
 };
 
@@ -114,6 +115,7 @@ public:
 	MonsterColor getColor();
 	int getSpeed();
 	int getHP();
+	int getGlow();
 	int rollDamage();
 	int attack(Entity * victim);
 	bool takeDamage(int hp);
@@ -130,6 +132,7 @@ public:
 	PC();
 	int getSpeed();
 	int rollDamage();
+	int getGlow();
 	int setPosition(Coordinate position);
 	bool hasInventoryItem(int slot);
 	bool hasEquipmentItem(int slot);
