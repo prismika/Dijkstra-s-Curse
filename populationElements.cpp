@@ -166,8 +166,12 @@ bool PC::hasInventoryItem(int slot){
 	return this->inventory[slot] != NULL;
 }
 
-bool PC::hasEquipmentItem(int slot){//STUB
-	return this->equipment[slot] != NULL;
+bool PC::hasEquipmentItem(int slot){
+	if( 0 <= slot && slot < EQUIPMENT_SIZE){
+		return this->equipment[slot] != NULL;
+	}else{
+		return false;
+	}
 }
 
 Item * PC::getInventoryItem(int slot){

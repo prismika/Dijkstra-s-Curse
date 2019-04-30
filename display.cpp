@@ -240,12 +240,28 @@ int display_inventory(PC *pc){
 int display_equipment(PC *pc){
 	Item * item;
 	int i;
-	for(i = 0; i < EQUIPMENT_SIZE; i++){
-		mvprintw(SPACE_ABOVE_MAP + 2 + i,30,"%c) ", i+'a');
-		if(pc->hasEquipmentItem(i)){
-			item = pc->getEquipmentItem(i);
+	int itemSlot = 0;
+	for(i = 0; i < EQUIPMENT_SIZE/2; i++){
+		mvprintw(SPACE_ABOVE_MAP + 2 + 2*i,3,"%c) ", itemSlot +'a');
+		if(pc->hasEquipmentItem(itemSlot)){
+			item = pc->getEquipmentItem(itemSlot);
 			printw(item->getName()->c_str());
+			mvprintw(SPACE_ABOVE_MAP + 2 + i*2+1, 3, "");
+			printw("att: %s ", item->getDamage().toString().c_str());
+			printw("sp: %d ", item->getSpeed());
 		}
+		itemSlot++;
+	}
+	for(i=0; i<(EQUIPMENT_SIZE+1)/2; i++){
+		mvprintw(SPACE_ABOVE_MAP + 2 + 2*i,40,"%c) ", itemSlot +'a');
+		if(pc->hasEquipmentItem(itemSlot)){
+			item = pc->getEquipmentItem(itemSlot);
+			printw(item->getName()->c_str());
+			mvprintw(SPACE_ABOVE_MAP + 2 + i*2+1, 40, "");
+			printw("att: %s ", item->getDamage().toString().c_str());
+			printw("sp: %d ", item->getSpeed());
+		}
+		itemSlot++;
 	}
 	return 0;
 }
