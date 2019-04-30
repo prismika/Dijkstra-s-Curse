@@ -21,5 +21,7 @@ int display_equipment(PC *pc);
 int display_item_description(Item * item);
 int display_entity_description(Entity * ent);
 int display_pc_stats(PC * pc);
+int display_title_screen(); //Blocking call
+int display_clear();
 
 #endif

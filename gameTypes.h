@@ -137,6 +137,7 @@ private:
 	void quit_game(bool win);
 	int interpret_pc_input(PC * pc, InputState * inState);
 	void handle_death(void);
+	void title_screen(void);
 
 	friend class MovementGameMode;
 	friend class ListGameMode;

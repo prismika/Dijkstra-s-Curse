@@ -33,6 +33,26 @@ char * winString = (char *) "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 "                         Dijkstra sheds a single tear. He is proud.\n"
 "                 \"You found your path,\" he whispers. \"You found your path.\"\n"
 "\n\n\n\n\n\n";
+char * titleString = (char *)"\n"
+	"	 _____   _  _ _                         _     \n"
+	"	(____ \\ (_)(_) |         _             ( )    \n"
+	"	 _   \\ \\ _  _| |  _  ___| |_   ____ ___|/ ___ \n"
+	"	| |   | | || | | / )/___)  _) / ___) _  |/___)\n"
+	"	| |__/ /| || | |< (|___ | |__| |  ( ( | |___ |\n"
+	"	|_____/ |_|| |_| \\_|___/ \\___)_|   \\_||_(___/ \n"
+	"	         (__/ \n"
+	"\n"
+	"		   (     \n"
+	"		   )\\     (   (          (\n"
+	"		 (((_)   ))\\  )(   (    ))\\\n"
+	"		 )\\___  /((_)(()\\  )\\  /((_)\n"
+	"		((/ __|(_))(  ((_)((_)(_)) \n"
+	"		 | (__ | || || \'_|(_-</ -_)\n"
+	"		  \\___| \\_,_||_|  /__/\\___|\n"
+	"\n"
+	"\n"
+	"		  \n"
+	"		  Press any key to start...\n";
 static char getBlockVisual(BlockType type){
 	switch(type){
 		case rock:		return ' ';
@@ -294,5 +314,16 @@ int display_pc_stats(PC * pc){
 	mvprintw(SPACE_ABOVE_MAP + MAPHEIGHT, 1, "");
 	printw("hp: %d ", pc->getHP());
 	printw("sp: %d ", pc->getSpeed());
+	return 0;
+}
+
+
+int display_title_screen(){
+	mvprintw(0,0,titleString);
+	return 0;
+}
+
+int display_clear(){
+	erase();
 	return 0;
 }

@@ -26,6 +26,7 @@ OriginalGameType::OriginalGameType(int seed, int nummon){
 }
 
 int OriginalGameType::runGame(){
+	title_screen();
 	//Generate!
 	init_level();
 	//Main loop
@@ -49,6 +50,12 @@ int OriginalGameType::runGame(){
 		}
 	}
 	return 0;
+}
+
+void OriginalGameType::title_screen(){
+	display_title_screen();
+	getch();
+	display_clear();
 }
 
 void OriginalGameType::init_level(){
