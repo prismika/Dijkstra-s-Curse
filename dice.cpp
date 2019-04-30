@@ -1,6 +1,6 @@
 #include "dice.h"
 #include <string>
-#include <ostream>
+#include <iostream>
 
 using namespace std;
 
@@ -36,6 +36,17 @@ int Dice::roll(){
 		sum += rand()%sides + 1;
 	}
 	return sum;
+}
+
+string Dice::toString(){
+	string ret;
+	ret += to_string(base);
+	ret += "+";
+	ret += to_string(count);
+	ret += "d";
+	ret += to_string(sides);
+
+	return ret;
 }
 
 ostream & operator<<(ostream &out, const Dice &d){

@@ -228,7 +228,9 @@ int display_inventory(PC *pc){
 		if(pc->hasInventoryItem(i)){
 			item = pc->getInventoryItem(i);
 			printw(item->getName()->c_str());
-			mvprintw(SPACE_ABOVE_MAP + 2 + i*2, 31, "sp: %d", item->getSpeed());
+			mvprintw(SPACE_ABOVE_MAP + 2 + i*2, 31, "");
+			printw("att: %s ", item->getDamage().toString().c_str());
+			printw("sp: %d ", item->getSpeed());
 		}
 	}
 	return 0;

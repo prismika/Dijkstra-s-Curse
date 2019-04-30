@@ -75,6 +75,7 @@ public:
 	MonsterColor getColor();
 	int getSpeed();
 	ItemType getType();
+	Dice &getDamage();
 	int rollDamage();
 	string *getDescription();
 	void pickedUp();

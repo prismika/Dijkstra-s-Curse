@@ -440,6 +440,10 @@ ItemType Item::getType(){
 	return this->type;
 }
 
+Dice &Item::getDamage(){
+	return this->damage;
+}
+
 int Item::rollDamage(){
 	return this->damage.roll();
 }
