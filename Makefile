@@ -6,7 +6,7 @@ TAR = tar cvfz
 
 ASSIGNMENT = 1.10
 
-CFLAGS = -Wall -ggdb3
+CFLAGS = -Wall -ggdb3 -lncurses
 
 BIN = dijkstrasCurse
 OBJS = 			mapElements.o 	pathFinder.o	display.o 	heap.o 		mapBuilder.o 	map.o 	populationElements.o 	mapPopulator.o 		turnMaster.o 	inputCollector.o 	gameTypes.o 	monsterParser.o 	itemParser.o	dice.o
@@ -21,13 +21,13 @@ all: $(BIN)
 # 	gcc -Wall -ggdb3 dijkstrasCurse.c mapElements.o display.o pathFinder.o heap.o -o dijkstrasCurse -lm
 $(BIN): $(OBJS) dijkstrasCurse.o
 	@$(ECHO) Linking $@
-	@$(CXX) $^ -o $@ -lncurses
+	$(CXX) $^ -o $@ -lncurses
 
 -include $(OBJS:.o=.d)
 
 %.o: %.cpp %.h
 	@$(ECHO) Compiling $<
-	@$(CXX) $(CFLAGS) -MMD -MF $*.d -c $<
+	$(CXX) $(CFLAGS) -MMD -MF $*.d -c $<
 
 #Test things
 test: test.o object_descriptions.o

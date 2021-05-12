@@ -13,6 +13,8 @@ New features:
 	+Non-telepathic monsters aren't telepathic anymore!
 	+There's a title screen!!
 
+Installation:
+	This game was made to run on Linux and was only tested there. To install, move the directory called .rlg327 to your home directory. Then return to this directory in a command line and run "make". The game should be ready to go. To start, run ./dijkstrasCurse (see "Usage" below).
 
 Usage:
 	./dijkstrasCurse
@@ -40,6 +42,9 @@ Secret Controls (shhh):
 	T: Teleport. Move cursor with number pad and select target with 'T'.
 	f: Toggle fog of war.
 
+Customization:
+	Monster and item specifications are in the .rlg327 folder. Once it is placed in your home directory, feel free to edit the file and customize the gameplay!
+
 Architecture:
 	This project has many files, with an architecture consisting of four rough layers:
 
@@ -61,3 +66,6 @@ Architecture:
 				+mapElements (stores map specs and defines types such as Block, BlockType, DistanceMap, etc.)
 				+pathFinder (implements Dijkstra's algorithm and generates distance maps)
 				+populationElements (defines types such as Entity (for characters), PC, NPC, Item, etc.)
+
+Credit:
+	The heap class and monster descriptions were made by Dr. Jeremy Sheaffer. All other code was written by Brantley Vose.
